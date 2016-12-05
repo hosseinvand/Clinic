@@ -1,5 +1,11 @@
-def func(x):
-    return x + 1
+class ExpertDoctor:
+
+  def getVisitCost(self):
+    return 40000
+
+def validateVisitCost(cost):
+  return cost < 50000
 
 def test_answer():
-    assert func(3) == 4
+  doc = ExpertDoctor()
+  assert validateVisitCost(doc.getVisitCost())
