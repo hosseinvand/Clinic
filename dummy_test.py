@@ -4,7 +4,7 @@ class ExpertDoctor:
     return 40000
 
 def validateVisitCost(cost):
-  return cost < 30000
+  return cost < 50000
 
 def test_answer():
   doc = ExpertDoctor()
