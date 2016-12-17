@@ -1,14 +1,15 @@
-from django.conf.urls import include, url
-from django.conf.urls.static import static
-from django.contrib import admin
+from django.conf.urls import url
+from django.contrib.auth.views import logout
+from django.urls.base import reverse_lazy
 
-from Clinic import settings
-from reservation.views import MainPageView, PatientCreateView
+from reservation.views import MainPageView, PatientCreateView, PatientLoginView
 
 __author__ = 'mohre'
 
 urlpatterns = [
     url(r'^$', MainPageView.as_view(), name='mainPage'),
+    url(r'^login/$', PatientLoginView.as_view(), name="login"),
+    url(r'^logout/$', logout, {'next_page': reverse_lazy('mainPage')}),
     url(r'^register/$', PatientCreateView.as_view(), name='registerPage'),
 
 ]
