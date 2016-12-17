@@ -25,7 +25,7 @@ class PatientCreateView(CreateView):
         return super(PatientCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        context = super(PatientCreateView, self).get_context_data(self, **kwargs)
+        context = super(PatientCreateView, self).get_context_data(**kwargs)
         context['user'] = self.request.user
         return context
 
