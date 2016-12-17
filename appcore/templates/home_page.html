@@ -1,14 +1,21 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
 {% load static %}
 
+{% block pageBody %}
+    <div id="top"></div>
+    <div id="search">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+    </div>
+    <div id="features">
 
-</body>
-</html>
+    </div>
+    <div id="advertisement">
+
+    </div>
+    <div id="tutorial">
+
+    </div>
+    <div id="registration">
+        {% include "registration_section.html" %}
+    </div>
+{% endblock %}
