@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 {#{% load material_form %}#}
 {% load widget_tweaks %}
 
@@ -75,6 +75,9 @@
 <div class="container">
     {% block pageBody %}
     {% endblock %}
+</div>
+<div id="footer">
+
 </div>
 {#<script src="{% static "js/jquery-3.1.0.js" %}"></script>#}
 <script src="{% static "js/jquery-1.10.2.min.js" %}"></script>
