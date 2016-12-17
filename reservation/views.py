@@ -1,5 +1,7 @@
+from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
+from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView
 from django.views.generic.edit import FormView
 from reservation.forms import PatientRegisterForm
@@ -14,8 +16,7 @@ class MainPageView(TemplateView):
 class PatientCreateView(CreateView):
     model = Patient
     template_name = 'signup.html'
-    # success_url = reverse_lazy('home')
-    success_url = '/'
+    success_url = reverse_lazy('mainPage')
     form_class = PatientRegisterForm
 
     def form_valid(self, form):
@@ -25,18 +26,15 @@ class PatientCreateView(CreateView):
         login(self.request, new_user)
         return response
 
-    def get_context_data(self, **kwargs):
-        context = super(PatientCreateView, self).get_context_data(**kwargs)
-        context['user'] = self.request.user
-        return context
-
 
 class PatientLoginView(FormView):
     template_name = 'signup.html'
     form_class = LoginForm
-    success_url = '/'
+    success_url = reverse_lazy('mainPage')
 
     def form_valid(self, form):
-        user = User.objects.get(username=form.cleaned_data['username'])
+        response = super(PatientLoginView, self).form_valid(form)
+        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
         login(self.request, user)
-        return super(PatientLoginView, self).form_valid(form)
+        return response
