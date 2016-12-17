@@ -21,7 +21,7 @@ from Clinic import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('appcore.urls')),
+    url(r'^', include('reservation.urls')),
 ]
 
 if settings.DEBUG:
