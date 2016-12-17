@@ -1,0 +1,96 @@
+{% load static %}
+{#{% load material_form %}#}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ PageTitle }}</title>
+    <meta name="description" content="Article Tagging and Comment System"/>
+
+    <!-- Material Design fonts -->
+{#    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">#}
+{#    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">#}
+
+    <!-- Bootstrap -->
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    {#    <link href="{% static "css/bootstrap-theme.min.css" %}" rel="stylesheet">#}
+    <link href="{% static "css/style.css" %}" rel="stylesheet">
+
+    <!-- Bootstrap Material Design -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-material-design.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/ripples.min.css" %}">
+
+</head>
+<body>
+<div class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="active navbar-brand" href="/">Clinic</a>
+        </div>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/panel">Panel</a></li>
+{#                <li class="dropdown">#}
+{#                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown#}
+{#                        <b class="caret"></b></a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                        <li><a href="javascript:void(0)">Action</a></li>#}
+{#                        <li><a href="javascript:void(0)">Another action</a></li>#}
+{#                        <li><a href="javascript:void(0)">Something else here</a></li>#}
+{#                        <li class="divider"></li>#}
+{#                        <li class="dropdown-header">Dropdown header</li>#}
+{#                        <li><a href="javascript:void(0)">Separated link</a></li>#}
+{#                        <li><a href="javascript:void(0)">One more separated link</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+{#                <li><a href="javascript:void(0)">Link</a></li>#}
+                {% if user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}
+                        <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0)">Action</a></li>
+                        <li><a href="javascript:void(0)">Another action</a></li>
+                        <li><a href="javascript:void(0)">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+    {% block pageBody %}
+    {% endblock %}
+</div>
+<div id="footer">
+
+</div>
+{#<script src="{% static "js/jquery-3.1.0.js" %}"></script>#}
+<script src="{% static "js/jquery-1.10.2.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/ripples.min.js" %}"></script>
+<script src="{% static "js/material.min.js" %}"></script>
+<script>
+    $(function () {
+        $.material.init();
+    });
+</script>
+</body>
+
+</html>

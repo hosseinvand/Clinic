@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKAN.TTF") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKANBD.TTF") format("truetype");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKANIT.TTF") format("truetype");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKANBDIT.TTF") format("truetype");
+    font-style: italic;
+    font-weight: bold;
+}
+
+body {
+    font-family: 'XM yekan';
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+th{
+    text-align: center;
+}
+
+.input-block-level input{
+  display: inline-block;
+  width: 90%;
+  min-height: 28px;        // Make inputs at least the height of their button counterpart
+  .box-sizing(border-box); // Makes inputs behave like true block-level elements
+}
+
+.empty-form{
+    margin-top: 50px;
+}
