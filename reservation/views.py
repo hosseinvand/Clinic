@@ -19,10 +19,11 @@ class PatientCreateView(CreateView):
     form_class = PatientRegisterForm
 
     def form_valid(self, form):
+        response = super(PatientCreateView, self).form_valid(form)
         username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
         new_user = authenticate(username=username, password=password)
         login(self.request, new_user)
-        return super(PatientCreateView, self).form_valid(form)
+        return response
 
     def get_context_data(self, **kwargs):
         context = super(PatientCreateView, self).get_context_data(**kwargs)
