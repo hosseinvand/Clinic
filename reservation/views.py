@@ -28,7 +28,7 @@ class PatientCreateView(CreateView):
 
 
 class PatientLoginView(FormView):
-    template_name = 'signup.html'
+    template_name = 'login.html'
     form_class = LoginForm
     success_url = reverse_lazy('mainPage')
 
@@ -38,3 +38,8 @@ class PatientLoginView(FormView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return response
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientLoginView, self).get_context_data(**kwargs)
+        context['submit_button'] = 'Login'
+        return context

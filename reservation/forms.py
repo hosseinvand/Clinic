@@ -61,9 +61,7 @@ class LoginForm(ModelForm):
             User.objects.get(username=cleaned_data.get("username"))
         except User.DoesNotExist:
             raise forms.ValidationError('Username "%s" Does not exist.' % cleaned_data.get("username"))
-        return cleaned_data
 
-    def clean_password(self):
         password = self.cleaned_data.get('password')
         username = self.cleaned_data.get('username')
         if not password or len(password) < 1:
@@ -72,4 +70,5 @@ class LoginForm(ModelForm):
         user = authenticate(username=username, password=password)
         if user is None:
             raise forms.ValidationError("Your password is wrong!")
-        return password
+        return cleaned_data
+
