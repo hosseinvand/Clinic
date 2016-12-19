@@ -27,6 +27,7 @@ class PatientCreateView(CreateView):
         return response
 
 
+
 class PatientLoginView(FormView):
     template_name = 'login.html'
     form_class = LoginForm

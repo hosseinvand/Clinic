@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Patient(models.Model):
     user = models.OneToOneField(User, related_name="Patient_user" )
-
+    id_code = models.CharField(max_length=10,  default="")  # min_length=10
 
 class Secretary:
     None
