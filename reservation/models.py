@@ -40,6 +40,7 @@ class Doctor(Secretary):
     insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES)
     price = models.PositiveIntegerField(default="")
     cv = models.TextField(max_length=90)
+    contract = models.FileField(upload_to="contracts/")   #todo: give address where to go contract file!
 
 
 class SystemUser(models.Model):
