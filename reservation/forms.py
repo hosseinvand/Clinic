@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms.models import ModelForm, fields_for_model
-from reservation.models import SystemUser
+from reservation.models import SystemUser, Doctor
 
 
 class SystemUserRegisterForm(ModelForm):
@@ -77,3 +77,7 @@ class LoginForm(ModelForm):
             raise forms.ValidationError("Your password is wrong!")
         return cleaned_data
 
+class DoctorRegisterForm(ModelForm):
+      class Meta:
+            model = Doctor
+            fields = '__all__'
