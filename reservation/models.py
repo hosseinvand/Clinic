@@ -2,12 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class SystemUser(models.Model):
-    test = models.CharField(max_length=10, null=True)
-    user = models.OneToOneField(User, related_name="system_user" )
-    id_code = models.CharField(max_length=10,  default="")  # min_length=10
+class Role(models.Model):
+    None
 
-class Secretary:
+class Secretary(Role):
     None
 
 INSURANCE_TYPES = (
@@ -42,3 +40,9 @@ class Doctor(Secretary):
     insurance = models.TextField(choices=INSURANCE_TYPES)
     price = models.PositiveIntegerField
     cv = models.TextField(max_length=1000)
+
+
+class SystemUser(models.Model):
+    user = models.OneToOneField(User, related_name="system_user" )
+    id_code = models.CharField(max_length=10,  default="")  # min_length=10
+    role = models.ForeignKey(Role, related_name="user_role", null=True)#or make a dummy or patient role!
