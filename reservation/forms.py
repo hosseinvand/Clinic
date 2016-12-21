@@ -2,14 +2,13 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms.models import ModelForm, fields_for_model
+from django.forms import Form
 from reservation.models import SystemUser
 
 
 class SystemUserRegisterForm(ModelForm):
     username = fields_for_model(User)['username']
-    # email = fields_for_model(User)['email']
     email = forms.EmailField(widget=forms.EmailInput())
-    # password = fields_for_model(User)['password']
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
     first_name = fields_for_model(User)['first_name']
@@ -18,14 +17,6 @@ class SystemUserRegisterForm(ModelForm):
     class Meta:
         model = SystemUser
         fields = ['id_code']
-
-    #TODO: moved to clean method...
-    # def clean_username(self):
-    #     # print("clean_username entrance")
-    #     cleaned_data = super(SystemUserRegisterForm, self).clean()
-    #     if User.objects.filter(username=cleaned_data.get("username")).exists():
-    #         raise forms.ValidationError('Username already exists!')
-    #     return cleaned_data.get("username")
 
     def clean(self):
         cleaned_data = super(SystemUserRegisterForm, self).clean()
@@ -51,14 +42,9 @@ class SystemUserRegisterForm(ModelForm):
         return SystemUser.objects.create(user=tmp_user, id_code=id_code)
 
 
-class LoginForm(ModelForm):
+class LoginForm(Form):
     username = fields_for_model(User)['username']
-    # password = fields_for_model(User)['password']
     password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = SystemUser
-        fields = []
 
     def clean(self):
         cleaned_data = super(LoginForm, self).clean()
