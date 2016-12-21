@@ -23,7 +23,7 @@
     font-weight: bold;
 }
 
-body {
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 ,p{
     font-family: 'XM yekan';
 }
 
@@ -44,4 +44,14 @@ th{
 
 .empty-form{
     margin-top: 50px;
+}
+
+.center-div
+{
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

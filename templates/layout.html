@@ -18,12 +18,14 @@
 
     <!-- Bootstrap -->
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/bootstrap-rtl.min.css" %}" rel="stylesheet">
     {#    <link href="{% static "css/bootstrap-theme.min.css" %}" rel="stylesheet">#}
-    <link href="{% static "css/style.css" %}" rel="stylesheet">
 
     <!-- Bootstrap Material Design -->
     <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-material-design.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/ripples.min.css" %}">
+
+    <link href="{% static "css/style.css" %}" rel="stylesheet">
 
 </head>
 <body>
@@ -55,7 +57,7 @@
                 {#                    </ul>#}
                 {#                </li>#}
             </ul>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-left">
                 {#                <li><a href="javascript:void(0)">Link</a></li>#}
                 {% if user.is_authenticated %}
                     <li class="dropdown">
