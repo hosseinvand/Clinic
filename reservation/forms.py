@@ -2,10 +2,10 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms.models import ModelForm, fields_for_model
-from reservation.models import Patient
+from reservation.models import SystemUser
 
 
-class PatientRegisterForm(ModelForm):
+class SystemUserRegisterForm(ModelForm):
     username = fields_for_model(User)['username']
     # email = fields_for_model(User)['email']
     email = forms.EmailField(widget=forms.EmailInput())
@@ -16,22 +16,26 @@ class PatientRegisterForm(ModelForm):
     last_name = fields_for_model(User)['last_name']
 
     class Meta:
-        model = Patient
-        fields = []
+        model = SystemUser
+        fields = ['id_code']
 
-    def clean_username(self):
-        cleaned_data = super(PatientRegisterForm, self).clean()
-        if User.objects.filter(username=cleaned_data.get("username")).exists():
-            raise forms.ValidationError('Username already exists!')
-        return cleaned_data.get("username")
+    #TODO: moved to clean method...
+    # def clean_username(self):
+    #     # print("clean_username entrance")
+    #     cleaned_data = super(SystemUserRegisterForm, self).clean()
+    #     if User.objects.filter(username=cleaned_data.get("username")).exists():
+    #         raise forms.ValidationError('Username already exists!')
+    #     return cleaned_data.get("username")
 
     def clean(self):
-        cleaned_data = super(PatientRegisterForm, self).clean()
+        cleaned_data = super(SystemUserRegisterForm, self).clean()
+        if User.objects.filter(username=cleaned_data.get("username")).exists():
+            raise forms.ValidationError('Username already exists!')
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError(
-                "password and confirm_password does not match!"
+                "password and confirm password does not match!"
             )
         return cleaned_data
 
@@ -41,9 +45,10 @@ class PatientRegisterForm(ModelForm):
         password = self.cleaned_data.get('password', None)
         first_name = self.cleaned_data.get('first_name', None)
         last_name = self.cleaned_data.get('last_name', None)
+        id_code = self.cleaned_data.get('id_code', None)
 
         tmp_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-        return Patient.objects.create(user=tmp_user)
+        return SystemUser.objects.create(user=tmp_user, id_code=id_code)
 
 
 class LoginForm(ModelForm):
@@ -52,7 +57,7 @@ class LoginForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
-        model = Patient
+        model = SystemUser
         fields = []
 
     def clean(self):
