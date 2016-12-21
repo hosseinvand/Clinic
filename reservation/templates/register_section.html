@@ -37,10 +37,16 @@
                     <h4>
                         به عنوان یک پزشک می‌خواهم از سیستم رزرو سایت بهره‌مند شوم
                     </h4>
-
+                    {% if request.user.is_authenticated %}
                     <div class="panel-footer panel-success">
-                        <a href="{% url 'register' %}" class="btn btn-success btn-raised" role="button">پنل پزشکان</a>
+                        <a href="{% url 'doctorRegister' %}" class="btn btn-success btn-raised" role="button">پنل پزشکان</a>
                     </div>
+                    {% else %}
+                         <div class="panel-footer panel-success">
+                        <a href="{% url 'login' %}" class="btn btn-success btn-raised" role="button">پنل پزشکان</a>
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

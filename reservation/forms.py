@@ -78,6 +78,12 @@ class LoginForm(ModelForm):
         return cleaned_data
 
 class DoctorRegisterForm(ModelForm):
-      class Meta:
-            model = Doctor
-            fields = '__all__'
+    class Meta:
+        model = Doctor
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super(DoctorRegisterForm, self).clean()
+        if Doctor.objects.filter(doctor_code=cleaned_data.get("doctor_code")).exists():
+            raise forms.ValidationError('Doctor code already exists!')
+        return cleaned_data
