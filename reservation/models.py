@@ -34,15 +34,15 @@ SPECIALITY_TYPES = (
 )
 
 class Doctor(Secretary):
-    doctor_code = models.PositiveIntegerField(max_length=6)
-    education = models.TextField(max_length=30)
-    speciality = models.TextField(choices=SPECIALITY_TYPES)
-    insurance = models.TextField(choices=INSURANCE_TYPES)
-    price = models.PositiveIntegerField
-    cv = models.TextField(max_length=1000)
+    doctor_code = models.PositiveIntegerField(default="")
+    education = models.CharField(max_length=30)
+    speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
+    insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES)
+    price = models.PositiveIntegerField(default="")
+    cv = models.TextField(max_length=90)
 
 
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user" )
     id_code = models.CharField(max_length=10,  default="")  # min_length=10
-    role = models.ForeignKey(Role, related_name="user_role", null=True)#or make a dummy or patient role!
+    role = models.ForeignKey(Role, related_name="user_role", null=True)     # or make a dummy/patient role!
