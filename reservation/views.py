@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView
 from django.views.generic.edit import FormView
-from reservation.forms import PatientRegisterForm
-from reservation.models import Patient
+from reservation.forms import SystemUserRegisterForm
+from reservation.models import SystemUser
 from .forms import LoginForm
 
 
@@ -13,14 +13,14 @@ class MainPageView(TemplateView):
     template_name = 'home_page.html'
 
 
-class PatientCreateView(CreateView):
-    model = Patient
+class SystemUserCreateView(CreateView):
+    model = SystemUser
     template_name = 'signup.html'
     success_url = reverse_lazy('mainPage')
-    form_class = PatientRegisterForm
+    form_class = SystemUserRegisterForm
 
     def form_valid(self, form):
-        response = super(PatientCreateView, self).form_valid(form)
+        response = super(SystemUserCreateView, self).form_valid(form)
         username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
         new_user = authenticate(username=username, password=password)
         login(self.request, new_user)
@@ -28,19 +28,19 @@ class PatientCreateView(CreateView):
 
 
 
-class PatientLoginView(FormView):
+class SystemUserLoginView(FormView):
     template_name = 'login.html'
     form_class = LoginForm
     success_url = reverse_lazy('mainPage')
 
     def form_valid(self, form):
-        response = super(PatientLoginView, self).form_valid(form)
+        response = super(SystemUserLoginView, self).form_valid(form)
         username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return response
 
     def get_context_data(self, **kwargs):
-        context = super(PatientLoginView, self).get_context_data(**kwargs)
+        context = super(SystemUserLoginView, self).get_context_data(**kwargs)
         context['submit_button'] = 'Login'
         return context
