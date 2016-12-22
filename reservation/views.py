@@ -1,11 +1,9 @@
-from django import forms
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls.base import reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.edit import FormView
-from reservation.forms import SystemUserRegisterForm, DoctorRegisterForm
-from reservation.models import SystemUser, Doctor
+from reservation.forms import *
 from .forms import LoginForm
 
 
@@ -45,12 +43,34 @@ class SystemUserLoginView(FormView):
         return context
 
 
-class DoctorCreateView(CreateView):
+class DoctorCreateView(LoginRequiredMixin, CreateView):
     model = Doctor
     template_name = 'doctor_register.html'
     success_url = reverse_lazy('mainPage')
     form_class = DoctorRegisterForm
 
 
-class SecretaryPanel(TemplateView):
+class SecretaryPanel(LoginRequiredMixin, TemplateView):
+    selected = "panel"
     template_name = 'panel.html'
+
+
+class ManageSecretary(LoginRequiredMixin, TemplateView):
+    selected = "manageSecretary"
+    template_name = 'panel.html'
+
+
+class AddClinicView(LoginRequiredMixin, CreateView):
+    selected = "addClinic"
+    model = Office
+    template_name = 'panel.html'
+    success_url = reverse_lazy('mainPage')
+    form_class = ClinicForm
+
+
+class UpdateClinicView(LoginRequiredMixin, UpdateView):
+    selected = "updateClinic"
+    model = Office
+    template_name = 'panel.html'
+    form_class = ClinicForm
+
