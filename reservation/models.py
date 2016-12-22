@@ -11,6 +11,7 @@ INSURANCE_TYPES = (
 )
 
 SPECIALITY_TYPES = (
+    ('Universal','عمومی'),
     ('Eye', 'چشم'),
     ('Zanan', 'زنان و زایمان و نازایی'),
     ('Jarahi', 'جراحی'),
@@ -22,8 +23,19 @@ SPECIALITY_TYPES = (
     ('Ghodad', 'غدد'),
     ('Goush', 'گوش و حلق و بینی'),
     ('Koudak', 'کودکان'),
-    ('Dandan', 'دندان‌پزشکی')
+    ('Dandan', 'دندان‌پزشکی'),
+    ('Mama', 'مامایی'),
+    ('Radio', 'رادیولوژی'),
+    ('Sono', 'سونوگرافی')
     # TODO
+)
+
+EDUCATION_TYPES=(
+    ('K','کارشناسی'),
+    ('UK','کارشناسی‌ارشد'),
+    ('D','دکترا'),
+    ('S','تخصص'),
+    ('US','فوق تخصص'),
 )
 
 
@@ -46,11 +58,12 @@ class Secretary(Role):
 class Doctor(Secretary):
     # doctor_secretary = models.OneToOneField(Secretary, related_name="doctor")
     doctor_code = models.PositiveIntegerField(default="")
-    education = models.CharField(max_length=30)
+    education = models.CharField(max_length=30,choices=EDUCATION_TYPES)
     speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
     insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES)
     price = models.PositiveIntegerField(default="")
     cv = models.TextField(max_length=90)
+    contract = models.FileField(upload_to="contracts/")   #todo: give address where to go contract file!
 
 
 class SystemUser(models.Model):

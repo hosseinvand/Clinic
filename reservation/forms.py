@@ -88,3 +88,8 @@ class ClinicForm(ModelForm):
     class Meta:
         model = Office
         fields = '__all__'
+    def clean(self):
+        cleaned_data = super(DoctorRegisterForm, self).clean()
+        if Doctor.objects.filter(doctor_code=cleaned_data.get("doctor_code")).exists():
+            raise forms.ValidationError('Doctor code already exists!')
+        return cleaned_data

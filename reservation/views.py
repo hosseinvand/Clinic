@@ -73,4 +73,3 @@ class UpdateClinicView(LoginRequiredMixin, UpdateView):
     model = Office
     template_name = 'panel.html'
     form_class = ClinicForm
-
