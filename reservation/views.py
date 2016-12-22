@@ -49,6 +49,13 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('mainPage')
     form_class = DoctorRegisterForm
 
+    def form_valid(self, form):
+        print('form is valid')
+        response = super(CreateView, self).form_valid(form)
+        doctor = Doctor.objects.get(doctor_code=form.cleaned_data['doctor_code'])
+        SystemUser.objects.filter(user=self.request.user).update(role=doctor)
+        return response
+
 
 class SecretaryPanel(LoginRequiredMixin, TemplateView):
     selected = "panel"

@@ -52,7 +52,7 @@ class Role(models.Model):
 
 
 class Secretary(Role):
-    office = models.ForeignKey(Office, related_name='secretaries')
+    office = models.ForeignKey(Office, related_name='secretaries', null=True, blank=True)
 
 
 class Doctor(Secretary):
@@ -69,4 +69,4 @@ class Doctor(Secretary):
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
     id_code = models.CharField(max_length=10,  default="")  # min_length=10
-    role = models.ForeignKey(Role, related_name="user_role", null=True)     # or make a dummy/patient role!
+    role = models.ForeignKey(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!

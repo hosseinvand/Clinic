@@ -1,0 +1,51 @@
+{% load static %}
+<div class="col-md-3">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="profile-sidebar">
+            <div class="profile-userpic">
+                <img src="{% static "image/profile_user.png" %}" class="img-responsive" alt="">
+            </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name">
+                    {{ user.system_user.role }}
+                </div>
+                <div class="profile-usertitle-job">
+                    فوق تخصص
+                </div>
+                <div class="profile-usertitle-job">
+                    دندانپزشکی
+                </div>
+            </div>
+            <div class="profile-userbuttons">
+                <button type="button" class="btn btn-success btn-raised btn-md">رزرو نوبت</button>
+                <button type="button" class="btn btn-info btn-raised btn-md">بیشتر</button>
+            </div>
+{#            <div class="profile-usermenu">#}
+{#                <ul class="nav">#}
+{#                    <li class="active">#}
+{#                        <a href="#">#}
+{#                            <i class="glyphicon glyphicon-home"></i>#}
+{#                            پنل اصلی </a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="#">#}
+{#                            <i class="glyphicon glyphicon-user"></i>#}
+{#                            مدیریت منشی </a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="#" target="_blank">#}
+{#                            <i class="glyphicon glyphicon-ok"></i>#}
+{#                            Tasks </a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="#">#}
+{#                            <i class="glyphicon glyphicon-flag"></i>#}
+{#                            راهنما </a>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </div>#}
+        </div>
+    </div>
+</div>
+</div>
