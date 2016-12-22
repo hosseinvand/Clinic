@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block pageBody %}
+
+<div class="container" align="right">
+    <h2>
+        نتایج جست‌وجو:
+    </h2>
+    <div class="col-sm-2">
+
+    </div>
+    <div class="col-sm-10">
+        {% for f in object_list %}
+{#            {% include 'widget/food.html' with food=f%}#}
+            {{ f.user.first_name }}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

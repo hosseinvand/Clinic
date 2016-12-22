@@ -4,7 +4,11 @@
 {% block pageBody %}
     <div id="top"></div>
     <div id="search">
-
+        {% include "search.html" %}
+    </div>
+    <div class="blank-divider"></div>
+    <div id="registration">
+        {% include "register_section.html" %}
     </div>
     <div id="features">
 
@@ -14,8 +18,5 @@
     </div>
     <div id="tutorial">
 
-    </div>
-    <div id="registration">
-        {% include "register_section.html" %}
     </div>
 {% endblock %}

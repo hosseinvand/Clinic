@@ -55,3 +55,9 @@ th{
   bottom: 0;
   left: 0;
 }
+
+.blank-divider
+{
+    height: 100px;
+    width: 100%;
+}
