@@ -1,15 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class Role(models.Model):
-    None
-
-class Secretary(Role):
-    None
-
-
-
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
     ('Asia', 'آسیا'),
@@ -46,7 +37,26 @@ EDUCATION_TYPES=(
     ('S','تخصص'),
     ('US','فوق تخصص'),
 )
+
+
+class Office(models.Model):
+    country = models.CharField(max_length=30, default='ایران')
+    city = models.CharField(max_length=30)
+    address = models.TextField()
+    phone = models.IntegerField()
+    telegram = models.CharField(max_length=30)
+
+
+class Role(models.Model):
+    None
+
+
+class Secretary(Role):
+    office = models.ForeignKey(Office, related_name='secretaries', null=True, blank=True)
+
+
 class Doctor(Secretary):
+    # doctor_secretary = models.OneToOneField(Secretary, related_name="doctor")
     doctor_code = models.PositiveIntegerField(default="")
     education = models.CharField(max_length=30,choices=EDUCATION_TYPES)
     speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
@@ -57,6 +67,6 @@ class Doctor(Secretary):
 
 
 class SystemUser(models.Model):
-    user = models.OneToOneField(User, related_name="system_user" )
+    user = models.OneToOneField(User, related_name="system_user")
     id_code = models.CharField(max_length=10,  default="")  # min_length=10
-    role = models.ForeignKey(Role, related_name="user_role", null=True)     # or make a dummy/patient role!
+    role = models.ForeignKey(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!

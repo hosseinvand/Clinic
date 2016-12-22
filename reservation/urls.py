@@ -1,9 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.views import logout
-from django.urls.base import reverse_lazy
 
-from reservation.views import MainPageView, SystemUserCreateView, SystemUserLoginView, DoctorCreateView, \
-    SearchDoctorView
+from reservation.views import *
 
 __author__ = 'mohre'
 
@@ -16,4 +14,8 @@ urlpatterns = [
     url(r'^search/(?P<searched>.*)/$', SearchDoctorView.as_view(), name='searchResult'),
 
 
+    url(r'^panel/$', SecretaryPanel.as_view(), name="panel"),
+    url(r'^secretary/$', ManageSecretary.as_view(), name="ManageSecretary"),
+    url(r'^clinic/$', AddClinicView.as_view(), name="addClinic"),
+    url(r'^clinic/(?P<pk>\d+)$', UpdateClinicView.as_view(), name="updateClinic"),
 ]
