@@ -51,3 +51,9 @@ class DoctorCreateView(CreateView):
     template_name = 'doctor_register.html'
     success_url = reverse_lazy('mainPage')
     form_class = DoctorRegisterForm
+
+    #overriden just for logging request user
+    def get(self, request, *args, **kwargs):
+        print('get request to createview')
+        print(request.user.is_authenticated())
+        return super(CreateView, self).get(request, *args, **kwargs)
