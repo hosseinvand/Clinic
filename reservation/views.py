@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView
@@ -46,7 +47,9 @@ class SystemUserLoginView(FormView):
         return context
 
 
-class DoctorCreateView(CreateView):
+class DoctorCreateView(LoginRequiredMixin,CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
     model = Doctor
     template_name = 'doctor_register.html'
     success_url = reverse_lazy('mainPage')

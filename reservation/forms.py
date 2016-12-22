@@ -87,3 +87,4 @@ class DoctorRegisterForm(ModelForm):
         if Doctor.objects.filter(doctor_code=cleaned_data.get("doctor_code")).exists():
             raise forms.ValidationError('Doctor code already exists!')
         return cleaned_data
+
