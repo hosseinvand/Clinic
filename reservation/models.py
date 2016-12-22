@@ -8,6 +8,8 @@ class Role(models.Model):
 class Secretary(Role):
     None
 
+
+
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
     ('Asia', 'آسیا'),
@@ -18,6 +20,7 @@ INSURANCE_TYPES = (
 )
 
 SPECIALITY_TYPES = (
+    ('Universal','عمومی'),
     ('Eye', 'چشم'),
     ('Zanan', 'زنان و زایمان و نازایی'),
     ('Jarahi', 'جراحی'),
@@ -29,13 +32,23 @@ SPECIALITY_TYPES = (
     ('Ghodad', 'غدد'),
     ('Goush', 'گوش و حلق و بینی'),
     ('Koudak', 'کودکان'),
-    ('Dandan', 'دندان‌پزشکی')
+    ('Dandan', 'دندان‌پزشکی'),
+    ('Mama', 'مامایی'),
+    ('Radio', 'رادیولوژی'),
+    ('Sono', 'سونوگرافی')
     # TODO
 )
 
+EDUCATION_TYPES=(
+    ('K','کارشناسی'),
+    ('UK','کارشناسی‌ارشد'),
+    ('D','دکترا'),
+    ('S','تخصص'),
+    ('US','فوق تخصص'),
+)
 class Doctor(Secretary):
     doctor_code = models.PositiveIntegerField(default="")
-    education = models.CharField(max_length=30)
+    education = models.CharField(max_length=30,choices=EDUCATION_TYPES)
     speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
     insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES)
     price = models.PositiveIntegerField(default="")

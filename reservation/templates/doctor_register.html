@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load material_form %}
 {% load widget_tweaks %}
+{% load static %}
 {% block pageBody %}
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
@@ -34,11 +35,12 @@
                                     {{ form.insurance | attr:"placeholder:بیمه‌های تحت پوشش" | attr:"required:required" | add_class:"form-control"}}
                                 </div>
                             </div>
-                             <div class="form-group">
+                            <div class="form-group">
                                 <div class="col-xs-10 col-xs-offset-1">
                                     {{ form.price | attr:"placeholder:قیمت ویزیت" | attr:"required:required" | add_class:"form-control"}}
                                 </div>
                             </div>
+
                         </fieldset>
                     </div>
                     <div class="col-md-6">
@@ -49,7 +51,12 @@
                                     {{ form.cv | attr:"placeholder:رزومه" | add_class:"form-control"}}
                                 </div>
                             </div>
+
                             <div class="form-group">
+                                <a class="btn btn-primary" href="{% static "other/contract.doc" %}">
+                                    <i class="text-primary glyphicon glyphicon-download"></i>
+                                    دانلود فایل قرارداد
+                                </a>
                                 <div class="input-group  col-xs-10 col-xs-offset-1">
                                     {{ form.contract | attr:"required:required" | add_class:"file" }}
                                     <input type="text" class="form-control input-lg" disabled placeholder="آپلود فایل قرارداد...">
