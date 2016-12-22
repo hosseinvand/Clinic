@@ -1,11 +1,12 @@
 from django import forms
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView
 from django.views.generic.edit import FormView
-from reservation.forms import SystemUserRegisterForm
-from reservation.models import SystemUser
+from reservation.forms import SystemUserRegisterForm, DoctorRegisterForm
+from reservation.models import SystemUser, Doctor
 from .forms import LoginForm
 
 
@@ -44,3 +45,12 @@ class SystemUserLoginView(FormView):
         context = super(SystemUserLoginView, self).get_context_data(**kwargs)
         context['submit_button'] = 'Login'
         return context
+
+
+class DoctorCreateView(LoginRequiredMixin,CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Doctor
+    template_name = 'doctor_register.html'
+    success_url = reverse_lazy('mainPage')
+    form_class = DoctorRegisterForm
