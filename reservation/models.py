@@ -8,6 +8,8 @@ class Role(models.Model):
 class Secretary(Role):
     None
 
+
+
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
     ('Asia', 'آسیا'),
@@ -18,6 +20,7 @@ INSURANCE_TYPES = (
 )
 
 SPECIALITY_TYPES = (
+    ('Universal','عمومی'),
     ('Eye', 'چشم'),
     ('Zanan', 'زنان و زایمان و نازایی'),
     ('Jarahi', 'جراحی'),
@@ -29,20 +32,31 @@ SPECIALITY_TYPES = (
     ('Ghodad', 'غدد'),
     ('Goush', 'گوش و حلق و بینی'),
     ('Koudak', 'کودکان'),
-    ('Dandan', 'دندان‌پزشکی')
+    ('Dandan', 'دندان‌پزشکی'),
+    ('Mama', 'مامایی'),
+    ('Radio', 'رادیولوژی'),
+    ('Sono', 'سونوگرافی')
     # TODO
 )
 
+EDUCATION_TYPES=(
+    ('K','کارشناسی'),
+    ('UK','کارشناسی‌ارشد'),
+    ('D','دکترا'),
+    ('S','تخصص'),
+    ('US','فوق تخصص'),
+)
 class Doctor(Secretary):
-    doctor_code = models.PositiveIntegerField(max_length=6)
-    education = models.TextField(max_length=30)
-    speciality = models.TextField(choices=SPECIALITY_TYPES)
-    insurance = models.TextField(choices=INSURANCE_TYPES)
-    price = models.PositiveIntegerField
-    cv = models.TextField(max_length=1000)
+    doctor_code = models.PositiveIntegerField(default="")
+    education = models.CharField(max_length=30,choices=EDUCATION_TYPES)
+    speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
+    insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES)
+    price = models.PositiveIntegerField(default="")
+    cv = models.TextField(max_length=90)
+    contract = models.FileField(upload_to="contracts/")   #todo: give address where to go contract file!
 
 
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user" )
     id_code = models.CharField(max_length=10,  default="")  # min_length=10
-    role = models.ForeignKey(Role, related_name="user_role", null=True)#or make a dummy or patient role!
+    role = models.ForeignKey(Role, related_name="user_role", null=True)     # or make a dummy/patient role!

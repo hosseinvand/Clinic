@@ -1,11 +1,12 @@
 {% extends "layout.html" %}
 {% load material_form %}
 {% load widget_tweaks %}
+{% load static %}
 {% block pageBody %}
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-body">
-                <form name="searchForm" class="form-horizontal" method="post">{% csrf_token %}
+                <form name="doctorForm" class="form-horizontal" enctype="multipart/form-data"  method="post">{% csrf_token %}
                     {% for error in form.non_field_errors %}
                         <div class="alert alert-danger">
                             <strong>{{ error|escape }}</strong>
@@ -15,52 +16,63 @@
                         <fieldset>
                             <div class="form-group">
                                 <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.first_name | attr:"placeholder:Firstname"| attr:"required:required" | add_class:"form-control"}}
+                                    {{ form.doctor_code | attr:"placeholder:شماره نظام پزشکی"| attr:"required:required" | add_class:"form-control"}}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.last_name | attr:"placeholder:Lastname" | attr:"required:required"| add_class:"form-control"}}
+                                    {{ form.education | attr:"placeholder:تحصیلات" | attr:"required:required"| add_class:"form-control"}}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-10 col-xs-offset-1">
+                                    {{ form.speciality | attr:"placeholder:تخصص" | attr:"required:required" | add_class:"form-control"}}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.id_code | attr:"placeholder:Identification Code" | attr:"required:required" | add_class:"form-control"}}
+                                    {{ form.insurance | attr:"placeholder:بیمه‌های تحت پوشش" | attr:"required:required" | add_class:"form-control"}}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.email | attr:"placeholder:Email" | attr:"required:required" | add_class:"form-control"}}
+                                    {{ form.price | attr:"placeholder:قیمت ویزیت" | attr:"required:required" | add_class:"form-control"}}
                                 </div>
                             </div>
+
                         </fieldset>
                     </div>
                     <div class="col-md-6">
                         <fieldset>
+
                             <div class="form-group">
                                 <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.username | attr:"placeholder:Username" | attr:"required:required" | add_class:"form-control"}}
+                                    {{ form.cv | attr:"placeholder:رزومه" | add_class:"form-control"}}
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.password | attr:"placeholder:Password" | attr:"required:required" | add_class:"form-control"}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.confirm_password | attr:"placeholder:Confirm Password" | attr:"required:required" | add_class:"form-control"}}
+                                <a class="btn btn-primary" href="{% static "other/contract.doc" %}">
+                                    <i class="text-primary glyphicon glyphicon-download"></i>
+                                    دانلود فایل قرارداد
+                                </a>
+                                <div class="input-group  col-xs-10 col-xs-offset-1">
+                                    {{ form.contract | attr:"required:required" | add_class:"file" }}
+                                    <input type="text" class="form-control input-lg" disabled placeholder="آپلود فایل قرارداد...">
+                                    <span class="input-group-addon"><i class="text-primary glyphicon glyphicon-inbox"></i></span>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
                     <div class="center-align">
                         <div class="col-xs-4 col-xs-offset-4">
-                            <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">Sign Up</button>
+                            <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">Register</button>
                         </div>
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 {% endblock %}
