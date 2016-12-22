@@ -45,13 +45,3 @@ th{
 .empty-form{
     margin-top: 50px;
 }
-
-.center-div
-{
-  position: absolute;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}

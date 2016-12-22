@@ -27,7 +27,6 @@ class SystemUserCreateView(CreateView):
         return response
 
 
-
 class SystemUserLoginView(FormView):
     template_name = 'login.html'
     form_class = LoginForm
@@ -51,3 +50,7 @@ class DoctorCreateView(CreateView):
     template_name = 'doctor_register.html'
     success_url = reverse_lazy('mainPage')
     form_class = DoctorRegisterForm
+
+
+class SecretaryPanel(TemplateView):
+    template_name = 'panel.html'

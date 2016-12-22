@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Role(models.Model):
     None
 
+
 class Secretary(Role):
     None
 
@@ -33,7 +34,9 @@ SPECIALITY_TYPES = (
     # TODO
 )
 
+
 class Doctor(Secretary):
+    doctor_secretary = models.OneToOneField(Secretary, related_name="doctor")
     doctor_code = models.PositiveIntegerField(default="")
     education = models.CharField(max_length=30)
     speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
