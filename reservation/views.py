@@ -15,7 +15,7 @@ class MainPageView(TemplateView):
     # form_class = DoctorSearchForm
 
     def get_context_data(self, **kwargs):
-        context = super(TemplateView, self).get_context_data(**kwargs)
+        context = super(MainPageView, self).get_context_data(**kwargs)
         print(context.keys())
         return context
 
@@ -62,7 +62,7 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         print('form is valid')
-        response = super(CreateView, self).form_valid(form)
+        response = super(DoctorCreateView, self).form_valid(form)
         doctor = Doctor.objects.get(doctor_code=form.cleaned_data['doctor_code'])
         SystemUser.objects.filter(user=self.request.user).update(role=doctor)
         return response
@@ -118,8 +118,15 @@ class AddClinicView(LoginRequiredMixin, CreateView):
         return response
 
 
+class PanelSearch(LoginRequiredMixin, TemplateView):
+    selected = "panelSearch"
+    template_name = 'panel.html'
+
+
 class UpdateClinicView(LoginRequiredMixin, UpdateView):
     selected = "updateClinic"
     model = Office
     template_name = 'panel.html'
     form_class = ClinicForm
+
+

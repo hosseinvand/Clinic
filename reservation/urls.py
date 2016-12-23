@@ -15,7 +15,8 @@ urlpatterns = [
 
 
     url(r'^panel/$', SecretaryPanel.as_view(), name="panel"),
-    url(r'^secretary/$', ManageSecretary.as_view(), name="ManageSecretary"),
-    url(r'^clinic/$', AddClinicView.as_view(), name="addClinic"),
+    url(r'^panel/secretary/$', ManageSecretary.as_view(), name="ManageSecretary"),
+    url(r'^panel/clinic/$', AddClinicView.as_view(), name="addClinic"),
+    url(r'^panel/search$', PanelSearch.as_view(), name="panelSearch"),
     url(r'^clinic/(?P<pk>\d+)$', UpdateClinicView.as_view(), name="updateClinic"),
 ]
