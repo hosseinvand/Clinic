@@ -1,27 +1,23 @@
 {% load material_form %}
 {% load widget_tweaks %}
-{# <form id="searchform" action="{% url 'blog_search_list_view' %}" method="get" accept-charset="utf-8">#}
-{#      <button class="searchbutton" type="submit">#}
-{#        <i class="fa fa-search"></i>#}
-{#      </button>#}
-{#      <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Search">#}
-{#    </form>#}
-<div class="container">
-        <div class="col-md-6 col-md-offset-3 center-align">
-            <h1 class="text-center text-primary text-darken-4">کلینیک</h1>
-            <div id="custom-search-input">
-                <div class="input-group col-md-12">
-{#                    <fieldset>#}
-{#                    {{ form.name | attr:"placeholder:جست و جو در بین پزشکان..." | add_class:"form-control input-lg text-primary"}}#}
-                    <input id="doctor_name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین پزشکان...">
+<div class="col-md-12">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="col-md-6 col-md-offset-3 center-align">
+                <h1 class="text-center text-primary text-darken-4">کلینیک</h1>
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input id="doctor_name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین پزشکان...">
                     <span class="input-group-addon">
                         <button class="btn btn-floating btn-primary btn-lg btn-raised" onclick=searchFunction("doctor_name") type="submit">
                             <i class="glyphicon glyphicon-search"></i>
                         </button>
                     </span>
-{#                    </fieldset>#}
+                    </div>
                 </div>
+                <a class="text-info" href="/search//"><i class="glyphicon glyphicon-plus"></i>لیست تمام پزشکان</a>
+                <div class="blank-divider"></div>
             </div>
-            <a class="text-info" href="/search//"><i class="glyphicon glyphicon-plus"></i>لیست تمام پزشکان</a>
         </div>
+    </div>
 </div>

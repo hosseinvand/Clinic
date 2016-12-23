@@ -65,29 +65,32 @@
             {% include "clinic_form.html" %}
         {% elif view.selected == "updateClinic" %}
         {% elif view.selected == "manageSecretary" %}
-            <div class="panel">
-                <div class="panel-body">
-                    <div class="media">
-                        <div class="media-left">
-                            <img class="media-object img-circle profile-img" src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png">
-                        </div>
-                        <div class="media-body">
-                            <h2 class="media-heading">Daniel</h2>
-                            <div class="job">CEO</div>
-                            <div class="mail"><a href="mailto:daniel@bla.ch">daniel@bla.ch</a> </div>
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-body" data-toggle="modal" data-target="#myModal">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object img-circle profile-img" src="{% static "image/add-secretary.jpg" %}">
+                            </div>
+                            <div class="media-body">
+                                <h2 class="center"> منشی جدید</h2>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="panel">
-                <div class="panel-body" data-toggle="modal" data-target="#myModal">
-                    <div class="media">
-                        <div class="media-left">
-                            <img class="media-object img-circle profile-img" src="{% static "image/add-secretary.jpg" %}">
-                        </div>
-                        <div class="media-body">
-                            <h2 class="center">اضافه کردن منشی جدید</h2>
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="media">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <div class="media-left">
+                                <img class="media-object img-circle profile-img" src="{% static "image/avatar.png" %}">
+                            </div>
+                            <div class="media-body">
+                                <h2 class="center">سلام</h2>
+                                <div class="mail"><a href="mailto:daniel@bla.ch">daniel@bla.ch</a> </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,50 +102,50 @@
 
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    <div class="vertical-alignment-helper">
-        <div class="modal-dialog vertical-align-center" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">منشی جدید</h4>
-                </div>
-                <div class="modal-body">
-                    <p>نام کاربری منشی خود را وارد کنید:</p>
-                    <form>
-                        <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
-                    </form>
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">منشی جدید</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>نام کاربری منشی خود را وارد کنید:</p>
+                        <form>
+                            <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+                        </form>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">اضافه کردن</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">اضافه کردن</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
-    {#    <div class="col-md-9">#}
-    {#        <!-- Nav tabs -->#}
-    {#        <div class="panel">#}
-    {#            <ul class="nav nav-tabs" role="tablist">#}
-    {#                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>#}
-    {#                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>#}
-    {#                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>#}
-    {#                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>#}
-    {#            </ul>#}
-    {##}
-    {#            <!-- Tab panes -->#}
-    {#            <div class="panel-body">#}
-    {#                <div class="tab-content">#}
-    {#                    <div role="tabpanel" class="tab-pane active" id="home">#}
-    {#                    تست#}
-    {#                </div>#}
-    {#                    <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>#}
-    {#                    <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>#}
-    {#                    <div role="tabpanel" class="tab-pane" id="settings">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage..</div>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
+        {#    <div class="col-md-9">#}
+        {#        <!-- Nav tabs -->#}
+        {#        <div class="panel">#}
+        {#            <ul class="nav nav-tabs" role="tablist">#}
+        {#                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>#}
+        {#                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>#}
+        {#                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>#}
+        {#                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>#}
+        {#            </ul>#}
+        {##}
+        {#            <!-- Tab panes -->#}
+        {#            <div class="panel-body">#}
+        {#                <div class="tab-content">#}
+        {#                    <div role="tabpanel" class="tab-pane active" id="home">#}
+        {#                    تست#}
+        {#                </div>#}
+        {#                    <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>#}
+        {#                    <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>#}
+        {#                    <div role="tabpanel" class="tab-pane" id="settings">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage..</div>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+        {#    </div>#}
 
 {% endblock %}
