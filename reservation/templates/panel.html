@@ -16,10 +16,11 @@
                     <!-- SIDEBAR USER TITLE -->
                     <div class="profile-usertitle">
                         <div class="profile-usertitle-name">
-                            Marcus Doe
+                            {{ user.first_name }} {{ user.last_name }}
                         </div>
                         <div class="profile-usertitle-job">
-                            Developer
+                            {{ user.user_role.get_role_type }}
+                            {{ user.system_user.role.get_role_type }}
                         </div>
                     </div>
                     <!-- END SIDEBAR USER TITLE -->
@@ -37,21 +38,33 @@
                                     <i class="glyphicon glyphicon-home"></i>
                                     پنل اصلی </a>
                             </li>
+                            <li {% if view.selected == "panelSearch" %}class="active"{% endif %}>
+                                <a href="{% url 'panelSearch' %}">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                    جستجوی پزشک
+                                </a>
+                            </li>
+                            {% if user.system_user.role.get_role_id == 1 %}
+                            <li>
+                                <a href="{% url 'doctorRegister' %}">
+                                    <i class="glyphicon glyphicon-log-in"></i>
+ثبت نام پزشک
+                                </a>
+                            </li>
+                            {% else %}
+                            {% if user.system_user.role.get_role_id == 3 %}
                             <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
                                 <a href="{% url 'ManageSecretary' %}">
                                     <i class="glyphicon glyphicon-user"></i>
                                     مدیریت منشی </a>
                             </li>
+                                {% endif %}
                             <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
                                 <a href="{% url 'addClinic' %}">
                                     <i class="glyphicon glyphicon-ok"></i>
                                     ثبت اطلاعات مطب </a>
                             </li>
-                            <li>
-                                <a href="#">
-                                    <i class="glyphicon glyphicon-flag"></i>
-                                    راهنما </a>
-                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <!-- END MENU -->
@@ -96,6 +109,7 @@
                 </div>
             </div>
         {% else %}
+            {% include "search.html" %}
         {% endif %}
 
     </div>

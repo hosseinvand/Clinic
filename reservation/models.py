@@ -55,6 +55,7 @@ CITY_NAMES=(
 
 )
 
+
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
     city = models.CharField(max_length=30,choices=CITY_NAMES, default='تهران')
@@ -64,11 +65,45 @@ class Office(models.Model):
 
 
 class Role(PolymorphicModel):
-    pass
+
+    @abstractmethod
+    def get_role_type(self):
+        None
+
+    @abstractmethod
+    def get_role_id(self):
+        None
+
+
+class Patient(Role):
+
+    def save(self, *args, **kwargs):
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(Patient, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            cls().save()
+            return cls.objects.get()
+
+    def get_role_type(self):
+        return "بیمار"
+
+    def get_role_id(self):
+        return 1
 
 
 class DoctorSecretary(Role):
-    offices = models.ManyToManyField(Office, null=True, blank=True)
+    offices = models.ManyToManyField(Office, blank=True)
+
+    def get_role_type(self):
+        return "منشی پزشک"
+
+    def get_role_id(self):
+        return 2
 
 
 class Doctor(DoctorSecretary):
@@ -80,6 +115,12 @@ class Doctor(DoctorSecretary):
     price = models.PositiveIntegerField(default="")
     cv = models.TextField(max_length=90)
     contract = models.FileField(upload_to="contracts/")
+
+    def get_role_type(self):
+        return "پزشک"
+
+    def get_role_id(self):
+        return 3
 
     @property
     def full_name(self):
@@ -93,7 +134,12 @@ class Doctor(DoctorSecretary):
 
 
 class Secretary(DoctorSecretary):
-    pass
+    def get_role_type(self):
+        return "منشی"
+
+    def get_role_id(self):
+        return 4
+
 
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
