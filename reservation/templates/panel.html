@@ -92,6 +92,7 @@
                     </div>
                 </div>
             </div>
+            {% for secretary in object %}
             <div class="col-md-6">
                 <div class="panel">
                     <div class="panel-body">
@@ -108,7 +109,6 @@
                     </div>
                 </div>
             </div>
-            {{ form.as_p }}sdf
         {% else %}
             {% include "search.html" %}
         {% endif %}
@@ -129,9 +129,7 @@
                             <div class="form-group">
                             <div class="modal-body">
                                 <p>نام کاربری منشی خود را وارد کنید:</p>
-
-                                {{ form.username }}
-                                <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+                                {{ form.username  | attr:"placeholder:جست و جو در بین کاربران..." | add_class:"form-control"}}
 
                             </div>
                             <div class="modal-footer">

@@ -97,7 +97,7 @@ class Patient(Role):
 
 
 class DoctorSecretary(Role):
-    offices = models.ManyToManyField(Office, blank=True)
+    office = models.ForeignKey(Office, blank=True)
 
     def get_role_type(self):
         return "منشی پزشک"

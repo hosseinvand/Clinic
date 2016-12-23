@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
-from reservation.models import Patient
+from reservation.models import Patient, DoctorSecretary, Secretary, Role
 
 
 class MainPageView(TemplateView):
@@ -93,15 +93,26 @@ class SearchDoctorView(ListView):
         return object_list
 
 
-class SecretaryPanel(LoginRequiredMixin, FormView):
+class SecretaryPanel(LoginRequiredMixin, TemplateView):
     selected = "panel"
-    form_class = SearchUserForm
     template_name = 'panel.html'
 
 
-class ManageSecretary(LoginRequiredMixin, TemplateView):
+class ManageSecretary(LoginRequiredMixin, FormView):
+    form_class = SearchUserForm
     selected = "manageSecretary"
     template_name = 'panel.html'
+    success_url = reverse_lazy('ManageSecretary')
+
+    def form_valid(self, form):
+        response = super(ManageSecretary, self).form_valid(form)
+        myrole = self.request.user.system_user.role
+        if myrole in Role.objects.instance_of(Doctor):
+            newrole = Secretary.objects.create()
+            newrole.offices.add(myrole.office)
+            user = User.objects.get(username=form.cleaned_data['username'])
+            SystemUser.objects.filter(user=user).update(role=newrole)
+        return response
 
 
 class AddClinicView(LoginRequiredMixin, CreateView):
