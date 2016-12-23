@@ -81,7 +81,7 @@
             </div>
 
             <div class="panel">
-                <div class="panel-body">
+                <div class="panel-body" data-toggle="modal" data-target="#myModal">
                     <div class="media">
                         <div class="media-left">
                             <img class="media-object img-circle profile-img" src="{% static "image/add-secretary.jpg" %}">
@@ -96,6 +96,30 @@
         {% endif %}
 
     </div>
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">منشی جدید</h4>
+                </div>
+                <div class="modal-body">
+                    <p>نام کاربری منشی خود را وارد کنید:</p>
+                    <form>
+                        <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">اضافه کردن</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     {#    <div class="col-md-9">#}
     {#        <!-- Nav tabs -->#}

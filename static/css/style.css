@@ -36,25 +36,24 @@ th{
 }
 
 .input-block-level input{
-  display: inline-block;
-  width: 90%;
-  min-height: 28px;        // Make inputs at least the height of their button counterpart
-  .box-sizing(border-box); // Makes inputs behave like true block-level elements
+    display: inline-block;
+    width: 90%;
+    min-height: 28px;        // Make inputs at least the height of their button counterpart
+.box-sizing(border-box); // Makes inputs behave like true block-level elements
 }
 
 .empty-form{
     margin-top: 50px;
 }
-<<<<<<< HEAD
 
 .center-div
 {
-  position: absolute;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 .blank-divider
@@ -62,5 +61,33 @@ th{
     height: 100px;
     width: 100%;
 }
-=======
->>>>>>> 9889a1b7f455cc41f642975fdd377f8006adaa21
+
+.panel-body{
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.panel-body:hover{
+   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events: all;
+}
+
