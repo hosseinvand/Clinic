@@ -263,3 +263,4 @@ Clinic/bin/
 Clinic/lib/
 Clinic/include/
 Clinic/pip-selfcheck.json
+Clinic/reservation/migrations
