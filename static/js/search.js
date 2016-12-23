@@ -3,5 +3,5 @@
  */
     function searchFunction(element) {
         var x = document.getElementById(element).value;
-        window.location = '/search/' + x;
+        window.location = '/search/' + x +"/";
     }
