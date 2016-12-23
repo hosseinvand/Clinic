@@ -45,25 +45,25 @@
                                 </a>
                             </li>
                             {% if user.system_user.role.get_role_id == 1 %}
-                            <li>
-                                <a href="{% url 'doctorRegister' %}">
-                                    <i class="glyphicon glyphicon-log-in"></i>
-ثبت نام پزشک
-                                </a>
-                            </li>
+                                <li>
+                                    <a href="{% url 'doctorRegister' %}">
+                                        <i class="glyphicon glyphicon-log-in"></i>
+                                        ثبت نام پزشک
+                                    </a>
+                                </li>
                             {% else %}
-                            {% if user.system_user.role.get_role_id == 3 %}
-                            <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
-                                <a href="{% url 'ManageSecretary' %}">
-                                    <i class="glyphicon glyphicon-user"></i>
-                                    مدیریت منشی </a>
-                            </li>
+                                {% if user.system_user.role.get_role_id == 3 %}
+                                    <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
+                                        <a href="{% url 'ManageSecretary' %}">
+                                            <i class="glyphicon glyphicon-user"></i>
+                                            مدیریت منشی </a>
+                                    </li>
                                 {% endif %}
-                            <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
-                                <a href="{% url 'addClinic' %}">
-                                    <i class="glyphicon glyphicon-ok"></i>
-                                    ثبت اطلاعات مطب </a>
-                            </li>
+                                <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
+                                    <a href="{% url 'addClinic' %}">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                        ثبت اطلاعات مطب </a>
+                                </li>
                             {% endif %}
                         </ul>
                     </div>
@@ -108,58 +108,66 @@
                     </div>
                 </div>
             </div>
+            {{ form.as_p }}sdf
         {% else %}
             {% include "search.html" %}
         {% endif %}
 
     </div>
 
+    {% if view.selected == "manageSecretary" %}
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">منشی جدید</h4>
+                        </div>
+                        <form name="searchUserForm" method="post">
+                                {% csrf_token %}
+                            <div class="form-group">
+                            <div class="modal-body">
+                                <p>نام کاربری منشی خود را وارد کنید:</p>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-        <div class="vertical-alignment-helper">
-            <div class="modal-dialog vertical-align-center" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">منشی جدید</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>نام کاربری منشی خود را وارد کنید:</p>
-                        <form>
-                            <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+                                {{ form.username }}
+                                <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">اضافه کردن</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                            </div>
+                            </div>
                         </form>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">اضافه کردن</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
-                    </div>
-                </div><!-- /.modal-content -->
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
+    {% endif %}
 
-        {#    <div class="col-md-9">#}
-        {#        <!-- Nav tabs -->#}
-        {#        <div class="panel">#}
-        {#            <ul class="nav nav-tabs" role="tablist">#}
-        {#                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>#}
-        {#                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>#}
-        {#                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>#}
-        {#                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>#}
-        {#            </ul>#}
-        {##}
-        {#            <!-- Tab panes -->#}
-        {#            <div class="panel-body">#}
-        {#                <div class="tab-content">#}
-        {#                    <div role="tabpanel" class="tab-pane active" id="home">#}
-        {#                    تست#}
-        {#                </div>#}
-        {#                    <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>#}
-        {#                    <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>#}
-        {#                    <div role="tabpanel" class="tab-pane" id="settings">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage..</div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#    </div>#}
+    {#    <div class="col-md-9">#}
+    {#        <!-- Nav tabs -->#}
+    {#        <div class="panel">#}
+    {#            <ul class="nav nav-tabs" role="tablist">#}
+    {#                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>#}
+    {#                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>#}
+    {#                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>#}
+    {#                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>#}
+    {#            </ul>#}
+    {##}
+    {#            <!-- Tab panes -->#}
+    {#            <div class="panel-body">#}
+    {#                <div class="tab-content">#}
+    {#                    <div role="tabpanel" class="tab-pane active" id="home">#}
+    {#                    تست#}
+    {#                </div>#}
+    {#                    <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>#}
+    {#                    <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>#}
+    {#                    <div role="tabpanel" class="tab-pane" id="settings">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage..</div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
 
 {% endblock %}

@@ -93,8 +93,9 @@ class SearchDoctorView(ListView):
         return object_list
 
 
-class SecretaryPanel(LoginRequiredMixin, TemplateView):
+class SecretaryPanel(LoginRequiredMixin, FormView):
     selected = "panel"
+    form_class = SearchUserForm
     template_name = 'panel.html'
 
 

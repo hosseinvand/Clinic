@@ -88,3 +88,7 @@ class ClinicForm(ModelForm):
     class Meta:
         model = Office
         fields = '__all__'
+
+
+class SearchUserForm(forms.Form):
+    username = forms.CharField(max_length=30)
