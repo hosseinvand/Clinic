@@ -7,6 +7,7 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
+from reservation.models import Patient
 
 
 class MainPageView(TemplateView):
@@ -29,6 +30,8 @@ class SystemUserCreateView(CreateView):
         response = super(SystemUserCreateView, self).form_valid(form)
         username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
         new_user = authenticate(username=username, password=password)
+        user = User.objects.get(username=username)
+        SystemUser.objects.filter(user=user).update(role=Patient.load())
         login(self.request, new_user)
         return response
 
@@ -104,11 +107,11 @@ class AddClinicView(LoginRequiredMixin, CreateView):
     selected = "addClinic"
     model = Office
     template_name = 'panel.html'
-    success_url = reverse_lazy('mainPage')
+    success_url = reverse_lazy('panel')
     form_class = ClinicForm
 
     def form_valid(self, form):
-        response = super(CreateView, self).form_valid(form)
+        response = super(AddClinicView, self).form_valid(form)
         office = Office.objects.filter(address=form.cleaned_data['address'], phone=form.cleaned_data['phone'])[0]
         doctor = SystemUser.objects.get(user=self.request.user).role
         doctor.offices.add(office)
