@@ -1,4 +1,5 @@
 Django==1.10.4
 django-material==0.11.0
+django-polymorphic==1.0.2
 django-widget-tweaks==1.4.1
-git reset --hard
+material==0.1
