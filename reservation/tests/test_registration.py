@@ -54,7 +54,7 @@ class DoctorSignupViewTest(TestCase):
         self.client.logout()
         self.client.login(username='ahmad', password='password')
         response = self.client.get(reverse_lazy('doctorRegister'))
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_valid_new_doctor_creation(self):
         doctor_data = {
