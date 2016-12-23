@@ -87,7 +87,9 @@ class Doctor(DoctorSecretary):
 
     @property
     def city(self):
-        return self.doctor.offices.all()[0].get_city_display()
+        if self.doctor.offices.all().count() > 0:
+            return self.doctor.offices.all()[0].get_city_display()
+        return ''
 
 
 class Secretary(DoctorSecretary):
