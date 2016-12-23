@@ -13,6 +13,11 @@ class MainPageView(TemplateView):
     template_name = 'home_page.html'
     # form_class = DoctorSearchForm
 
+    def get_context_data(self, **kwargs):
+        context = super(TemplateView, self).get_context_data(**kwargs)
+        print(context.keys())
+        return context
+
 
 class SystemUserCreateView(CreateView):
     model = SystemUser
@@ -101,6 +106,13 @@ class AddClinicView(LoginRequiredMixin, CreateView):
     template_name = 'panel.html'
     success_url = reverse_lazy('mainPage')
     form_class = ClinicForm
+
+    def form_valid(self, form):
+        response = super(CreateView, self).form_valid(form)
+        office = Office.objects.filter(address=form.cleaned_data['address'], phone=form.cleaned_data['phone'])[0]
+        doctor = SystemUser.objects.get(user=self.request.user).role
+        doctor.offices.add(office)
+        return response
 
 
 class UpdateClinicView(LoginRequiredMixin, UpdateView):
