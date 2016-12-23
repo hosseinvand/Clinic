@@ -107,6 +107,13 @@ class AddClinicView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('mainPage')
     form_class = ClinicForm
 
+    def form_valid(self, form):
+        response = super(CreateView, self).form_valid(form)
+        office = Office.objects.filter(address=form.cleaned_data['address'], phone=form.cleaned_data['phone'])[0]
+        doctor = SystemUser.objects.get(user=self.request.user).role
+        doctor.offices.add(office)
+        return response
+
 
 class UpdateClinicView(LoginRequiredMixin, UpdateView):
     selected = "updateClinic"

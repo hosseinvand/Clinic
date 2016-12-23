@@ -85,6 +85,10 @@ class Doctor(DoctorSecretary):
     def full_name(self):
         return self.user_role.full_name
 
+    @property
+    def city(self):
+        return self.doctor.offices.all()[0].get_city_display()
+
 
 class Secretary(DoctorSecretary):
     pass
