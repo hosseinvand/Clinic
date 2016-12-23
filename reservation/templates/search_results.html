@@ -10,9 +10,16 @@
 
     </div>
     <div class="col-sm-10">
+        {% if not object_list %}
+            <h4>هیچ پزشکی با این نام در سیستم وجود ندارد.</h4>
+
+        {% endif %}
+
         {% for f in object_list %}
+            <div>
 {#            {% include 'widget/food.html' with food=f%}#}
-            {{ f.user.first_name }}
+            {{ f.full_name }}
+            </div>
         {% endfor %}
     </div>
 </div>

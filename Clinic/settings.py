@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'polymorphic',
     'material',
     'widget_tweaks',
     'django.contrib.admin',
