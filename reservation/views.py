@@ -3,12 +3,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+
 from reservation.forms import *
 from .forms import LoginForm
 
 
 class MainPageView(TemplateView):
     template_name = 'home_page.html'
+    # form_class = DoctorSearchForm
 
     def get_context_data(self, **kwargs):
         context = super(TemplateView, self).get_context_data(**kwargs)
@@ -60,6 +63,29 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
         doctor = Doctor.objects.get(doctor_code=form.cleaned_data['doctor_code'])
         SystemUser.objects.filter(user=self.request.user).update(role=doctor)
         return response
+
+class SearchDoctorView(ListView):
+    model = SystemUser
+    template_name = 'search_results.html' #TODO
+
+    # def get_queryset(self):
+    #     text = self.kwargs.get('searched')
+    #     ans = self.model.objects.filter(type__icontains=text) | self.model.objects.filter(name__icontains=text)
+    #     return ans
+
+    def get_queryset(self):
+        name = self.kwargs.get('searched')
+        print('name: ', name, " ")
+
+        if name is not None:
+            object_list = self.model.objects.all()
+            #TODO: return doctors which their name is 'name'
+            # user = User.objects.filter(first_name=name)
+            # object_list = self.model.objects.filter(user__icontains=user)
+        else:
+            object_list = self.model.objects.all()
+        return object_list
+
 
 
 class SecretaryPanel(LoginRequiredMixin, TemplateView):

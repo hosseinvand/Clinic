@@ -45,3 +45,22 @@ th{
 .empty-form{
     margin-top: 50px;
 }
+<<<<<<< HEAD
+
+.center-div
+{
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.blank-divider
+{
+    height: 100px;
+    width: 100%;
+}
+=======
+>>>>>>> 9889a1b7f455cc41f642975fdd377f8006adaa21
