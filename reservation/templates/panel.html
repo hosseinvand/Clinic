@@ -44,16 +44,27 @@
                                     جستجوی پزشک
                                 </a>
                             </li>
+                            {% if user.system_user.role.get_role_id == 1 %}
+                            <li>
+                                <a href="{% url 'doctorRegister' %}">
+                                    <i class="glyphicon glyphicon-log-in"></i>
+ثبت نام پزشک
+                                </a>
+                            </li>
+                            {% else %}
+                            {% if user.system_user.role.get_role_id == 3 %}
                             <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
                                 <a href="{% url 'ManageSecretary' %}">
                                     <i class="glyphicon glyphicon-user"></i>
                                     مدیریت منشی </a>
                             </li>
+                                {% endif %}
                             <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
                                 <a href="{% url 'addClinic' %}">
                                     <i class="glyphicon glyphicon-ok"></i>
                                     ثبت اطلاعات مطب </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <!-- END MENU -->

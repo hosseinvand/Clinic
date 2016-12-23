@@ -70,6 +70,10 @@ class Role(PolymorphicModel):
     def get_role_type(self):
         None
 
+    @abstractmethod
+    def get_role_id(self):
+        None
+
 
 class Patient(Role):
 
@@ -88,12 +92,18 @@ class Patient(Role):
     def get_role_type(self):
         return "بیمار"
 
+    def get_role_id(self):
+        return 1
+
 
 class DoctorSecretary(Role):
     offices = models.ManyToManyField(Office, blank=True)
 
     def get_role_type(self):
         return "منشی پزشک"
+
+    def get_role_id(self):
+        return 2
 
 
 class Doctor(DoctorSecretary):
@@ -109,6 +119,9 @@ class Doctor(DoctorSecretary):
     def get_role_type(self):
         return "پزشک"
 
+    def get_role_id(self):
+        return 3
+
     @property
     def full_name(self):
         return self.user_role.full_name
@@ -123,6 +136,9 @@ class Doctor(DoctorSecretary):
 class Secretary(DoctorSecretary):
     def get_role_type(self):
         return "منشی"
+
+    def get_role_id(self):
+        return 4
 
 
 class SystemUser(models.Model):
