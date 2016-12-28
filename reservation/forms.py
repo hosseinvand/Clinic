@@ -85,6 +85,15 @@ class DoctorRegisterForm(ModelForm):
 
 
 class ClinicForm(ModelForm):
+    WEEK_DAYS = (('sat', 'شنبه'),
+              ('sun', 'یک‌شنبه'),
+              ('mon', 'دوشنبه'),
+              ('tue', 'سه‌شنبه'),
+              ('wed', 'چهارشنبه'),
+              ('thu', 'پنج‌شنبه'),
+              ('fri','جمعه'))
+    days = forms.MultipleChoiceField(choices=WEEK_DAYS, widget=forms.CheckboxSelectMultiple())
+
     class Meta:
         model = Office
         fields = '__all__'

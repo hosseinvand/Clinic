@@ -114,7 +114,8 @@ class AddClinicView(LoginRequiredMixin, CreateView):
         response = super(AddClinicView, self).form_valid(form)
         office = Office.objects.filter(address=form.cleaned_data['address'], phone=form.cleaned_data['phone'])[0]
         doctor = SystemUser.objects.get(user=self.request.user).role
-        doctor.offices.add(office)   #TODO: change offices to office and fix ..
+        doctor.office = office   #TODO: save nemishe tuye secretarydoctor!!! ->handle
+        doctor.save()
         return response
 
 
