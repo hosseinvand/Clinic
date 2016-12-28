@@ -58,16 +58,22 @@ class DoctorSignupViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_valid_new_doctor_creation(self):
+        tmp_user = create_test_user(username='ahmad', password='password')
+        SystemUser.objects.create(user=tmp_user, id_code='123456', role=None)
+        self.client.logout()
+        self.client.login(username='ahmad', password='password')
         doctor_data = {
             'doctor_code': '123456',
             'education': 'S',
             'speciality': 'Eye',
             'insurance': 'Iran',
             'price': 35000,
-            'cv': 'maybe not the best doc in the world but the happiest one :)'
+            'cv': 'test cv test cv',
         }
         response = self.client.post(reverse_lazy('doctorRegister'), doctor_data)
+        print(response.context)
         self.assertEqual(response.status_code, 302)
+        print(Doctor.objects.all())
         self.assertTrue(Doctor.objects.filter(doctor_code=doctor_data['doctor_code']).exists())
 
     def test_invalid_new_doctor_code_already_exist(self):
@@ -77,7 +83,8 @@ class DoctorSignupViewTest(TestCase):
             'speciality': 'Eye',
             'insurance': 'Iran',
             'price': 35000,
-            'cv': 'maybe not the best doc in the world but the happiest one :)'
+            'cv': 'test cv test cv',
+            'contract': 'contracts/',
         }
         response = self.client.post(reverse_lazy('doctorRegister'), doctor_data)
         self.assertEqual(response.status_code, 302)
