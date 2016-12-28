@@ -1,7 +1,13 @@
 from abc import abstractmethod
+from unittest.test.test_result import __init__
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
+
+PATIENT_ROLE_ID = 1
+DOCTOR_SECRETARY_ROLE_ID = 2
+DOCTOR_ROLE_ID = 3
+SECRETARY_ROLE_ID = 4
 
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
@@ -55,6 +61,26 @@ CITY_NAMES=(
 
 )
 
+WEEK_DAYS = (('sat', 'شنبه'),
+              ('sun', 'یک‌شنبه'),
+              ('mon', 'دوشنبه'),
+              ('tue', 'سه‌شنبه'),
+              ('wed', 'چهارشنبه'),
+              ('thu', 'پنج‌شنبه'),
+              ('fri','جمعه'))
+
+BASE_TIMES = ((10,'10'),
+              (15,'15'),
+              (20,'20'),
+              (30,'30'),
+              (60,'60'))
+
+HOURS = [(i, i) for i in range(24)]
+
+class Time():
+    def __init__(self,hour,minute):
+        self.hour = hour
+        self.minute = minute
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
@@ -62,17 +88,22 @@ class Office(models.Model):
     address = models.TextField()
     phone = models.IntegerField()
     telegram = models.CharField(max_length=30)
+    from_hour = models.IntegerField(choices=HOURS,null=True)   #TODO: RangeIntegerField create
+    to_hour = models.IntegerField(choices=HOURS,null=True)
+    base_time = models.IntegerField(choices=BASE_TIMES, default=15)
 
+    def get_base_time(self):
+        return self.base_time
 
 class Role(PolymorphicModel):
 
     @abstractmethod
     def get_role_type(self):
-        None
+        pass
 
     @abstractmethod
     def get_role_id(self):
-        None
+        pass
 
 
 class Patient(Role):
@@ -93,17 +124,21 @@ class Patient(Role):
         return "بیمار"
 
     def get_role_id(self):
-        return 1
+        return PATIENT_ROLE_ID
 
 
 class DoctorSecretary(Role):
-    offices = models.ManyToManyField(Office, blank=True)
+    office = models.ForeignKey(Office, blank=True, null=True)
 
     def get_role_type(self):
         return "منشی پزشک"
 
     def get_role_id(self):
-        return 2
+        return DOCTOR_SECRETARY_ROLE_ID
+
+    def get_base_time(self):
+        return self.office.get_base_time()
+
 
 
 class Doctor(DoctorSecretary):
@@ -120,7 +155,7 @@ class Doctor(DoctorSecretary):
         return "پزشک"
 
     def get_role_id(self):
-        return 3
+        return DOCTOR_ROLE_ID
 
     @property
     def full_name(self):
@@ -128,9 +163,15 @@ class Doctor(DoctorSecretary):
 
     @property
     def city(self):
-        if self.doctor.offices.all().count() > 0:
-            return self.doctor.offices.all()[0].get_city_display()
+        if self.office is not None:
+            return self.office.get_city_display()
         return ''
+
+    # @property
+    # def city(self):
+    #     if self.doctor.offices.all().count() > 0:
+    #         return self.doctor.offices.all()[0].get_city_display()
+    #     return ''
 
 
 class Secretary(DoctorSecretary):
@@ -138,7 +179,7 @@ class Secretary(DoctorSecretary):
         return "منشی"
 
     def get_role_id(self):
-        return 4
+        return SECRETARY_ROLE_ID
 
 
 class SystemUser(models.Model):
@@ -149,3 +190,15 @@ class SystemUser(models.Model):
     @property
     def full_name(self):
         return '{} {}'.format(self.user.first_name, self.user.last_name)
+
+class AvailableTime(models.Model):
+    day = models.CharField(max_length=30,choices=WEEK_DAYS,default='شنبه')   #TODO: esme ruz ha bere tuye office
+    range_num = models.IntegerField()
+    doctor = models.ForeignKey(Doctor, related_name='available_times')
+
+    def num_to_range(self, num):
+        base = self.doctor.get_base_time()
+        start = Time(((num-1)*base)//60, ((num-1)*base)%60)
+        end = Time((num*base)//60, (num*base)%60)
+        return start, end
+

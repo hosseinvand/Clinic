@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='doctorsecretary',
-            name='offices',
+            name='office',
             field=models.ManyToManyField(blank=True, null=True, to='reservation.Office'),
         ),
     ]

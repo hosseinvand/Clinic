@@ -26,6 +26,7 @@ class OfficeAddTest(TestCase):
         self.client.login(username='ahmad', password='password')
         response = self.client.get(reverse_lazy('addClinic'))
         self.assertNotEqual(response.status_code, 200)
+ #TODO: change offices to office and fix ..
 
     def test_add_new_offic(self):
         office_data = {
