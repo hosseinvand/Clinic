@@ -2,6 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 
@@ -70,12 +71,7 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
 
 class SearchDoctorView(ListView):
     model = Doctor
-    template_name = 'search_results.html'  # TODO
-
-    # def get_queryset(self):
-    #     text = self.kwargs.get('searched')
-    #     ans = self.model.objects.filter(type__icontains=text) | self.model.objects.filter(name__icontains=text)
-    #     return ans
+    template_name = 'search_results.html'
 
     def get_queryset(self):
         name = self.kwargs.get('searched')
@@ -114,7 +110,8 @@ class AddClinicView(LoginRequiredMixin, CreateView):
         response = super(AddClinicView, self).form_valid(form)
         office = Office.objects.filter(address=form.cleaned_data['address'], phone=form.cleaned_data['phone'])[0]
         doctor = SystemUser.objects.get(user=self.request.user).role
-        doctor.offices.add(office)   #TODO: change offices to office and fix ..
+        doctor.office = office   #TODO: save nemishe tuye secretarydoctor!!! ->handle
+        doctor.save()
         return response
 
 
@@ -129,4 +126,6 @@ class UpdateClinicView(LoginRequiredMixin, UpdateView):
     template_name = 'panel.html'
     form_class = ClinicForm
 
-
+class DoctorProfileView(DetailView):
+    model = Doctor
+    template_name = 'doctor_profile.html'
