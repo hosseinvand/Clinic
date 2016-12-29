@@ -30,12 +30,12 @@ class SystemUserRegisterForm(ModelForm):
     def clean(self):
         cleaned_data = super(SystemUserRegisterForm, self).clean()
         if User.objects.filter(username=cleaned_data.get("username")).exists():
-            raise forms.ValidationError('Username already exists!')
+            raise forms.ValidationError('نام کاربری وارد شده پیش از این توسط شخص دیگری ثبت شده‌است!')
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError(
-                "password and confirm password does not match!"
+                "رمز عبور و تکرار رمز عبور مشابه نیست!"
             )
         return cleaned_data
 
@@ -70,11 +70,11 @@ class LoginForm(ModelForm):
         password = self.cleaned_data.get('password')
         username = self.cleaned_data.get('username')
         if not password or len(password) < 1:
-            raise forms.ValidationError("Please enter your password")
+            raise forms.ValidationError("لطفا رمز عبور خود را وارد نمایید")
 
         user = authenticate(username=username, password=password)
         if user is None:
-            raise forms.ValidationError("Your password is wrong!")
+            raise forms.ValidationError("رمز عبور شما نادرست است!")
         return cleaned_data
 
 
@@ -97,3 +97,11 @@ class ClinicForm(ModelForm):
     class Meta:
         model = Office
         fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super(ClinicForm, self).clean()
+        if Office.objects.filter(phone=cleaned_data.get("phone")).exists():
+            raise forms.ValidationError('این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!')
+        if cleaned_data.get("from_hour") > cleaned_data.get("to_hour"):
+            raise forms.ValidationError('ساعت شروع کار باید از ساعت پایان کار کمتر باشد')
+        return cleaned_data

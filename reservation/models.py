@@ -42,7 +42,7 @@ EDUCATION_TYPES=(
     ('K','کارشناسی'),
     ('UK','کارشناسی‌ارشد'),
     ('D','دکترا'),
-    ('S','تخصص'),
+    ('S','متخصص'),
     ('US','فوق تخصص'),
 )
 
@@ -86,7 +86,7 @@ class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
     city = models.CharField(max_length=30,choices=CITY_NAMES, default='تهران')
     address = models.TextField()
-    phone = models.IntegerField()
+    phone = models.CharField(max_length=11,unique=True,null=True)
     telegram = models.CharField(max_length=30,null=True)
     from_hour = models.IntegerField(choices=HOURS,null=True)   #TODO: RangeIntegerField create
     to_hour = models.IntegerField(choices=HOURS,null=True)
@@ -167,11 +167,6 @@ class Doctor(DoctorSecretary):
             return self.office.get_city_display()
         return ''
 
-    # @property
-    # def city(self):
-    #     if self.doctor.offices.all().count() > 0:
-    #         return self.doctor.offices.all()[0].get_city_display()
-    #     return ''
 
 
 class Secretary(DoctorSecretary):

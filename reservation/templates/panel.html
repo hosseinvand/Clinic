@@ -64,7 +64,14 @@
                                     <i class="glyphicon glyphicon-ok"></i>
                                     ثبت اطلاعات مطب </a>
                             </li>
+                            <li>
+                                <a href="{% url 'doctorProfile' user.system_user.role.pk %}">
+                                    <i class="glyphicon glyphicon-eye-open"></i>
+مشاهده پروفایل
+                                </a>
+                            </li>
                             {% endif %}
+
                         </ul>
                     </div>
                     <!-- END MENU -->
