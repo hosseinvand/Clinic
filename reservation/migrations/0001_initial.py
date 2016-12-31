@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AvailableTime',
+            name='ReserveTimeQuantity',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('day', models.CharField(choices=[('sat', 'شنبه'), ('sun', 'یک\u200cشنبه'), ('mon', 'دوشنبه'), ('tue', 'سه\u200cشنبه'), ('wed', 'چهارشنبه'), ('thu', 'پنج\u200cشنبه'), ('fri', 'جمعه')], default='شنبه', max_length=30)),

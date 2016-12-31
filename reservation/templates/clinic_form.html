@@ -59,15 +59,14 @@
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                        <p>
-روزهای کاری:
+                            <p>
+                                روزهای کاری:
                             </p>
-                            {% for checkbox in form.days %}
+                            {% for checkbox in form.opening_days %}
                                 <p class="text-primary">
                                     {{ checkbox.tag }} {{ checkbox.choice_label }}
                                 </p>
                             {% endfor %}
-                            {#                            {{ form.days | attr:"placeholder:روزهای کاری" | add_class:"form-control"}}#}
                         </div>
                     </div>
                 </fieldset>

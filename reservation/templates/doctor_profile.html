@@ -76,7 +76,7 @@
                             تا
                             {{ doctor.office.to_hour }}</dd>
                         <dt class="text-primary">روزهای کاری </dt>
-                        <dd> <h4 class="text-danger">انجام شود</h4> </dd>
+                        <dd> {{ doctor.office.get_opening_days_display}}</dd>
                         <dt class="text-primary">تلفن</dt>
                         <dd>{{ doctor.office.phone}}</dd>
                         <dt class="text-primary">تلگرام</dt>

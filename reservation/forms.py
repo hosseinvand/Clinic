@@ -19,14 +19,6 @@ class SystemUserRegisterForm(ModelForm):
         model = SystemUser
         fields = ['id_code']
 
-    #TODO: moved to clean method...
-    # def clean_username(self):
-    #     # print("clean_username entrance")
-    #     cleaned_data = super(SystemUserRegisterForm, self).clean()
-    #     if User.objects.filter(username=cleaned_data.get("username")).exists():
-    #         raise forms.ValidationError('Username already exists!')
-    #     return cleaned_data.get("username")
-
     def clean(self):
         cleaned_data = super(SystemUserRegisterForm, self).clean()
         if User.objects.filter(username=cleaned_data.get("username")).exists():
@@ -83,16 +75,15 @@ class DoctorRegisterForm(ModelForm):
         model = Doctor
         fields = '__all__'
 
+    def clean(self):
+        cleaned_data = super(DoctorRegisterForm, self).clean()
+        if Doctor.objects.filter(doctor_code=cleaned_data.get("doctor_code")).exists():
+            raise forms.ValidationError('شماره نظام پزشکی قبلا در سیستم ثبت شده است.')
+        if not cleaned_data.get("contract"):
+            raise forms.ValidationError('فرم قرارداد امضا شده را آپلود نمایید.')
+        return cleaned_data
 
 class ClinicForm(ModelForm):
-    WEEK_DAYS = (('sat', 'شنبه'),
-              ('sun', 'یک‌شنبه'),
-              ('mon', 'دوشنبه'),
-              ('tue', 'سه‌شنبه'),
-              ('wed', 'چهارشنبه'),
-              ('thu', 'پنج‌شنبه'),
-              ('fri','جمعه'))
-    days = forms.MultipleChoiceField(choices=WEEK_DAYS, widget=forms.CheckboxSelectMultiple())
 
     class Meta:
         model = Office
@@ -104,4 +95,19 @@ class ClinicForm(ModelForm):
             raise forms.ValidationError('این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!')
         if cleaned_data.get("from_hour") > cleaned_data.get("to_hour"):
             raise forms.ValidationError('ساعت شروع کار باید از ساعت پایان کار کمتر باشد')
+        print("opening days:", cleaned_data.get("opening_days"))
         return cleaned_data
+
+
+class DoctorSearchForm(ModelForm):
+
+    name = forms.CharField(widget=forms.TextInput,required=False)
+    max_price = forms.IntegerField(widget=forms.NumberInput, required=False)
+    city = fields_for_model(Office)['city']
+    from_hour = fields_for_model(Office)['from_hour']
+    to_hour = fields_for_model(Office)['to_hour']
+    # days = fields_for_model(Office)['opening_days']
+
+    class Meta:
+        model = Doctor
+        fields = ['education', 'speciality', 'insurance']
