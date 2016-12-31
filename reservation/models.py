@@ -68,11 +68,11 @@ WEEK_DAYS = (('sat', 'شنبه'),
               ('thu', 'پنج‌شنبه'),
               ('fri','جمعه'))
 
-BASE_TIMES = ((10,'10'),
-              (15,'15'),
-              (20,'20'),
-              (30,'30'),
-              (60,'60'))
+BASE_TIMES = ((10, '۱۰'),
+              (15, '۱۵'),
+              (20, '۲۰'),
+              (30, '۳۰'),
+              (60, '۶۰'))
 
 HOURS = [(i, i) for i in range(24)]
 
@@ -86,7 +86,7 @@ class Office(models.Model):
     city = models.CharField(max_length=30,choices=CITY_NAMES, default='تهران')
     address = models.TextField()
     phone = models.IntegerField()
-    telegram = models.CharField(max_length=30)
+    telegram = models.CharField(max_length=30,null=True)
     from_hour = models.IntegerField(choices=HOURS,null=True)   #TODO: RangeIntegerField create
     to_hour = models.IntegerField(choices=HOURS,null=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
