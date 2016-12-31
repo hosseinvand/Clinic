@@ -104,14 +104,14 @@ class Time:
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
-    city = models.CharField(max_length=30,choices=CITY_NAMES, default='تهران')
+    city = models.CharField(max_length=30,choices=CITY_NAMES, default='تهران',blank=True)
     address = models.TextField()
-    phone = models.CharField(max_length=11,unique=True,null=True)
+    phone = models.CharField(max_length=11,unique=True,null=True,blank=True)
     telegram = models.CharField(max_length=30,null=True)
-    from_hour = models.IntegerField(choices=HOURS,null=True)   #TODO: RangeIntegerField create
-    to_hour = models.IntegerField(choices=HOURS,null=True)
+    from_hour = models.IntegerField(choices=HOURS,null=True, blank=True)   #TODO: RangeIntegerField create
+    to_hour = models.IntegerField(choices=HOURS,null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
-    opening_days = MultiSelectField(choices=WEEK_DAYS,null=True)
+    opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
     def get_base_time(self):
         return self.base_time
@@ -178,11 +178,11 @@ class DoctorSecretary(Role):
 class Doctor(DoctorSecretary):
     # doctor_secretary = models.OneToOneField(DoctorSecretary, related_name="doctor")
     doctor_code = models.PositiveIntegerField(default="")
-    education = models.CharField(max_length=30,choices=EDUCATION_TYPES)
-    speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES)
-    insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES)
-    price = models.PositiveIntegerField(default="")
-    cv = models.TextField(max_length=90)
+    education = models.CharField(max_length=30,choices=EDUCATION_TYPES, blank=True)
+    speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES, blank=True)
+    insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES, blank=True)
+    price = models.PositiveIntegerField(default="", blank=True)
+    cv = models.TextField(max_length=90, blank=True)
     contract = models.FileField(upload_to="contracts/")
 
     def get_role_type(self):

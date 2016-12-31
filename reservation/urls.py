@@ -12,8 +12,9 @@ urlpatterns = [
     url(r'^logout/$', logout, {'next_page': reverse_lazy('mainPage')}),
     url(r'^register/$', SystemUserCreateView.as_view(), name='register'),
     url(r'^register/doctor$', DoctorCreateView.as_view(), name='doctorRegister'),
-    url(r'^search/(?P<searched>.*)/$', SearchDoctorView.as_view(), name='searchResult'),
+    # url(r'^search/(?P<searched>.*)/$', SearchDoctorView.as_view(), name='searchResult'),
 
+    url(r'^search_results/$', SearchDoctorView.as_view(), name='searchResult'),
 
     url(r'^panel/$', SecretaryPanel.as_view(), name="panel"),
     url(r'^panel/secretary/$', ManageSecretary.as_view(), name="ManageSecretary"),
