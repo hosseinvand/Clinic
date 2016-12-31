@@ -1,5 +1,8 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http.response import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
@@ -8,11 +11,12 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
-from reservation.models import Patient
+from reservation.models import Patient, Secretary, SECRETARY_ROLE_ID, PATIENT_ROLE_ID
 
 
 class MainPageView(TemplateView):
     template_name = 'home_page.html'
+
     # form_class = DoctorSearchForm
 
     def get_context_data(self, **kwargs):
@@ -76,14 +80,14 @@ class SearchDoctorView(ListView):
     def get_queryset(self):
         name = self.kwargs.get('searched')
         print('name: ', name, " ")
-        object_list=self.model.objects.all()
+        object_list = self.model.objects.all()
         if name:
             words = name.split()
             for word in words:
                 tmp_list = self.model.objects.filter(
                     user_role__user__first_name__icontains=word) | self.model.objects.filter(
                     user_role__user__last_name__icontains=word)
-                object_list = list(set(object_list)&set(tmp_list))
+                object_list = list(set(object_list) & set(tmp_list))
                 # TODO: return doctors which their name is 'name'
         print(object_list)
         return object_list
@@ -94,9 +98,54 @@ class SecretaryPanel(LoginRequiredMixin, TemplateView):
     template_name = 'panel.html'
 
 
-class ManageSecretary(LoginRequiredMixin, TemplateView):
+class ManageSecretary(LoginRequiredMixin, ListView):
     selected = "manageSecretary"
+    model = Secretary
     template_name = 'panel.html'
+
+    def get_queryset(self):
+        object_list = self.model.objects.filter(office=self.request.user.system_user.role.office)
+        return object_list
+
+    def getSystemUserByUsername(self, username):
+        try:
+            return User.objects.get(username=username).system_user
+        except User.DoesNotExist:
+            return None
+
+    def post(self, request, *args, **kwargs):
+        secretary_username = request.POST.get('username')
+        secretary_user = self.getSystemUserByUsername(secretary_username)
+
+        if not secretary_user:
+            return HttpResponse("خطا! منشی وجود ندارد.")
+
+        if self.entered_username_can_become_secretary(secretary_user):
+            print("cannn")
+            office = request.user.system_user.role.office
+            secretary_role = Secretary(office=office)
+            secretary_role.save()
+            secretary_user.role = secretary_role
+            secretary_user.save()
+        return redirect(reverse_lazy("ManageSecretary"))
+
+    def entered_username_can_become_secretary(self, secretary_user):
+        print(secretary_user.role.get_role_id())
+        return secretary_user.role.get_role_id() == PATIENT_ROLE_ID
+
+
+@login_required
+def deleteSecretary(request):
+    # office = request.user.system_user.role.office
+    # TODO don't allow user to delete secretary of other doctors
+    username = request.POST.get('username', None)
+    user = User.objects.get(username=username).system_user
+    user.role.delete()
+    patient_role = Patient()
+    patient_role.save()
+    user.role = patient_role
+    user.save()
+    return JsonResponse({})
 
 
 class AddClinicView(LoginRequiredMixin, CreateView):
@@ -110,7 +159,7 @@ class AddClinicView(LoginRequiredMixin, CreateView):
         response = super(AddClinicView, self).form_valid(form)
         office = Office.objects.filter(address=form.cleaned_data['address'], phone=form.cleaned_data['phone'])[0]
         doctor = SystemUser.objects.get(user=self.request.user).role
-        doctor.office = office   #TODO: save nemishe tuye secretarydoctor!!! ->handle
+        doctor.office = office  # TODO: save nemishe tuye secretarydoctor!!! ->handle
         doctor.save()
         return response
 
@@ -129,3 +178,4 @@ class UpdateClinicView(LoginRequiredMixin, UpdateView):
 class DoctorProfileView(DetailView):
     model = Doctor
     template_name = 'doctor_profile.html'
+

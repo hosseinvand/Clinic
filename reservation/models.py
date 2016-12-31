@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from unittest.test.test_result import __init__
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
@@ -139,6 +138,20 @@ class DoctorSecretary(Role):
     def get_base_time(self):
         return self.office.get_base_time()
 
+    @property
+    def full_name(self):
+        return self.user_role.full_name
+
+    @property
+    def username(self):
+        return self.user_role.username
+
+    @property
+    def city(self):
+        if self.office is not None:
+            return self.office.get_city_display()
+        return ''
+
 
 
 class Doctor(DoctorSecretary):
@@ -157,18 +170,6 @@ class Doctor(DoctorSecretary):
     def get_role_id(self):
         return DOCTOR_ROLE_ID
 
-    @property
-    def full_name(self):
-        return self.user_role.full_name
-
-    @property
-    def city(self):
-        if self.office is not None:
-            return self.office.get_city_display()
-        return ''
-
-
-
 class Secretary(DoctorSecretary):
     def get_role_type(self):
         return "منشی"
@@ -185,6 +186,10 @@ class SystemUser(models.Model):
     @property
     def full_name(self):
         return '{} {}'.format(self.user.first_name, self.user.last_name)
+
+    @property
+    def username(self):
+        return self.user.username
 
 class AvailableTime(models.Model):
     day = models.CharField(max_length=30,choices=WEEK_DAYS,default='شنبه')   #TODO: esme ruz ha bere tuye office
