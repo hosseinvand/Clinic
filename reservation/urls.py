@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.views import logout
 
+from reservation import views
 from reservation.views import *
 
 __author__ = 'mohre'
@@ -16,6 +17,7 @@ urlpatterns = [
 
     url(r'^panel/$', SecretaryPanel.as_view(), name="panel"),
     url(r'^panel/secretary/$', ManageSecretary.as_view(), name="ManageSecretary"),
+    url(r'^ajax/delete_secretary/$', views.deleteSecretary, name='deleteSecretary'),
     url(r'^panel/clinic/$', AddClinicView.as_view(), name="addClinic"),
     url(r'^panel/search$', PanelSearch.as_view(), name="panelSearch"),
     url(r'^clinic/(?P<pk>\d+)$', UpdateClinicView.as_view(), name="updateClinic"),

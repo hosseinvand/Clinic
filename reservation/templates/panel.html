@@ -45,25 +45,25 @@
                                 </a>
                             </li>
                             {% if user.system_user.role.get_role_id == 1 %}
-                            <li>
-                                <a href="{% url 'doctorRegister' %}">
-                                    <i class="glyphicon glyphicon-log-in"></i>
-ثبت نام پزشک
-                                </a>
-                            </li>
+                                <li>
+                                    <a href="{% url 'doctorRegister' %}">
+                                        <i class="glyphicon glyphicon-log-in"></i>
+                                        ثبت نام پزشک
+                                    </a>
+                                </li>
                             {% else %}
-                            {% if user.system_user.role.get_role_id == 3 %}
-                            <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
-                                <a href="{% url 'ManageSecretary' %}">
-                                    <i class="glyphicon glyphicon-user"></i>
-                                    مدیریت منشی </a>
-                            </li>
+                                {% if user.system_user.role.get_role_id == 3 %}
+                                    <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
+                                        <a href="{% url 'ManageSecretary' %}">
+                                            <i class="glyphicon glyphicon-user"></i>
+                                            مدیریت منشی </a>
+                                    </li>
                                 {% endif %}
-                            <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
-                                <a href="{% url 'addClinic' %}">
-                                    <i class="glyphicon glyphicon-ok"></i>
-                                    ثبت اطلاعات مطب </a>
-                            </li>
+                                <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
+                                    <a href="{% url 'addClinic' %}">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                        ثبت اطلاعات مطب </a>
+                                </li>
                             {% endif %}
                         </ul>
                     </div>
@@ -83,7 +83,8 @@
                     <div class="panel-body" data-toggle="modal" data-target="#myModal">
                         <div class="media">
                             <div class="media-left">
-                                <img class="media-object img-circle profile-img" src="{% static "image/add-secretary.jpg" %}">
+                                <img class="media-object img-circle profile-img"
+                                     src="{% static "image/add-secretary.jpg" %}">
                             </div>
                             <div class="media-body">
                                 <h2 class="center"> منشی جدید</h2>
@@ -92,22 +93,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="panel">
-                    <div class="panel-body">
-                        <div class="media">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <div class="media-left">
-                                <img class="media-object img-circle profile-img" src="{% static "image/avatar.png" %}">
-                            </div>
-                            <div class="media-body">
-                                <h2 class="center">سلام</h2>
-                                <div class="mail"><a href="mailto:daniel@bla.ch">daniel@bla.ch</a> </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% for f in object_list %}
+                {% include 'secretary_card.html' with secretary=f %}
+            {% endfor %}
         {% else %}
             {% include "search.html" %}
         {% endif %}
@@ -120,13 +108,15 @@
             <div class="modal-dialog vertical-align-center" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">منشی جدید</h4>
                     </div>
                     <div class="modal-body">
                         <p>نام کاربری منشی خود را وارد کنید:</p>
                         <form method="post"> {% csrf_token %}
-                            <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+                            <input id="name" name="username" type="text" class="form-control input-lg text-primary"
+                                   placeholder="جست و جو در بین کاربران...">
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">اضافه کردن</button>
