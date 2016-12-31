@@ -59,17 +59,23 @@
                                             مدیریت منشی </a>
                                     </li>
                                 {% endif %}
-                            <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
-                                <a href="{% url 'addClinic' %}">
-                                    <i class="glyphicon glyphicon-ok"></i>
-                                    ثبت اطلاعات مطب </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'doctorProfile' user.system_user.role.pk %}">
-                                    <i class="glyphicon glyphicon-eye-open"></i>
-مشاهده پروفایل
-                                </a>
-                            </li>
+                                <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
+                                    <a href="{% url 'addClinic' %}">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                        ثبت اطلاعات مطب </a>
+                                </li>
+                                <li {% if view.selected == "updateClinic" %}class="active"{% endif %}>
+                                    <a href="{% url 'updateClinic' %}">
+                                        <i class="glyphicon glyphicon-edit"></i>
+                                        ویرایش اطلاعات مطب
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'doctorProfile' user.system_user.role.pk %}">
+                                        <i class="glyphicon glyphicon-eye-open"></i>
+                                        مشاهده پروفایل
+                                    </a>
+                                </li>
                             {% endif %}
 
                         </ul>
@@ -84,6 +90,7 @@
         {% if view.selected == "addClinic" %}
             {% include "clinic_form.html" %}
         {% elif view.selected == "updateClinic" %}
+            {% include "clinic_form.html" %}
         {% elif view.selected == "manageSecretary" %}
             <div class="col-md-6">
                 <div class="panel">

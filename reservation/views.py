@@ -12,7 +12,7 @@ from django.views.generic.list import ListView
 from reservation.forms import *
 from .forms import LoginForm
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
-from reservation.tests.mixins import PatientRequiredMixin
+from reservation.tests.mixins import PatientRequiredMixin, DoctorRequiredMixin
 
 
 class MainPageView(TemplateView):
@@ -170,11 +170,14 @@ class PanelSearch(LoginRequiredMixin, TemplateView):
     template_name = 'panel.html'
 
 
-class UpdateClinicView(LoginRequiredMixin, UpdateView):
+class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
     selected = "updateClinic"
     model = Office
     template_name = 'panel.html'
     form_class = ClinicForm
+
+    def get_object(self):
+        return SystemUser.objects.get(user=self.request.user).role.office
 
 
 class DoctorProfileView(DetailView):
