@@ -1,13 +1,24 @@
 from abc import abstractmethod
-from unittest.test.test_result import __init__
+from random import choice
+
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
+from multiselectfield import MultiSelectField
 
 PATIENT_ROLE_ID = 1
 DOCTOR_SECRETARY_ROLE_ID = 2
 DOCTOR_ROLE_ID = 3
 SECRETARY_ROLE_ID = 4
+
+SATURDAY = 'sat'
+SUNDAY = 'sun'
+MONDAY = 'mon'
+TUESDAY = 'tue'
+WEDNESDAY = 'wed'
+THURSDAY = 'thu'
+FRIDAY = 'fri'
+
 
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
@@ -61,13 +72,13 @@ CITY_NAMES=(
 
 )
 
-WEEK_DAYS = (('sat', 'شنبه'),
-              ('sun', 'یک‌شنبه'),
-              ('mon', 'دوشنبه'),
-              ('tue', 'سه‌شنبه'),
-              ('wed', 'چهارشنبه'),
-              ('thu', 'پنج‌شنبه'),
-              ('fri','جمعه'))
+WEEK_DAYS = ((SATURDAY, 'شنبه'),
+             (SUNDAY, 'یک‌شنبه'),
+             (MONDAY, 'دوشنبه'),
+             (TUESDAY, 'سه‌شنبه'),
+             (WEDNESDAY, 'چهارشنبه'),
+             (THURSDAY, 'پنج‌شنبه'),
+             (FRIDAY,'جمعه'))
 
 BASE_TIMES = ((10, '۱۰'),
               (15, '۱۵'),
@@ -77,10 +88,19 @@ BASE_TIMES = ((10, '۱۰'),
 
 HOURS = [(i, i) for i in range(24)]
 
-class Time():
-    def __init__(self,hour,minute):
+class Time:
+    def __init__(self, hour, minute):
         self.hour = hour
         self.minute = minute
+
+    def get_hour(self):
+        return self.hour
+
+    def get_minute(self):
+        return self.minute
+
+    def get_display_time(self):
+        return '{} : {}'.format(self.hour, self.minute)
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
@@ -91,6 +111,7 @@ class Office(models.Model):
     from_hour = models.IntegerField(choices=HOURS,null=True)   #TODO: RangeIntegerField create
     to_hour = models.IntegerField(choices=HOURS,null=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
+    opening_days = MultiSelectField(choices=WEEK_DAYS,null=True)
 
     def get_base_time(self):
         return self.base_time
@@ -186,14 +207,17 @@ class SystemUser(models.Model):
     def full_name(self):
         return '{} {}'.format(self.user.first_name, self.user.last_name)
 
-class AvailableTime(models.Model):
-    day = models.CharField(max_length=30,choices=WEEK_DAYS,default='شنبه')   #TODO: esme ruz ha bere tuye office
+
+class ReserveTimeQuantity(models.Model):
     range_num = models.IntegerField()
     doctor = models.ForeignKey(Doctor, related_name='available_times')
 
-    def num_to_range(self, num):
+    def get_range(self, num):
         base = self.doctor.get_base_time()
         start = Time(((num-1)*base)//60, ((num-1)*base)%60)
         end = Time((num*base)//60, (num*base)%60)
         return start, end
 
+    def is_in_doctor_available_times(self):
+        #TODO: check whether between start and end of doctor working hour or not
+        pass
