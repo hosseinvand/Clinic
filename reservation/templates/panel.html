@@ -125,14 +125,15 @@
                     </div>
                     <div class="modal-body">
                         <p>نام کاربری منشی خود را وارد کنید:</p>
-                        <form>
+                        <form method="post"> {% csrf_token %}
                             <input id="name" type="text" class="form-control input-lg text-primary" placeholder="جست و جو در بین کاربران...">
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">اضافه کردن</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                            </div>
                         </form>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">اضافه کردن</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

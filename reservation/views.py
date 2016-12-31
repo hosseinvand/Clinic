@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http.response import HttpResponse
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.edit import FormView
@@ -101,6 +102,20 @@ class SecretaryPanel(LoginRequiredMixin, TemplateView):
 class ManageSecretary(LoginRequiredMixin, TemplateView):
     selected = "manageSecretary"
     template_name = 'panel.html'
+
+    def post(self, request, *args, **kwargs):
+        secretary_username = self.kwargs.get('name')
+        office = request.user.system_user.role.office
+        print(secretary_username)
+        print(office)
+        print(dir(office))
+        #step 1: get doctor's office
+        #step 2: get SysUser of secretary
+        #step 3: assign new role to secretary
+        #step 4: add office to secretary
+        return HttpResponse("salam")
+
+
 
 
 class AddClinicView(LoginRequiredMixin, CreateView):

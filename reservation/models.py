@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from unittest.test.test_result import __init__
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
