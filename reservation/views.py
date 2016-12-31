@@ -174,6 +174,7 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
     selected = "updateClinic"
     model = Office
     template_name = 'panel.html'
+    success_url = reverse_lazy('panel')
     form_class = ClinicForm
 
     def get_object(self):
