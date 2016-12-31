@@ -153,7 +153,6 @@ class DoctorSecretary(Role):
         return ''
 
 
-
 class Doctor(DoctorSecretary):
     # doctor_secretary = models.OneToOneField(DoctorSecretary, related_name="doctor")
     doctor_code = models.PositiveIntegerField(default="")
@@ -170,6 +169,7 @@ class Doctor(DoctorSecretary):
     def get_role_id(self):
         return DOCTOR_ROLE_ID
 
+
 class Secretary(DoctorSecretary):
     def get_role_type(self):
         return "منشی"
@@ -180,7 +180,7 @@ class Secretary(DoctorSecretary):
 
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
-    id_code = models.CharField(max_length=10,  default="")  # min_length=10
+    id_code = models.CharField(max_length=10, unique=True, default="")  # min_length=10
     role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
 
     @property
@@ -190,6 +190,7 @@ class SystemUser(models.Model):
     @property
     def username(self):
         return self.user.username
+
 
 class AvailableTime(models.Model):
     day = models.CharField(max_length=30,choices=WEEK_DAYS,default='شنبه')   #TODO: esme ruz ha bere tuye office

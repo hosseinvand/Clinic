@@ -11,7 +11,8 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
-from reservation.models import Patient, Secretary, SECRETARY_ROLE_ID, PATIENT_ROLE_ID
+from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
+from reservation.tests.mixins import PatientRequiredMixin
 
 
 class MainPageView(TemplateView):
@@ -59,7 +60,7 @@ class SystemUserLoginView(FormView):
         return context
 
 
-class DoctorCreateView(LoginRequiredMixin, CreateView):
+class DoctorCreateView(LoginRequiredMixin, PatientRequiredMixin, CreateView):
     model = Doctor
     template_name = 'doctor_register.html'
     success_url = reverse_lazy('mainPage')
@@ -174,6 +175,7 @@ class UpdateClinicView(LoginRequiredMixin, UpdateView):
     model = Office
     template_name = 'panel.html'
     form_class = ClinicForm
+
 
 class DoctorProfileView(DetailView):
     model = Doctor
