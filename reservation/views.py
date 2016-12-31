@@ -1,19 +1,21 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.test.runner import filter_tests_by_tags
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+import sys
 
 from reservation.forms import *
 from .forms import LoginForm
 from reservation.models import Patient
 
 
-class MainPageView(TemplateView):
+class MainPageView(TemplateView, FormView):
     template_name = 'home_page.html'
-    # form_class = DoctorSearchForm
+    form_class = DoctorSearchForm
 
     def get_context_data(self, **kwargs):
         context = super(MainPageView, self).get_context_data(**kwargs)
@@ -69,25 +71,68 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
         return response
 
 
-class SearchDoctorView(ListView):
+class SearchDoctorView(ListView, FormView):
     model = Doctor
     template_name = 'search_results.html'
+    form_class = DoctorSearchForm
+
+    def __init__(self):
+        super(SearchDoctorView, self).__init__()
+        self.object_list = None
+
+    def get_initial(self):
+        initial = super(SearchDoctorView, self).get_initial()
+        field_list = self.request.GET
+        for field in field_list:
+            initial[field] = self.request.GET.get(field, '')
+        return initial
 
     def get_queryset(self):
-        name = self.kwargs.get('searched')
+        self.object_list = self.model.objects.all()
+        # filter by name
+        name = self.request.GET.get('name', '')
         print('name: ', name, " ")
-        object_list=self.model.objects.all()
         if name:
             words = name.split()
             for word in words:
-                tmp_list = self.model.objects.filter(
-                    user_role__user__first_name__icontains=word) | self.model.objects.filter(
+                tmp_list = self.object_list.filter(user_role__user__first_name__icontains=word) | self.object_list.filter(
                     user_role__user__last_name__icontains=word)
-                object_list = list(set(object_list)&set(tmp_list))
-                # TODO: return doctors which their name is 'name'
-        print(object_list)
-        return object_list
+                self.object_list = list(set(self.object_list)&set(tmp_list))
 
+        # filter by city
+        city = self.request.GET.get('city', '')
+        if city:
+            self.object_list = self.object_list.filter(office__city__icontains=city)
+
+        # filter by education
+        edu = self.request.GET.get('education', '')
+        if edu:
+            self.object_list = self.object_list.filter(education__icontains=edu)
+
+        # filter by speciality
+        spec = self.request.GET.get('speciality', '')
+        if spec:
+            self.object_list = self.object_list.filter(speciality__icontains=spec)
+
+        # filter by max price
+        max_price = self.request.GET.get('max_price', '')
+        if max_price:
+            self.object_list = self.object_list.filter(price__lte=max_price)
+
+        # filter by insurance
+        ins = self.request.GET.get('insurance', '')
+        if ins:
+            self.object_list = self.object_list.filter(insurance__icontains=ins)
+
+        # filter by opening time
+        from_h = self.request.GET.get('from_hour', '')
+        to_h = self.request.GET.get('to_hour', '')
+        if from_h:
+            self.object_list = self.object_list.filter(office__to_hour__gte=from_h)
+        if to_h:
+            self.object_list = self.object_list.filter(office__from_hour__lte=to_h)
+
+        return self.object_list
 
 class SecretaryPanel(LoginRequiredMixin, TemplateView):
     selected = "panel"
