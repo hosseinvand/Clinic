@@ -95,6 +95,16 @@ class ClinicForm(ModelForm):
                 'required': "شما باید حداقل یک روز هفته را انتخاب کنید."
             },
         }
+        labels = {
+            'city': "شهر",
+            'address': "آدرس",
+            'phone': "تلفن",
+            'telegram': "کانال تلگرام",
+            'from_hour': "از",
+            'to_hour': "تا",
+            'base_time': "مدت زمان ویزیت هر بیمار(دقیقه)",
+            'opening_days': "روزهای کاری",
+        }
 
     def clean(self):
         cleaned_data = super(ClinicForm, self).clean()

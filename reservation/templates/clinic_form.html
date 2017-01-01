@@ -20,22 +20,22 @@
                 <fieldset>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            {{ form.city | attr:"placeholder:شهر"| attr:"required:required" | add_class:"form-control"}}
+                            {% render_field form.city placeholder=form.city.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            {{ form.address | attr:"placeholder:آدرس" | attr:"required:required"| add_class:"form-control"}}
+                            {% render_field form.address placeholder=form.address.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            {{ form.phone | attr:"placeholder:تلفن" | attr:"required:required" | add_class:"form-control"}}
+                            {% render_field form.phone placeholder=form.phone.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            {{ form.telegram | attr:"placeholder:کانال تلگرام" | add_class:"form-control"}}
+                            {% render_field form.telegram placeholder=form.telegram.label class="form-control" %}
                         </div>
                     </div>
                 </fieldset>
@@ -50,27 +50,25 @@
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            از
-                            {{ form.from_hour | attr:"placeholder:از" | attr:"required:required" | add_class:"form-control"}}
+                            {{ form.from_hour.label_tag }}
+                            {% render_field form.from_hour placeholder=form.from_hour.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            تا
-                            {{ form.to_hour | attr:"placeholder:تا" | add_class:"form-control"}}
+                            {{ form.to_hour.label_tag }}
+                            {% render_field form.to_hour placeholder=form.to_hour.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            مدت زمان ویزیت هر بیمار(دقیقه)
-                            {{ form.base_time | attr:"placeholder:مدت زمان ویزیت هر بیمار(دقیقه)" | add_class:"form-control"}}
+                            {{ form.base_time.label_tag }}
+                            {% render_field form.base_time placeholder=form.base_time.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
-                            <p>
-                                روزهای کاری:
-                            </p>
+                            {{ form.opening_days.label_tag }}
                             {% for checkbox in form.opening_days %}
                                 <p class="text-primary">
                                     {{ checkbox.tag }} {{ checkbox.choice_label }}
