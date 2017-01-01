@@ -50,11 +50,11 @@ SPECIALITY_TYPES = (
 )
 
 EDUCATION_TYPES=(
-    ('K','کارشناسی'),
-    ('UK','کارشناسی‌ارشد'),
-    ('D','دکترا'),
-    ('S','متخصص'),
-    ('US','فوق تخصص'),
+    ('K', 'کارشناسی'),
+    ('UK', 'کارشناسی‌ارشد'),
+    ('D', 'دکترا'),
+    ('S', 'متخصص'),
+    ('US', 'فوق تخصص'),
 )
 
 CITY_NAMES=(
@@ -62,13 +62,13 @@ CITY_NAMES=(
     ('Isfahan', 'اصفهان'),
     ('Mahshad', 'مشهد'),
     ('Yazd', 'یزد'),
-    ('Kerman','کرمان'),
-    ('Rasht','رشت'),
-    ('Zanjan','زنجان'),
-    ('Qazvin','قزوین'),
-    ('Qom','قم'),
-    ('Hamedan','همدان'),
-    ('Karaj','کرج')
+    ('Kerman', 'کرمان'),
+    ('Rasht', 'رشت'),
+    ('Zanjan', 'زنجان'),
+    ('Qazvin', 'قزوین'),
+    ('Qom', 'قم'),
+    ('Hamedan', 'همدان'),
+    ('Karaj', 'کرج')
 
 )
 
@@ -78,7 +78,7 @@ WEEK_DAYS = ((SATURDAY, 'شنبه'),
              (TUESDAY, 'سه‌شنبه'),
              (WEDNESDAY, 'چهارشنبه'),
              (THURSDAY, 'پنج‌شنبه'),
-             (FRIDAY,'جمعه'))
+             (FRIDAY, 'جمعه'))
 
 BASE_TIMES = ((10, '۱۰'),
               (15, '۱۵'),
@@ -87,6 +87,7 @@ BASE_TIMES = ((10, '۱۰'),
               (60, '۶۰'))
 
 HOURS = [(i, i) for i in range(24)]
+
 
 class Time:
     def __init__(self, hour, minute):
@@ -102,19 +103,22 @@ class Time:
     def get_display_time(self):
         return '{} : {}'.format(self.hour, self.minute)
 
+
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
-    city = models.CharField(max_length=30,choices=CITY_NAMES, default='تهران',blank=True)
+    city = models.CharField(max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
     address = models.TextField()
-    phone = models.CharField(max_length=11,unique=True,null=True,blank=True)
-    telegram = models.CharField(max_length=30,null=True)
-    from_hour = models.IntegerField(choices=HOURS,null=True, blank=True)   #TODO: RangeIntegerField create
-    to_hour = models.IntegerField(choices=HOURS,null=True, blank=True)
+    phone = models.CharField(max_length=11, unique=True, null=True, blank=True,
+                             error_messages={'unique': "این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!"})
+    telegram = models.CharField(max_length=30, null=True)
+    from_hour = models.IntegerField(choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
+    to_hour = models.IntegerField(choices=HOURS, null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
     def get_base_time(self):
         return self.base_time
+
 
 class Role(PolymorphicModel):
 
@@ -195,6 +199,7 @@ class Doctor(DoctorSecretary):
     def full_name(self):
         return self.user_role.full_name
 
+
 class Secretary(DoctorSecretary):
     def get_role_type(self):
         return "منشی"
@@ -215,7 +220,6 @@ class SystemUser(models.Model):
     @property
     def username(self):
         return self.user.username
-
 
 
 class ReserveTimeQuantity(models.Model):

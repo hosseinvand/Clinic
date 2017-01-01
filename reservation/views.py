@@ -3,13 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
-from django.test.runner import filter_tests_by_tags
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-import sys
 
 from reservation.forms import *
 from .forms import LoginForm
@@ -222,7 +220,7 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
     success_url = reverse_lazy('panel')
     form_class = ClinicForm
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return SystemUser.objects.get(user=self.request.user).role.office
 
 

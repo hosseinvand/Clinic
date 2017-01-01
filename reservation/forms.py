@@ -71,6 +71,7 @@ class LoginForm(ModelForm):
 
 
 class DoctorRegisterForm(ModelForm):
+
     class Meta:
         model = Doctor
         fields = '__all__'
@@ -83,16 +84,20 @@ class DoctorRegisterForm(ModelForm):
             raise forms.ValidationError('فرم قرارداد امضا شده را آپلود نمایید.')
         return cleaned_data
 
+
 class ClinicForm(ModelForm):
 
     class Meta:
         model = Office
         fields = '__all__'
+        error_messages = {
+            'opening_days': {
+                'required': "شما باید حداقل یک روز هفته را انتخاب کنید."
+            },
+        }
 
     def clean(self):
         cleaned_data = super(ClinicForm, self).clean()
-        if Office.objects.filter(phone=cleaned_data.get("phone")).exists():
-            raise forms.ValidationError('این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!')
         if cleaned_data.get("from_hour") > cleaned_data.get("to_hour"):
             raise forms.ValidationError('ساعت شروع کار باید از ساعت پایان کار کمتر باشد')
         print("opening days:", cleaned_data.get("opening_days"))
