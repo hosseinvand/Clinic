@@ -12,7 +12,7 @@ from django.views.generic.list import ListView
 from reservation.forms import *
 from .forms import LoginForm
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
-from reservation.tests.mixins import PatientRequiredMixin, DoctorRequiredMixin
+from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin
 
 
 class MainPageView(TemplateView, FormView):
@@ -92,48 +92,52 @@ class SearchDoctorView(ListView, FormView):
 
     def get_queryset(self):
         self.object_list = self.model.objects.all()
+        print("object list: ", self.object_list)
+        print("params: ", self.request.GET)
         # filter by name
         name = self.request.GET.get('name', '')
-        print('name: ', name, " ")
         if name:
             words = name.split()
+            print('words: ', words)
             for word in words:
-                tmp_list = self.object_list.filter(user_role__user__first_name__icontains=word) | self.object_list.filter(
+                self.object_list = self.object_list.filter(user_role__user__first_name__icontains=word) | self.object_list.filter(
                     user_role__user__last_name__icontains=word)
-                self.object_list = list(set(self.object_list)&set(tmp_list))
 
         # filter by city
         city = self.request.GET.get('city', '')
         if city:
-            self.object_list = self.object_list.filter(office__city__icontains=city)
+            self.object_list = self.object_list.filter(office__city__iexact=city)
 
         # filter by education
         edu = self.request.GET.get('education', '')
         if edu:
-            self.object_list = self.object_list.filter(education__icontains=edu)
+            self.object_list = self.object_list.filter(education__iexact=edu)
 
         # filter by speciality
         spec = self.request.GET.get('speciality', '')
         if spec:
-            self.object_list = self.object_list.filter(speciality__icontains=spec)
+            self.object_list = self.object_list.filter(speciality__iexact=spec)
 
         # filter by max price
         max_price = self.request.GET.get('max_price', '')
         if max_price:
+            max_price = int(max_price)
             self.object_list = self.object_list.filter(price__lte=max_price)
 
         # filter by insurance
         ins = self.request.GET.get('insurance', '')
         if ins:
-            self.object_list = self.object_list.filter(insurance__icontains=ins)
+            self.object_list = self.object_list.filter(insurance__iexact=ins)
 
         # filter by opening time
         from_h = self.request.GET.get('from_hour', '')
         to_h = self.request.GET.get('to_hour', '')
         if from_h:
-            self.object_list = self.object_list.filter(office__to_hour__gte=from_h)
+            from_h = int(from_h)
+            self.object_list = self.object_list.filter(office__to_hour__gt=from_h)
         if to_h:
-            self.object_list = self.object_list.filter(office__from_hour__lte=to_h)
+            to_h = int(to_h)
+            self.object_list = self.object_list.filter(office__from_hour__lt=to_h)
 
         return self.object_list
 

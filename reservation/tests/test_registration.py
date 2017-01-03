@@ -12,6 +12,7 @@ def create_test_doctor(doctor_code, username, password):
     user = create_test_user(username=username, password=password)
     doctor = Doctor.objects.create(doctor_code=doctor_code, education='S', speciality='Jarahi', insurance='Iran', price=35000, cv='maybe not the best doc in the world but the happiest one :)', contract='contracts/')
     return SystemUser.objects.create(user=user, id_code='123456', role=doctor)
+    # TODO test uniqueness of id_code
 
 class OfficeAddTest(TestCase):
     def test_page_status_for_anonymous_user(self):
