@@ -181,7 +181,7 @@ class DoctorSecretary(Role):
 
 class Doctor(DoctorSecretary):
     # doctor_secretary = models.OneToOneField(DoctorSecretary, related_name="doctor")
-    doctor_code = models.PositiveIntegerField(default="")
+    doctor_code = models.PositiveIntegerField(default="", unique=True, error_messages={'unique': "این شماره نظام پزشکی برای پزشک دیگری ثبت شده است."})
     education = models.CharField(max_length=30,choices=EDUCATION_TYPES, blank=True)
     speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES, blank=True)
     insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES, blank=True)

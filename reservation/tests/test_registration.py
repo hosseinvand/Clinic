@@ -1,18 +1,13 @@
+import os
+
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse_lazy
 
 from reservation.models import SystemUser, INSURANCE_TYPES, Doctor
+from reservation.tests.test_utils import create_test_doctor, create_test_user, create_test_system_user
 
-def create_test_user(username, password):
-    return User.objects.create_user(username=username, email='ahmad@gmail.com', password=password,
-                             first_name='ahmad', last_name='ahmad')
-
-def create_test_doctor(doctor_code, username, password):
-    user = create_test_user(username=username, password=password)
-    doctor = Doctor.objects.create(doctor_code=doctor_code, education='S', speciality='Jarahi', insurance='Iran', price=35000, cv='maybe not the best doc in the world but the happiest one :)', contract='contracts/')
-    return SystemUser.objects.create(user=user, id_code='123456', role=doctor)
-    # TODO test uniqueness of id_code
 
 class OfficeAddTest(TestCase):
     def test_page_status_for_anonymous_user(self):
@@ -45,53 +40,38 @@ class OfficeAddTest(TestCase):
 
 
 class DoctorSignupViewTest(TestCase):
-    def test_page_status_for_anonymous_user(self):
-        self.client.logout()
-        response = self.client.get(reverse_lazy('doctorRegister'))
-        self.assertNotEqual(response.status_code, 200)
+    doctor_data = {
+        'doctor_code': 123456,
+        'education': 'S',
+        'speciality': 'Eye',
+        'insurance': 'Iran',
+        'price': 35000,
+        'cv': 'test cv test cv',
+        'contract': 'contracts/chi.jpg',
+    }
 
-    def test_page_status_for_non_doctor_user(self):
-        tmp_user = create_test_user(username='ahmad', password='password')
-        SystemUser.objects.create(user=tmp_user, id_code='123456', role=None)
-        self.client.logout()
-        self.client.login(username='ahmad', password='password')
-        response = self.client.get(reverse_lazy('doctorRegister'))
-        self.assertEqual(response.status_code, 200)
+    def setUp(self):
+        upload_file = open(os.path.join(os.path.dirname(__file__), 'test_utils.py'), 'rb')
+        self.doctor_data['contract'] = SimpleUploadedFile(upload_file.name, upload_file.read())
 
     def test_valid_new_doctor_creation(self):
-        tmp_user = create_test_user(username='ahmad', password='password')
-        SystemUser.objects.create(user=tmp_user, id_code='123456', role=None)
-        self.client.logout()
+        create_test_system_user(create_test_user(username='ahmad', password='password'), '0012332')
         self.client.login(username='ahmad', password='password')
-        doctor_data = {
-            'doctor_code': '123456',
-            'education': 'S',
-            'speciality': 'Eye',
-            'insurance': 'Iran',
-            'price': 35000,
-            'cv': 'test cv test cv',
-        }
-        response = self.client.post(reverse_lazy('doctorRegister'), doctor_data)
-        print(response.context)
+        response = self.client.post(reverse_lazy('doctorRegister'), self.doctor_data)
         self.assertEqual(response.status_code, 302)
-        print(Doctor.objects.all())
-        self.assertTrue(Doctor.objects.filter(doctor_code=doctor_data['doctor_code']).exists())
+        self.assertTrue(Doctor.objects.filter(doctor_code=self.doctor_data['doctor_code']).exists())
 
     def test_invalid_new_doctor_code_already_exist(self):
-        doctor_data = {
-            'doctor_code': '123456',
-            'education': 'S',
-            'speciality': 'Eye',
-            'insurance': 'Iran',
-            'price': 35000,
-            'cv': 'test cv test cv',
-            'contract': 'contracts/',
-        }
-        response = self.client.post(reverse_lazy('doctorRegister'), doctor_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(Doctor.objects.filter(doctor_code=doctor_data['doctor_code']).exists())
-        response = self.client.post(reverse_lazy('doctorRegister'), doctor_data)
+        print(Doctor.objects.all())
+        create_test_doctor(self.doctor_data['doctor_code'], 'doki', 'password')
+        create_test_system_user(create_test_user('alien', 'alien'), '0052342')
+        self.client.login(username='alien', password='alien')
+        before_trying = len(Doctor.objects.all())
+        response = self.client.post(reverse_lazy('doctorRegister'), self.doctor_data)
+        after_trying = len(Doctor.objects.all())
+        self.assertEqual(before_trying, after_trying)
         self.assertEqual(response.status_code, 200)
+
 
 
 class LoginViewTest(TestCase):
