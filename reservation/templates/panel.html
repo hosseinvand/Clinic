@@ -70,6 +70,12 @@
                                         ویرایش اطلاعات مطب
                                     </a>
                                 </li>
+                                <li {% if view.selected == "updateProfile" %}class="active"{% endif %}>
+                                    <a href="{% url 'systemUserProfile' %}">
+                                        <i class="glyphicon glyphicon-edit"></i>
+ویرایش اطلاعات  کاربری
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{% url 'doctorProfile' user.system_user.role.pk %}">
                                         <i class="glyphicon glyphicon-eye-open"></i>
@@ -91,6 +97,8 @@
             {% include "clinic_form.html" %}
         {% elif view.selected == "updateClinic" %}
             {% include "clinic_form.html" %}
+        {% elif view.selected == "updateProfile" %}
+            {% include "update_profile.html" %}
         {% elif view.selected == "manageSecretary" %}
             <div class="col-md-6">
                 <div class="panel">

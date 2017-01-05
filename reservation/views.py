@@ -228,9 +228,10 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
 
 
 class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
+    selected = "updateProfile"
     model = User
-    template_name = 'signup.html'
-    success_url = reverse_lazy('mainPage')
+    template_name = 'panel.html'
+    success_url = reverse_lazy('panel')
     form_class = SystemUserUpdateForm
 
     def get_object(self, queryset=None):

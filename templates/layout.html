@@ -71,14 +71,14 @@
                         <ul class="dropdown-menu">
 {#                            <li><a href="javascript:void(0)">Action</a></li>#}
 {#                            <li><a href="javascript:void(0)">Another action</a></li>#}
-                            <li><a href="/profile">پروفایل</a></li>
+                            <li><a href="{% url "systemUserProfile" %}">پروفایل</a></li>
                             <li class="divider"></li>
-                            <li><a href="/logout">خروج</a></li>
+                            <li><a href="{% url "logout" %}">خروج</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="/register">ثبت نام</a></li>
-                    <li><a href="/login">ورود</a></li>
+                    <li><a href="{% url "register" %}">ثبت نام</a></li>
+                    <li><a href="{% url "login" %}">ورود</a></li>
                 {% endif %}
             </ul>
         </div>
