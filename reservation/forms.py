@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
 from reservation.models import SystemUser, Doctor, Office
 
@@ -126,3 +127,43 @@ class DoctorSearchForm(ModelForm):
     class Meta:
         model = Doctor
         fields = ['education', 'speciality', 'insurance']
+
+
+class SystemUserUpdateForm(ModelForm):
+    password = forms.CharField(required=False, widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput(), required=False)
+    id_code = forms.CharField(max_length=10, min_length=10)
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+    def clean(self):
+        cleaned_data = super(SystemUserUpdateForm, self).clean()
+        id_code = cleaned_data.get('id_code')
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if (password or confirm_password) and password != confirm_password:
+            raise forms.ValidationError(
+                "رمز عبور و تکرار رمز عبور مشابه نیست!"
+            )
+        try:
+            int(id_code)
+            if SystemUser.objects.filter(id_code=id_code).exclude(user=self.instance).exists():
+                raise forms.ValidationError('کد ملی قبلا در سیستم ثبت شده است.')
+        except ValueError:
+            raise forms.ValidationError(
+                "کد ملی را به صورت صحیح وارد نمایید."
+            )
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super(SystemUserUpdateForm, self).save(commit=False)
+        SystemUser.objects.filter(user=user).update(id_code=self.cleaned_data.get('id_code', None))
+        password = self.cleaned_data.get('password', None)
+        if password:
+            user.set_password(password)
+        user.save()
+        return user
+
+

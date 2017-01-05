@@ -22,6 +22,9 @@ urlpatterns = [
     url(r'^panel/clinic/$', AddClinicView.as_view(), name="addClinic"),
     url(r'^panel/clinic/edit$', UpdateClinicView.as_view(), name="updateClinic"),
     url(r'^panel/search$', PanelSearch.as_view(), name="panelSearch"),
+
+    url(r'^profile/$', UpdateSystemUserProfile.as_view(), name="systemUserProfile"),
+
     url(r'^profile/(?P<pk>\d+)$', DoctorProfileView.as_view(), name="doctorProfile"),
 
 ]

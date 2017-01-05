@@ -22,7 +22,6 @@ class MainPageView(TemplateView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(MainPageView, self).get_context_data(**kwargs)
-        print(context.keys())
         return context
 
 
@@ -226,6 +225,21 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return SystemUser.objects.get(user=self.request.user).role.office
+
+
+class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
+    model = User
+    template_name = 'signup.html'
+    success_url = reverse_lazy('mainPage')
+    form_class = SystemUserUpdateForm
+
+    def get_object(self, queryset=None):
+        return SystemUser.objects.get(user=self.request.user).user
+
+    def get_form_kwargs(self):
+        kwargs = super(UpdateSystemUserProfile, self).get_form_kwargs()
+        kwargs.update({'initial': {'id_code': self.request.user.system_user.id_code}})
+        return kwargs
 
 
 class DoctorProfileView(DetailView):
