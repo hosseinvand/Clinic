@@ -151,7 +151,7 @@ class SystemUserUpdateForm(ModelForm):
             int(id_code)
             if SystemUser.objects.filter(id_code=id_code).exclude(user=self.instance).exists():
                 raise forms.ValidationError('کد ملی قبلا در سیستم ثبت شده است.')
-        except ValueError:
+        except (TypeError, ValueError):
             raise forms.ValidationError(
                 "کد ملی را به صورت صحیح وارد نمایید."
             )

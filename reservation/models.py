@@ -211,7 +211,7 @@ class Secretary(DoctorSecretary):
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
     id_code = models.CharField(max_length=10, unique=True, default="")  # min_length=10
-    role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
+    role = models.ForeignKey(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
 
     @property
     def full_name(self):
