@@ -170,7 +170,6 @@ class ManageSecretary(LoginRequiredMixin, ListView):
             return HttpResponse("خطا! منشی وجود ندارد.")
 
         if self.entered_username_can_become_secretary(secretary_user):
-            print("cannn")
             office = request.user.system_user.role.office
             secretary_role = Secretary(office=office)
             secretary_role.save()
@@ -179,7 +178,6 @@ class ManageSecretary(LoginRequiredMixin, ListView):
         return redirect(reverse_lazy("ManageSecretary"))
 
     def entered_username_can_become_secretary(self, secretary_user):
-        print(secretary_user.role.get_role_id())
         return secretary_user.role.get_role_id() == PATIENT_ROLE_ID
 
 
@@ -197,7 +195,7 @@ def deleteSecretary(request):
     return JsonResponse({})
 
 
-class AddClinicView(LoginRequiredMixin, CreateView):
+class AddClinicView(LoginRequiredMixin, DoctorRequiredMixin, CreateView):
     selected = "addClinic"
     model = Office
     template_name = 'panel.html'
