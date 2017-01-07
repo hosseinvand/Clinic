@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse_lazy
 
-from reservation.models import SystemUser, INSURANCE_TYPES, Doctor
+from reservation.models import SystemUser, INSURANCE_TYPES, Doctor, Office, Patient
 from reservation.tests.test_utils import create_test_doctor, create_test_user, create_test_system_user
 
 
@@ -17,12 +17,12 @@ class OfficeAddTest(TestCase):
 
     def test_page_status_for_non_doctor_user(self):
         tmp_user = create_test_user(username='ahmad', password='password')
-        SystemUser.objects.create(user=tmp_user, id_code='123456', role=None)
-        self.client.logout()
+        patient = Patient()
+        patient.save()
+        SystemUser.objects.create(user=tmp_user, id_code='123456', role=patient)
         self.client.login(username='ahmad', password='password')
         response = self.client.get(reverse_lazy('addClinic'))
         self.assertNotEqual(response.status_code, 200)
- #TODO: change offices to office and fix ..
 
     def test_add_new_offic(self):
         office_data = {
@@ -30,13 +30,18 @@ class OfficeAddTest(TestCase):
             'address': 'میدان انقلاب',
             'phone': '0223344213',
             'telegram': 'ahmadClinic',
+            'from_hour': '12',
+            'to_hour': '15',
+            'base_time': 15,
+            'opening_days': 'sun'
         }
-        user = create_test_doctor('123456', 'ahmad', 'password')
-        self.client.logout()
+        doctor_system_user = create_test_doctor('123456', 'ahmad', 'password')
         self.client.login(username='ahmad', password='password')
         response = self.client.post(reverse_lazy('addClinic'), office_data)
+        role = doctor_system_user.role
+        role.refresh_from_db()
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(user.role.offices.all().filter(address=office_data['address'], phone=office_data['phone']).exists())
+        self.assertEqual(role.office, Office.objects.get(phone=office_data['phone']))
 
 
 class DoctorSignupViewTest(TestCase):

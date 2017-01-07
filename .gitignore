@@ -257,6 +257,7 @@ media
 *.iml
 modules.xml
 .idea/misc.xml
+migrations
 *.ipr
 migrations
 .idea/
