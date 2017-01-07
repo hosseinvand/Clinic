@@ -1333,7 +1333,7 @@ mark,
 .text-capitalize {
   text-transform: capitalize;
 }
-.text-muted {
+.text-warning {
   color: #777;
 }
 .text-primary {
