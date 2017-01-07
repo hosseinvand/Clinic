@@ -4,8 +4,8 @@ from reservation import models
 from reservation.models import Doctor, SystemUser, Office, Patient
 
 
-def create_test_user(username, password, first_name='ahmad', last_name='ahmadi'):
-    return User.objects.create_user(username=username, email='ahmad@gmail.com', password=password,
+def create_test_user(username, password, first_name='ahmad', last_name='ahmadi', email='ahmad@gmail.com', **kwargs):
+    return User.objects.create_user(username=username, email=email, password=password,
                                     first_name=first_name, last_name=last_name)
 
 def create_test_system_user(user, id_code):

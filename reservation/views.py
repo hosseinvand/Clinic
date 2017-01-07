@@ -177,7 +177,6 @@ class ManageSecretary(LoginRequiredMixin, ListView):
         return redirect(reverse_lazy("ManageSecretary"))
 
     def entered_username_can_become_secretary(self, secretary_user):
-        print(secretary_user.role.get_role_id())
         return secretary_user.role.get_role_id() == PATIENT_ROLE_ID
 
 
