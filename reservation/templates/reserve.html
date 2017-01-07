@@ -3,30 +3,35 @@
 {% load static %}
 
 <div class="row">
-
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
     {% for day in doctor.office.get_available_days %}
         <div class="col-md-2 col-xs-6">
             <div class="panel-group" id="accordion">
                 <div class="panel panel-success text-center">
+
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1{{ forloop.counter }}">
                                 <p>
-{{ day.1 }}
+                                    {{ day.1 }}
                                 </p>
                                 <p>
-{{ day.0 }}
+                                    {{ day.0 }}
                                 </p>
                             </a>
                         </h4>
                     </div>
-                    <div id="collapse1" class="panel-collapse collapse in">
+                    <div id="collapse1{{ forloop.counter }}" class="panel-collapse collapse in">
                         <div class="panel-body bg-success">
                             <p>
                                 ساعت کاری پزشک
                             </p>
                             <p>
-از
+                                از
                                 {{ doctor.office.from_hour }}
                                 تا
                                 {{ doctor.office.to_hour }}
@@ -37,23 +42,43 @@
                 <div class="panel  panel-success text-center">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">بازه زمانی مورد نظر</a>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2{{ forloop.counter }}">بازه زمانی مورد نظر</a>
                         </h4>
                     </div>
-                    <div id="collapse2" class="panel-collapse collapse">
-                        <div class="panel-body bg-success">
-                            <p>
-                                از
-                            </p>
-                            <p>
-                                تا
-                            </p>
-                        </div>
+                    <div id="collapse2{{ forloop.counter }}" class="panel-collapse collapse">
+                        <form name="searchForm" class="form-horizontal" method="post">{% csrf_token %}
+
+                            <fieldset>
+
+                                <div class="panel-body bg-success">
+
+                                    <div class="form-group">
+                                        از
+                                        {{ form.from_time }}
+                                    </div>
+                                    <div class="form-group">
+                                        تا
+                                        {{ form.to_time }}
+                                    </div>
+
+                                        <input id="id_date" name="date" type="text" hidden value="{{ day.0 }}" required="">
+                                        {% render_field form.doctor_pk value=doctor.pk hidden=true%}
+                                        {% render_field form.patient_pk value=patient.pk hidden=true%}
+
+                                    <button type="submit" class=" btn btn-lg btn-block btn-raised btn-primary">
+                                        درخواست نوبت
+                                    </button>
+                                </div>
+                            </fieldset>
+
+                        </form>
                     </div>
+
                 </div>
+
             </div>
         </div>
     {% endfor %}
-
-    {#</div>#}
 </div>
+
+{#</div>#}

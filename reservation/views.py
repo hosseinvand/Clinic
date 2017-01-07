@@ -11,7 +11,7 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
-from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
+from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin
 
 
@@ -247,9 +247,21 @@ class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class DoctorProfileView(DetailView, CreateView):
+class DoctorProfileView(DetailView):
     model = Doctor
     template_name = 'doctor_profile.html'
-    success_url = reverse_lazy('doctorProfile')
+
+
+
+class ReservationCreateView(LoginRequiredMixin, CreateView):
+    model = Reservation
+    template_name = 'reservation.html'
     form_class = ReservationDateTimeForm
+    success_url = reverse_lazy("searchResult")
+
+    def get_context_data(self, **kwargs):
+        context = super(ReservationCreateView, self).get_context_data(**kwargs)
+        context['doctor'] = Doctor.objects.get(pk=self.kwargs['pk'])
+        context['patient'] = self.request.user.system_user
+        return context
 

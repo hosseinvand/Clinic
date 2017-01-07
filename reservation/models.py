@@ -216,25 +216,25 @@ class SystemUser(models.Model):
         return self.user.username
 
 
-class ReserveTimeQuantity(models.Model):
-    range_num = models.IntegerField()
-    doctor = models.ForeignKey(Doctor, related_name='available_times')
-
-    def get_range(self, num):
-        base = self.doctor.get_base_time()
-        start = datetime.time(hours=((num-1)*base)//60, minutes=((num-1)*base) % 60)
-        end = datetime.time(hours=((num*base)//60), minutes=((num*base) % 60))
-        return start, end
-
-    def is_in_doctor_available_times(self):
-        #TODO: check whether between start and end of doctor working hour or not
-        pass
 
 
 class Reservation(models.Model):
     status = models.CharField(choices=RESERVATION_STATUS,max_length=30)
-    from_time = models.TimeField()
-    to_time = models.TimeField()
+    from_time = models.IntegerField(choices=HOURS)
+    to_time = models.IntegerField(choices=HOURS)
     date = models.DateField()
     patient = models.ForeignKey(SystemUser, related_name='Reservations')
     doctor = models.ForeignKey(Doctor, related_name='Reservations')
+    range_num = models.IntegerField(null=True)
+
+    #   TODO: TEST
+    def get_range(self, num):
+        base = self.doctor.get_base_time()
+        start = datetime.time((num*base)//60, (num*base) % 60)
+        end = datetime.time((((num+1)*base)//60), (((num+1)*base) % 60))
+        return start, end
+
+    def get_num_by_start(self, hour, minute=0):
+        if minute%self.doctor.get_base_time() > 0:
+            return -1
+        return (hour*60 + minute) // self.doctor.get_base_time()

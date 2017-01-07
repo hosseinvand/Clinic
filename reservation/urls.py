@@ -25,5 +25,7 @@ urlpatterns = [
     url(r'^panel/profile/$', UpdateSystemUserProfile.as_view(), name="systemUserProfile"),
 
     url(r'^profile/(?P<pk>\d+)$', DoctorProfileView.as_view(), name="doctorProfile"),
+    url(r'^reservation/(?P<pk>\d+)$', ReservationCreateView.as_view(), name="reservation"),
+
 
 ]
