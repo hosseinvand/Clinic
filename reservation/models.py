@@ -1,3 +1,4 @@
+import datetime
 from abc import abstractmethod
 from random import choice
 
@@ -5,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
 from multiselectfield import MultiSelectField
+from reservation import jalali
 
 PATIENT_ROLE_ID = 1
 DOCTOR_SECRETARY_ROLE_ID = 2
@@ -119,6 +121,19 @@ class Office(models.Model):
     def get_base_time(self):
         return self.base_time
 
+    def get_available_days(self):
+        today = datetime.date.today()
+        result, opening_days = [], []
+        for day in self.opening_days:
+            opening_days.append([x[0] for x in WEEK_DAYS].index(day))
+
+        for i in range(14):
+            day = today + datetime.timedelta(days=i)
+            day_code = (day.weekday() + 2) % 7
+            if day_code in opening_days:
+                result.append((jalali.Gregorian(day).persian_string("{}/{}/{}"), WEEK_DAYS[day_code][1]))
+        return result
+
 
 class Role(PolymorphicModel):
 
@@ -215,8 +230,8 @@ class ReserveTimeQuantity(models.Model):
 
     def get_range(self, num):
         base = self.doctor.get_base_time()
-        start = Time(((num-1)*base)//60, ((num-1)*base)%60)
-        end = Time((num*base)//60, (num*base)%60)
+        start = Time(((num-1)*base)//60, ((num-1)*base) % 60)
+        end = Time((num*base)//60, (num*base) % 60)
         return start, end
 
     def is_in_doctor_available_times(self):

@@ -226,7 +226,9 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
     form_class = ClinicForm
 
     def get_object(self, queryset=None):
-        return SystemUser.objects.get(user=self.request.user).role.office
+        x = SystemUser.objects.get(user=self.request.user).role.office
+        print(x.get_available_days())
+        return x
 
 
 class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
