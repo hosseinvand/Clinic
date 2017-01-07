@@ -36,18 +36,13 @@ class AvailableDaysTest(TestCase):
             'opening_days': ['sat','tue','wed']
         }
         doctor_user = test_utils.create_test_doctor(123,"0018032311" ,"mahshid","pass")
-        # login_data ={
-        #     'username': "mahshid",
-        #     'password': "pass"
-        # }
-        # response = self.client.post(reverse_lazy('login'), login_data)
-        # self.assertEqual(response.status_code, 302)
         self.client.login(username='mahshid', password='pass')
         response = self.client.post(reverse_lazy('addClinic'), office_data)
         self.assertEqual(response.status_code, 302)
-        doctor_user.save()
-
+        role = doctor_user.role
+        role.refresh_from_db()
         print(doctor_user.role.office)
-        #TODO:
-        # print("len:",len(doctor_user.role.office.opening_days))
-        # self.assertEqual(len(doctor_user.role.office.opening_days),3)
+        print("len:",len(doctor_user.role.office.opening_days))
+        self.assertEqual(len(doctor_user.role.office.opening_days), 3)
+        days = doctor_user.role.office.get_available_days()
+        self.assertEqual(len(doctor_user.role.office.opening_days)*2, len(days))    #change if more than 2 week!!!!!!
