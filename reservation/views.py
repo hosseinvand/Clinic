@@ -36,7 +36,9 @@ class SystemUserCreateView(CreateView):
         username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
         new_user = authenticate(username=username, password=password)
         user = User.objects.get(username=username)
-        SystemUser.objects.filter(user=user).update(role=Patient.load())
+        role = Patient()
+        role.save()
+        SystemUser.objects.filter(user=user).update(role=role)
         login(self.request, new_user)
         return response
 

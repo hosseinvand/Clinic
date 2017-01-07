@@ -132,19 +132,6 @@ class Role(PolymorphicModel):
 
 
 class Patient(Role):
-
-    def save(self, *args, **kwargs):
-        self.__class__.objects.exclude(id=self.id).delete()
-        super(Patient, self).save(*args, **kwargs)
-
-    @classmethod
-    def load(cls):
-        try:
-            return cls.objects.get()
-        except cls.DoesNotExist:
-            cls().save()
-            return cls.objects.get()
-
     def get_role_type(self):
         return "بیمار"
 
@@ -211,7 +198,7 @@ class Secretary(DoctorSecretary):
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
     id_code = models.CharField(max_length=10, unique=True, default="")  # min_length=10
-    role = models.ForeignKey(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
+    role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
 
     @property
     def full_name(self):
