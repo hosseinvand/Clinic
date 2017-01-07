@@ -35,7 +35,7 @@ class OfficeAddTest(TestCase):
             'base_time': 15,
             'opening_days': 'sun'
         }
-        doctor_system_user = create_test_doctor('123456', 'ahmad', 'password')
+        doctor_system_user = create_test_doctor('123456', '0011223344', 'ahmad', 'password')
         self.client.login(username='ahmad', password='password')
         response = self.client.post(reverse_lazy('addClinic'), office_data)
         role = doctor_system_user.role
@@ -68,7 +68,7 @@ class DoctorSignupViewTest(TestCase):
 
     def test_invalid_new_doctor_code_already_exist(self):
         print(Doctor.objects.all())
-        create_test_doctor(self.doctor_data['doctor_code'], 'doki', 'password')
+        create_test_doctor(self.doctor_data['doctor_code'], '0044225533', 'doki', 'password')
         create_test_system_user(create_test_user('alien', 'alien'), '0052342')
         self.client.login(username='alien', password='alien')
         before_trying = len(Doctor.objects.all())
