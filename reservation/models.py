@@ -222,8 +222,8 @@ class ReserveTimeQuantity(models.Model):
 
     def get_range(self, num):
         base = self.doctor.get_base_time()
-        start = datetime.time(hours=((num-1)*base)//60, minutes=((num-1)*base) % 60)
-        end = datetime.time(hours=((num*base)//60), minutes=((num*base) % 60))
+        start = datetime.time(((num-1)*base)//60, ((num-1)*base) % 60)
+        end = datetime.time((num*base)//60, (num*base) % 60)
         return start, end
 
     def is_in_doctor_available_times(self):
