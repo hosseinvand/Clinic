@@ -1,7 +1,7 @@
 import datetime
 from abc import abstractmethod
 from random import choice
-
+from django.db.models import Q
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
@@ -217,7 +217,6 @@ class SystemUser(models.Model):
 
 
 class Reservation(models.Model):
-    status = models.CharField(choices=RESERVATION_STATUS,max_length=30)
     from_time = models.IntegerField(choices=HOURS)
     to_time = models.IntegerField(choices=HOURS)
     date = models.DateField()
@@ -226,7 +225,20 @@ class Reservation(models.Model):
     range_num = models.IntegerField(null=True)
 
     def get_available_times(self):
-        return range(10)
+        start_range_num = self.get_num_by_start(self.from_time)
+        end_range_num = self.get_num_by_start(self.to_time)
+        result = range(start_range_num, end_range_num)
+
+        reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
+        not_available = [reservation.range_num for reservation in reservations]
+        print('not', not_available)
+
+        available = [x for x in result if x not in not_available]
+        return [{'range': self.get_range(x), 'range_num': x} for x in available]
+
+    @property
+    def get_jalali(self):
+        return jalali.Gregorian(self.date).persian_string()
 
     #   TODO: TEST
     def get_range(self, num):

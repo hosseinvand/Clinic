@@ -19,7 +19,7 @@ function reserveTime(reservationPk, token) {
         url: '/ajax/reserve_time/',
         data: {
             'reservationPk': reservationPk,
-            'rangeNum': $("#select" + reservationPk + " option:selected").text().trim(),
+            'rangeNum': $("#select" + reservationPk + " option:selected").val().trim(),
             'csrfmiddlewaretoken': token
         },
         dataType: 'json',

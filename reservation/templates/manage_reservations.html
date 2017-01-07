@@ -17,19 +17,16 @@
             {% for reservation in object_list %}
                 <tr id="row{{reservation.pk}}" class="centered-cells">
                     <td>{{ reservation.patient.full_name }}</td>
-                    <td>{{ reservation.date }}</td>
-                    <td>{{ reservation.from_hour }}</td>
-                    <td>{{ reservation.to_hour }}</td>
+                    <td>{{ reservation.get_jalali }}</td>
+                    <td>{{ reservation.from_time }}</td>
+                    <td>{{ reservation.to_time }}</td>
                     <td class="without-top-margin">
                         <select id="select{{ reservation.pk }}" class="form-control">
                             <option value="">انتخاب کنید</option>
                             {% for available_time in reservation.get_available_times %}
-                                        <option value="{{ available_time}}">
-                                            {{ available_time }}
-                                        </option>
-{#                                    <option value="{{ available_time.range_num }}">#}
-{#                                        {{ available_time.get_range.0 }} - {{ available_time.get_range.1 }}#}
-{#                                    </option>#}
+                                    <option value="{{ available_time.range_num }}">
+                                        {{ available_time.range.0 }} - {{ available_time.range.1 }}
+                                    </option>
                             {% endfor %}
                         </select>
                     </td>

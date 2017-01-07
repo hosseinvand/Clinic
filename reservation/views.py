@@ -201,7 +201,9 @@ def reserveTime(request):
     reservationPk = request.POST.get('reservationPk', None)
     rangeNum = request.POST.get('rangeNum', None)
     reservation = Reservation.objects.get(pk=reservationPk)
-    print("hhhhhaaaaa", reservationPk, rangeNum)
+    print("hahahah", reservationPk, rangeNum)
+    reservation.range_num = rangeNum
+    reservation.save()
     return JsonResponse({})
 
 class AddClinicView(LoginRequiredMixin, CreateView):
@@ -259,7 +261,7 @@ class ManageReservations(LoginRequiredMixin, DoctorRequiredMixin, ListView):
     template_name = 'panel.html'
 
     def get_queryset(self):
-        return Reservation.objects.filter(status='PENDING', doctor=self.request.user.system_user.role)
+        return Reservation.objects.filter(range_num__isnull=True, doctor=self.request.user.system_user.role)
 
 
 class DoctorProfileView(DetailView):
