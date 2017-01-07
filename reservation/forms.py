@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
-from reservation.models import SystemUser, Doctor, Office
+from reservation.models import SystemUser, Doctor, Office, Reservation
 
 
 class SystemUserRegisterForm(ModelForm):
@@ -166,4 +166,8 @@ class SystemUserUpdateForm(ModelForm):
         user.save()
         return user
 
+class ReservationDateTimeForm(ModelForm):
 
+    class Meta:
+        model= Reservation
+        fields = '__all__'

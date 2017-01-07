@@ -1,48 +1,59 @@
-<div class="container">
-    <div class="col-md-2 col-xs-6">
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-success text-center">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+{% load material_form %}
+{% load widget_tweaks %}
+{% load static %}
+
+<div class="row">
+
+    {% for day in doctor.office.get_available_days %}
+        <div class="col-md-2 col-xs-6">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-success text-center">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                <p>
+{{ day.1 }}
+                                </p>
+                                <p>
+{{ day.0 }}
+                                </p>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse in">
+                        <div class="panel-body bg-success">
                             <p>
-                                شنبه
+                                ساعت کاری پزشک
                             </p>
                             <p>
-                                ۹۵/۳/۱۲
+از
+                                {{ doctor.office.from_hour }}
+                                تا
+                                {{ doctor.office.to_hour }}
                             </p>
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapse1" class="panel-collapse collapse in">
-                    <div class="panel-body bg-success">
-                        <p>
-                            ساعت کاری پزشک
-                        </p>
-                        <p>
-                            از ۱۳ تا ۱۷
-                        </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel  panel-success text-center">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">بازه زمانی مورد نظر</a>
-                    </h4>
-                </div>
-                <div id="collapse2" class="panel-collapse collapse">
-                    <div class="panel-body bg-success">
-                        <p>
-                            از
-                        </p>
-                        <p>
-                            تا
-                        </p>
+                <div class="panel  panel-success text-center">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">بازه زمانی مورد نظر</a>
+                        </h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse">
+                        <div class="panel-body bg-success">
+                            <p>
+                                از
+                            </p>
+                            <p>
+                                تا
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    {% endfor %}
 
+    {#</div>#}
+</div>

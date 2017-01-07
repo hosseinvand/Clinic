@@ -96,8 +96,16 @@
                     {% endif %}
                 </div>
                 <div class="tab-pane fade in" id="tab3">
-                    <h3>This is tab 3</h3>
-                    {% include "reserve.html" %}
+
+                    {% if doctor.office.get_available_days != None %}
+                        <h3>زمان های قابل رزرو پزشک</h3>
+                        <br>
+                        {% include "reserve.html" %}
+                    {% else %}
+                        <h3>
+                        هیچ زمان قابل رزروی برای این پزشک به ثبت نرسیده است.
+                        </h3>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -247,7 +247,9 @@ class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class DoctorProfileView(DetailView):
+class DoctorProfileView(DetailView, CreateView):
     model = Doctor
     template_name = 'doctor_profile.html'
+    success_url = reverse_lazy('doctorProfile')
+    form_class = ReservationDateTimeForm
 

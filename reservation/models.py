@@ -97,13 +97,6 @@ RESERVATION_STATUS = (
 )
 
 
-class Reservation(models.Model):
-    status = models.CharField(choices=RESERVATION_STATUS)
-    from_time = models.TimeField()
-    to_time = models.TimeField()
-    patient = models.ForeignKey(SystemUser, related_name='Reservations')
-    doctor = models.ForeignKey(Doctor, related_name='Reservations')
-
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
@@ -236,3 +229,12 @@ class ReserveTimeQuantity(models.Model):
     def is_in_doctor_available_times(self):
         #TODO: check whether between start and end of doctor working hour or not
         pass
+
+
+class Reservation(models.Model):
+    status = models.CharField(choices=RESERVATION_STATUS,max_length=30)
+    from_time = models.TimeField()
+    to_time = models.TimeField()
+    date = models.DateField()
+    patient = models.ForeignKey(SystemUser, related_name='Reservations')
+    doctor = models.ForeignKey(Doctor, related_name='Reservations')

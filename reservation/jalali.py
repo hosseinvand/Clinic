@@ -114,7 +114,7 @@ class Gregorian:
     def persian_tuple(self):
         return self.persian_year, self.persian_month, self.persian_day
 
-    def persian_string(self, date_format="{}-{}-{}"):
+    def persian_string(self, date_format="{}/{}/{}"):
         return date_format.format(self.persian_year, self.persian_month, self.persian_day)
 
 
@@ -185,7 +185,7 @@ class Persian:
     def gregorian_tuple(self):
         return self.gregorian_year, self.gregorian_month, self.gregorian_day
 
-    def gregorian_string(self, date_format="{}-{}-{}"):
+    def gregorian_string(self, date_format="{}/{}/{}"):
         return date_format.format(self.gregorian_year, self.gregorian_month, self.gregorian_day)
 
     def gregorian_datetime(self):
