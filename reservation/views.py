@@ -196,6 +196,13 @@ def deleteSecretary(request):
     user.save()
     return JsonResponse({})
 
+@login_required
+def reserveTime(request):
+    reservationPk = request.POST.get('reservationPk', None)
+    rangeNum = request.POST.get('rangeNum', None)
+    reservation = Reservation.objects.get(pk=reservationPk)
+    print("hhhhhaaaaa", reservationPk, rangeNum)
+    return JsonResponse({})
 
 class AddClinicView(LoginRequiredMixin, CreateView):
     selected = "addClinic"
@@ -247,9 +254,16 @@ class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+class ManageReservations(LoginRequiredMixin, DoctorRequiredMixin, ListView):
+    selected = "reservation"
+    template_name = 'panel.html'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(status='PENDING', doctor=self.request.user.system_user.role)
+
+
 class DoctorProfileView(DetailView, CreateView):
     model = Doctor
     template_name = 'doctor_profile.html'
     success_url = reverse_lazy('doctorProfile')
     form_class = ReservationDateTimeForm
-

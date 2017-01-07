@@ -82,6 +82,12 @@
                                         مشاهده پروفایل
                                     </a>
                                 </li>
+                                <li {% if view.selected == "reservation" %}class="active"{% endif %}>
+                                    <a href="{% url 'manageReservations' %}">
+                                        <i class="glyphicon glyphicon-edit"></i>
+نوبت دهی
+                                    </a>
+                                </li>
                             {% endif %}
 
                         </ul>
@@ -99,6 +105,8 @@
             {% include "clinic_form.html" %}
         {% elif view.selected == "updateProfile" %}
             {% include "update_profile.html" %}
+        {% elif view.selected == "reservation" %}
+            {% include "manage_reservations.html" %}
         {% elif view.selected == "manageSecretary" %}
             <div class="col-md-6">
                 <div class="panel">

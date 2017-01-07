@@ -238,3 +238,7 @@ class Reservation(models.Model):
     date = models.DateField()
     patient = models.ForeignKey(SystemUser, related_name='Reservations')
     doctor = models.ForeignKey(Doctor, related_name='Reservations')
+
+    def get_available_times(self):
+        return range(10)
+

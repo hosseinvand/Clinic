@@ -1,0 +1,44 @@
+{% load material_form %}
+{% load widget_tweaks %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-stripped table-bordered">
+            <thead>
+            <tr>
+                <th>نام و نام خانوادگی</th>
+                <th>تاریخ</th>
+                <th>از ساعت</th>
+                <th>تا ساعت</th>
+                <th>نوبت‌های خالی</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reservation in object_list %}
+                <tr id="row{{reservation.pk}}" class="centered-cells">
+                    <td>{{ reservation.patient.full_name }}</td>
+                    <td>{{ reservation.date }}</td>
+                    <td>{{ reservation.from_hour }}</td>
+                    <td>{{ reservation.to_hour }}</td>
+                    <td class="without-top-margin">
+                        <select id="select{{ reservation.pk }}" class="form-control">
+                            <option value="">انتخاب کنید</option>
+                            {% for available_time in reservation.get_available_times %}
+                                        <option value="{{ available_time}}">
+                                            {{ available_time }}
+                                        </option>
+{#                                    <option value="{{ available_time.range_num }}">#}
+{#                                        {{ available_time.get_range.0 }} - {{ available_time.get_range.1 }}#}
+{#                                    </option>#}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-raised btn-md" role="button" onclick=reserveTime("{{ reservation.pk }}","{{ csrf_token }}")> ثبت نوبت</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

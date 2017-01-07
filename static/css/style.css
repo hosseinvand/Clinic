@@ -170,3 +170,12 @@ th{
     padding: 0 20px;
     margin-bottom: 17px;
 }
+
+.without-top-margin > :first-child {
+    margin-top: 0px;
+}
+
+.centered-cells > td {
+    vertical-align: middle;
+    text-align: center;
+}
