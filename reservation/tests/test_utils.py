@@ -9,7 +9,9 @@ def create_test_user(username, password, first_name='ahmad', last_name='ahmadi',
                                     first_name=first_name, last_name=last_name)
 
 def create_test_system_user(user, id_code):
-    return SystemUser.objects.create(user=user, id_code=id_code, role=Patient.load())
+    patient = Patient()
+    patient.save()
+    return SystemUser.objects.create(user=user, id_code=id_code, role=patient)
 
 
 def create_test_doctor(doctor_code, username, password):

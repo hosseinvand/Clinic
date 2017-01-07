@@ -3,5 +3,7 @@ python:
   - "3.4"
 install:
   - pip install -r requirements.txt
+before_script:
+  - python ./manage.py makemigrations
 # command to run tests
 script: python ./manage.py test

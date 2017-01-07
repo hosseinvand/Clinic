@@ -195,7 +195,7 @@ def deleteSecretary(request):
     return JsonResponse({})
 
 
-class AddClinicView(LoginRequiredMixin, CreateView):
+class AddClinicView(LoginRequiredMixin, DoctorRequiredMixin, CreateView):
     selected = "addClinic"
     model = Office
     template_name = 'panel.html'
