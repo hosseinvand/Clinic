@@ -216,8 +216,6 @@ class SystemUser(models.Model):
         return self.user.username
 
 
-
-
 class Reservation(models.Model):
     status = models.CharField(choices=RESERVATION_STATUS,max_length=30)
     from_time = models.IntegerField(choices=HOURS)
