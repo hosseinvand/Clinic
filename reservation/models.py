@@ -1,10 +1,12 @@
+import datetime
 from abc import abstractmethod
 from random import choice
-
+from django.db.models import Q
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
 from multiselectfield import MultiSelectField
+from reservation import jalali
 
 PATIENT_ROLE_ID = 1
 DOCTOR_SECRETARY_ROLE_ID = 2
@@ -88,20 +90,12 @@ BASE_TIMES = ((10, '۱۰'),
 
 HOURS = [(i, i) for i in range(24)]
 
+RESERVATION_STATUS = (
+    ('PENDING', 'منتظر تایید'),
+    ('ACCEPTED', 'تایید شده'),
+    ('REJECTED', 'رد شده')
+)
 
-class Time:
-    def __init__(self, hour, minute):
-        self.hour = hour
-        self.minute = minute
-
-    def get_hour(self):
-        return self.hour
-
-    def get_minute(self):
-        return self.minute
-
-    def get_display_time(self):
-        return '{} : {}'.format(self.hour, self.minute)
 
 
 class Office(models.Model):
@@ -118,6 +112,19 @@ class Office(models.Model):
 
     def get_base_time(self):
         return self.base_time
+
+    def get_available_days(self):
+        today = datetime.date.today()
+        result, opening_days = [], []
+        for day in self.opening_days:
+            opening_days.append([x[0] for x in WEEK_DAYS].index(day))
+
+        for i in range(14):
+            day = today + datetime.timedelta(days=i)
+            day_code = (day.weekday() + 2) % 7
+            if day_code in opening_days:
+                result.append((jalali.Gregorian(day).persian_string("{}/{}/{}"), WEEK_DAYS[day_code][1]))
+        return result
 
 
 class Role(PolymorphicModel):
@@ -209,16 +216,38 @@ class SystemUser(models.Model):
         return self.user.username
 
 
-class ReserveTimeQuantity(models.Model):
-    range_num = models.IntegerField()
-    doctor = models.ForeignKey(Doctor, related_name='available_times')
+class Reservation(models.Model):
+    from_time = models.IntegerField(choices=HOURS)
+    to_time = models.IntegerField(choices=HOURS)
+    date = models.DateField()
+    patient = models.ForeignKey(SystemUser, related_name='Reservations')
+    doctor = models.ForeignKey(Doctor, related_name='Reservations')
+    range_num = models.IntegerField(null=True)
 
+    def get_available_times(self):
+        start_range_num = self.get_num_by_start(self.from_time)
+        end_range_num = self.get_num_by_start(self.to_time)
+        result = range(start_range_num, end_range_num)
+
+        reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
+        not_available = [reservation.range_num for reservation in reservations]
+        print('not', not_available)
+
+        available = [x for x in result if x not in not_available]
+        return [{'range': self.get_range(x), 'range_num': x} for x in available]
+
+    @property
+    def get_jalali(self):
+        return jalali.Gregorian(self.date).persian_string()
+
+    #   TODO: TEST
     def get_range(self, num):
         base = self.doctor.get_base_time()
-        start = Time(((num-1)*base)//60, ((num-1)*base)%60)
-        end = Time((num*base)//60, (num*base)%60)
+        start = datetime.time((num*base)//60, (num*base) % 60)
+        end = datetime.time((((num+1)*base)//60), (((num+1)*base) % 60))
         return start, end
 
-    def is_in_doctor_available_times(self):
-        #TODO: check whether between start and end of doctor working hour or not
-        pass
+    def get_num_by_start(self, hour, minute=0):
+        if minute%self.doctor.get_base_time() > 0:
+            return -1
+        return (hour*60 + minute) // self.doctor.get_base_time()

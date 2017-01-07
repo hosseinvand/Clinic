@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.gis.admin import widgets
 from django.db.utils import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
-from reservation.models import SystemUser, Doctor, Office
+from reservation import jalali
+from reservation.models import SystemUser, Doctor, Office, Reservation, RESERVATION_STATUS
 
 
 class SystemUserRegisterForm(ModelForm):
@@ -166,4 +168,34 @@ class SystemUserUpdateForm(ModelForm):
         user.save()
         return user
 
+class ReservationDateTimeForm(ModelForm):
 
+    doctor_pk = forms.IntegerField()
+    patient_pk = forms.IntegerField()
+    date = forms.CharField()
+    # from_time = forms.TimeField(widget=SelectTimeWidget(minute_step=15, second_step=30, twelve_hr=True))
+    # to_time = forms.TimeField(widget=SelectTimeWidget(minute_step=15, second_step=30, twelve_hr=True))
+
+    class Meta:
+        model = Reservation
+        fields = ['from_time', 'to_time']
+
+    def save(self, commit=True):
+        time = super(ReservationDateTimeForm, self).save(commit=False)
+        time.patient = SystemUser.objects.get(pk=self.cleaned_data.get("patient_pk"))
+        print("user patient: ", time.patient)
+        time.doctor = Doctor.objects.get(pk=self.cleaned_data.get("doctor_pk"))
+        time.date = jalali.Persian(self.cleaned_data.get("date")).gregorian_datetime()
+        time.status = RESERVATION_STATUS[0][0]
+        time.save()
+        return time
+
+    def clean(self):
+        cleaned_data = super(ReservationDateTimeForm, self).clean()
+        if cleaned_data.get("from_time") > cleaned_data.get("to_time"):
+            print("خاک تو سرت!")
+            raise forms.ValidationError('زمان آغازی بازه باید از ازمان پایانی آن کمتر باشد.')
+        doctor = Doctor.objects.get(pk=self.cleaned_data.get("doctor_pk"))
+        if cleaned_data.get("from_time") > doctor.office.to_hour or cleaned_data.get("to_time") < doctor.office.from_hour:
+            raise forms.ValidationError('زمان انتخابی شما در بازه‌ی ساعات کاری پزشک نیست')
+        return cleaned_data

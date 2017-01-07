@@ -11,7 +11,7 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
-from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
+from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin
 
 
@@ -194,6 +194,15 @@ def deleteSecretary(request):
     user.save()
     return JsonResponse({})
 
+@login_required
+def reserveTime(request):
+    reservationPk = request.POST.get('reservationPk', None)
+    rangeNum = request.POST.get('rangeNum', None)
+    reservation = Reservation.objects.get(pk=reservationPk)
+    print("hahahah", reservationPk, rangeNum)
+    reservation.range_num = rangeNum
+    reservation.save()
+    return JsonResponse({})
 
 class AddClinicView(LoginRequiredMixin, DoctorRequiredMixin, CreateView):
     selected = "addClinic"
@@ -224,7 +233,9 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
     form_class = ClinicForm
 
     def get_object(self, queryset=None):
-        return SystemUser.objects.get(user=self.request.user).role.office
+        x = SystemUser.objects.get(user=self.request.user).role.office
+        print(x.get_available_days())
+        return x
 
 
 class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
@@ -243,7 +254,28 @@ class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+class ManageReservations(LoginRequiredMixin, DoctorRequiredMixin, ListView):
+    selected = "reservation"
+    template_name = 'panel.html'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(range_num__isnull=True, doctor=self.request.user.system_user.role)
+
+
 class DoctorProfileView(DetailView):
     model = Doctor
     template_name = 'doctor_profile.html'
 
+
+
+class ReservationCreateView(LoginRequiredMixin, CreateView):
+    model = Reservation
+    template_name = 'reservation.html'
+    form_class = ReservationDateTimeForm
+    success_url = reverse_lazy("searchResult")
+
+    def get_context_data(self, **kwargs):
+        context = super(ReservationCreateView, self).get_context_data(**kwargs)
+        context['doctor'] = Doctor.objects.get(pk=self.kwargs['pk'])
+        context['patient'] = self.request.user.system_user
+        return context

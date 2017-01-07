@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% load material_form %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block pageBody %}
+    <div class="col-lg-12 col-sm-6">
+        <div class="card hovercard">
+            <div class="card-background">
+                <img class="card-bkimg" alt="" src="{% static "image/women_doctor.png" %}">
+                <!-- http://lorempixel.com/850/280/people/9/ -->
+            </div>
+            <div class="useravatar">
+                <img alt="" src="{% static "image/women_doctor.png" %}">
+            </div>
+
+            <div class="card-info">
+            <span class="card-title">
+دکتر
+            {{ doctor.full_name }}
+            </span>
+
+
+            </div>
+        </div>
+
+
+        <div class="well">
+
+            <div class="tab-pane fade in" id="tab3">
+
+                {% if doctor.office.get_available_days != None %}
+                    <h3>زمان های قابل رزرو پزشک</h3>
+                    <br>
+                    {% include "reserve.html" %}
+                {% else %}
+                    <h3>
+                        هیچ زمان قابل رزروی برای این پزشک به ثبت نرسیده است.
+                    </h3>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
