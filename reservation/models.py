@@ -90,20 +90,19 @@ BASE_TIMES = ((10, '۱۰'),
 
 HOURS = [(i, i) for i in range(24)]
 
+RESERVATION_STATUS = (
+    ('PENDING', 'منتظر تایید'),
+    ('ACCEPTED', 'تایید شده'),
+    ('REJECTED', 'رد شده')
+)
 
-class Time:
-    def __init__(self, hour, minute):
-        self.hour = hour
-        self.minute = minute
 
-    def get_hour(self):
-        return self.hour
-
-    def get_minute(self):
-        return self.minute
-
-    def get_display_time(self):
-        return '{} : {}'.format(self.hour, self.minute)
+class Reservation(models.Model):
+    status = models.CharField(choices=RESERVATION_STATUS)
+    from_time = models.TimeField()
+    to_time = models.TimeField()
+    patient = models.ForeignKey(SystemUser, related_name='Reservations')
+    doctor = models.ForeignKey(Doctor, related_name='Reservations')
 
 
 class Office(models.Model):
@@ -230,8 +229,8 @@ class ReserveTimeQuantity(models.Model):
 
     def get_range(self, num):
         base = self.doctor.get_base_time()
-        start = Time(((num-1)*base)//60, ((num-1)*base) % 60)
-        end = Time((num*base)//60, (num*base) % 60)
+        start = datetime.time(hours=((num-1)*base)//60, minutes=((num-1)*base) % 60)
+        end = datetime.time(hours=((num*base)//60), minutes=((num*base) % 60))
         return start, end
 
     def is_in_doctor_available_times(self):
