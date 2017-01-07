@@ -14,12 +14,12 @@ def create_test_system_user(user, id_code):
     return SystemUser.objects.create(user=user, id_code=id_code, role=patient)
 
 
-def create_test_doctor(doctor_code, username, password):
+def create_test_doctor(doctor_code,id_code, username, password):
     user = create_test_user(username=username, password=password)
     doctor = Doctor.objects.create(doctor_code=doctor_code, education='S', speciality='Jarahi', insurance='Iran',
                                    price=35000, cv='maybe not the best doc in the world but the happiest one :)',
                                    contract='contracts/')
-    return SystemUser.objects.create(user=user, id_code=doctor_code, role=doctor)
+    return SystemUser.objects.create(user=user, id_code=id_code, role=doctor)
 
 
 def create_office(phone, city, from_hour, to_hour):

@@ -1,8 +1,11 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse_lazy
+from reservation import models
 
 from reservation.models import SystemUser, INSURANCE_TYPES, Doctor
+from reservation.tests import test_utils
+
 
 def create_test_user(username, password):
     return User.objects.create_user(username=username, email='ahmad@gmail.com', password=password,
@@ -18,3 +21,33 @@ class OfficeAddTest(TestCase):
         self.client.logout()
         response = self.client.get(reverse_lazy('addClinic'))
         self.assertNotEqual(response.status_code, 200)
+
+
+class AvailableDaysTest(TestCase):
+    def test_available_days_and_time_range(self):
+        office_data = {
+            'city': 'Zanjan',
+            'address': 'میدان انقلاب',
+            'phone': '0223344213',
+            'telegram': 'ahmadClinic',
+            'from_hour': 13,
+            'to_hour': 18,
+            'base_time': 15,
+            'opening_days': ['sat','tue','wed']
+        }
+        doctor_user = test_utils.create_test_doctor(123,"0018032311" ,"mahshid","pass")
+        # login_data ={
+        #     'username': "mahshid",
+        #     'password': "pass"
+        # }
+        # response = self.client.post(reverse_lazy('login'), login_data)
+        # self.assertEqual(response.status_code, 302)
+        self.client.login(username='mahshid', password='pass')
+        response = self.client.post(reverse_lazy('addClinic'), office_data)
+        self.assertEqual(response.status_code, 302)
+        doctor_user.save()
+
+        print(doctor_user.role.office)
+        #TODO:
+        # print("len:",len(doctor_user.role.office.opening_days))
+        # self.assertEqual(len(doctor_user.role.office.opening_days),3)
