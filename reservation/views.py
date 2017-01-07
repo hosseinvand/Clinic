@@ -170,7 +170,6 @@ class ManageSecretary(LoginRequiredMixin, ListView):
             return HttpResponse("خطا! منشی وجود ندارد.")
 
         if self.entered_username_can_become_secretary(secretary_user):
-            print("cannn")
             office = request.user.system_user.role.office
             secretary_role = Secretary(office=office)
             secretary_role.save()

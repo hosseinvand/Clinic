@@ -3,7 +3,7 @@ from django.forms import forms
 from django.test import TestCase
 from django.urls import reverse_lazy
 
-from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_ROLE_ID
+from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_ROLE_ID, Patient, PATIENT_ROLE_ID
 from reservation.tests.test_utils import create_office, create_multiple_doctors, create_test_user
 
 
@@ -42,7 +42,10 @@ class SecretaryTest(TestCase):
             self.client.post(reverse_lazy('register'), data)
         else:
             tmp_user = create_test_user(**data)
+            role = Patient()
+            role.save()
             SystemUser.objects.create(user=tmp_user, id_code=data['id_code'])
+            SystemUser.objects.filter(user=tmp_user).update(role=role)
         user = User.objects.filter(username=data['username'])
         self.assertTrue(user.exists())
         self.assertTrue(SystemUser.objects.filter(user=user[0]).exists())
@@ -51,16 +54,7 @@ class SecretaryTest(TestCase):
         self.assertEqual(SystemUser.objects.all().count(), system_user_count + 1, "db doesn't changed")
         return SystemUser.objects.get(user=user)
 
-
-    # def create_secretary(self, user_data=user_data, office_data = office_data, should_login=False):
-    #     system_user = self.create_system_user(data=user_data, should_login=should_login)
-    #     office = create_office(self, **office_data)
-    #     secretary = Secretary.objects.create(office=office)
-    #     system_user.role = secretary
-    #     system_user.save()
-    #     return secretary
-
-    def add_secretary(self):
+    def add_secretary_and_add_non_valid_secretary(self):
         candidate_system_user = self.create_system_user(data=self.user_data, should_login=False)
         doctor_system_user = create_multiple_doctors(1)[0]
         self.client.login(username="doctor0", password="password0")
@@ -69,101 +63,24 @@ class SecretaryTest(TestCase):
         response = self.client.get(reverse_lazy('ManageSecretary'))
         self.assertEqual(response.status_code, 200)
 
+        # add valid secretary
+        secretary_count_before = len(Secretary.objects.filter(office=doctor_system_user.role.office))
         response = self.client.post(reverse_lazy('ManageSecretary'), {'username': candidate_system_user.user.username})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(candidate_system_user.role.get_role_id(), SECRETARY_ROLE_ID) # can i use this sysuser object?
+        secretary_count_after = len(Secretary.objects.filter(office=doctor_system_user.role.office))
+        self.assertEqual(response.status_code, 302)
+        candidate_system_user = SystemUser.objects.get(id_code=self.user_data['id_code'])
+        self.assertEqual(candidate_system_user.role.get_role_id(), SECRETARY_ROLE_ID)
         self.assertEqual(candidate_system_user.role.office, doctor_system_user.role.office)
+        self.assertEqual(secretary_count_before + 1, secretary_count_after)
 
+        # add non valid secretary
+        secretary_count_before = len(Secretary.objects.filter(office=doctor_system_user.role.office))
+        response = self.client.post(reverse_lazy('ManageSecretary'), {'username': 'fake_username'})
+        secretary_count_after = len(Secretary.objects.filter(office=doctor_system_user.role.office))
+        self.assertEqual(secretary_count_before, secretary_count_after)
 
-    def test_adding_secertary(self):
-        pass
-
-    def test_redirect_to_login(self):
-        response = self.client.get(reverse_lazy('systemUserProfile'), follow=True)
-        self.assertRedirects(response, '/login/?next=/panel/profile/', 302, 200)
-
-    def test_user_access(self):
-        self.create_system_user()
-        response = self.client.get(reverse_lazy('systemUserProfile'))
-        self.assertEqual(response.status_code, 200)
-        return response
-
-    def test_response_contains_data(self):
-
-        def check_field_initial_value(form, field, value=None):
-            self.assertTrue(field in form.initial)
-            if value:
-                self.assertEqual(form.initial[field], value)
-            else:
-                self.assertEqual(form.initial[field], self.user_data[field])
-
-        response = self.test_user_access()
-        form = response.context['form']
-        check_field_initial_value(form, 'username')
-        check_field_initial_value(form, 'first_name')
-        check_field_initial_value(form, 'last_name')
-        check_field_initial_value(form, 'email')
-        check_field_initial_value(form, 'id_code')
-        self.assertIsNone(form['password'].value())
-        self.assertIsNone(form['confirm_password'].value())
-
-    def test_invalid_id_code(self):
-        self.test_user_access()
-        new_data = self.user_data.copy()
-        new_data['id_code'] = '1234'
-        response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
-        self.assertFormError(response, 'form', 'id_code', 'Ensure this value has at least 10 characters (it has %d).'
-                             % len(new_data['id_code']))
-
-    def test_duplicate_id_code(self):
-        self.test_user_access()
-        new_data = self.user_data2.copy()
-        self.create_system_user(data=new_data)
-        new_data['id_code'] = self.user_data['id_code']
-        response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
-        self.assertEqual(response.status_code, 200)
-        self.assertRaises(forms.ValidationError, response.context['form'].clean)
-
-    def test_duplicate_username(self):
-        self.test_user_access()
-        new_data = self.user_data2.copy()
-        self.create_system_user(data=new_data)
-        new_data['username'] = self.user_data['username']
-        response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
-        self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'username', 'A user with that username already exists.')
-
-    def test_valid_submit(self):
-        self.test_user_access()
-        response = self.client.post(reverse_lazy('systemUserProfile'), self.user_data2)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.user_data2['id_code'], User.objects.filter(username=self.user_data2['username'])[0].system_user.id_code)
-
-    def test_valid_id_code_submit(self):
-        self.test_user_access()
-        new_data = self.user_data.copy()
-        new_data['id_code'] = self.user_data2['id_code']
-        response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.user_data2['id_code'], User.objects.filter(username=self.user_data['username'])[0].system_user.id_code)
-
-    def test_passwords_did_not_match(self):
-        self.test_user_access()
-        new_data = self.user_data.copy()
-        new_data['confirm_password'] = 'wrong'
-        response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
-        self.assertEqual(response.status_code, 200)
-        self.assertRaises(forms.ValidationError, response.context['form'].clean)
-
-    def test_change_password(self):
-        self.test_user_access()
-        new_data = self.user_data.copy()
-        new_password = 'new_password'
-        new_data['password'] = new_password
-        new_data['confirm_password'] = new_password
-        response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
-        self.assertEqual(response.status_code, 302)
-        response = self.client.post(reverse_lazy('login'), {'username': new_data['username'],
-                                                            'password': new_password})
-        self.assertEqual(response.status_code, 302)
-
+        # remove secretary
+        secretary_count_before = len(Secretary.objects.filter(office=doctor_system_user.role.office))
+        response = self.client.post(reverse_lazy('deleteSecretary'), {'username': candidate_system_user.user.username})
+        secretary_count_after = len(Secretary.objects.filter(office=doctor_system_user.role.office))
+        self.assertEqual(secretary_count_before - 1, secretary_count_after)
