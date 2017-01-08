@@ -7,11 +7,11 @@
     <div class="col-lg-12 col-sm-6">
         <div class="card hovercard">
             <div class="card-background">
-                <img class="card-bkimg" alt="" src="{% static "image/women_doctor.png" %}">
+                <img class="card-bkimg" alt="" src="{% static "image/back.png" %}">
                 <!-- http://lorempixel.com/850/280/people/9/ -->
             </div>
             <div class="useravatar">
-                <img alt="" src="{% static "image/women_doctor.png" %}">
+                <img alt="" src="{% static "image/doctor.png" %}">
             </div>
 
             <div class="card-info">
@@ -29,14 +29,23 @@
 
             <div class="tab-pane fade in" id="tab3">
 
-                {% if doctor.office.get_available_days != None %}
+                {% if doctor.office != None and doctor.office.get_available_days != None %}
                     <h3>زمان های قابل رزرو پزشک</h3>
                     <br>
                     {% include "reserve.html" %}
                 {% else %}
-                    <h3>
-                        هیچ زمان قابل رزروی برای این پزشک به ثبت نرسیده است.
-                    </h3>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h3>
+                                هیچ زمان قابل رزروی برای این پزشک به ثبت نرسیده است.
+                            </h3>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{% url "doctorProfile" doctor.pk %}" class="btn btn-primary">بازگشت به پروفایل</a>
+
+                        </div>
+                    </div>
+
                 {% endif %}
             </div>
         </div>

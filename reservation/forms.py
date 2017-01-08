@@ -79,6 +79,16 @@ class DoctorRegisterForm(ModelForm):
         model = Doctor
         fields = '__all__'
 
+        labels = {
+            'doctor_code': "شماره نظام پزشکی",
+            'education': "میزان تحصیلات",
+            'speciality': "تخصص",
+            'insurance': "بیمه‌های تحت پوشش",
+            'price': "قیمت ویزیت",
+            'cv': "رزومه",
+            'contract': "آپلود فایل قرارداد...",
+        }
+
     def clean(self):
         cleaned_data = super(DoctorRegisterForm, self).clean()
         if Doctor.objects.filter(doctor_code=cleaned_data.get("doctor_code")).exists():

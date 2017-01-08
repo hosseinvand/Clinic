@@ -10,12 +10,12 @@
     {% endfor %}
     {% for day in doctor.office.get_available_days %}
         <div class="col-md-2 col-xs-6">
-            <div class="panel-group" id="accordion">
+            <div class="panel-group" id="accordion{{ forloop.counter }}">
                 <div class="panel panel-success text-center">
 
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1{{ forloop.counter }}">
+                            <a data-toggle="collapse" data-parent="#accordion{{ forloop.counter }}" href="#collapse1{{ forloop.counter }}">
                                 <p>
                                     {{ day.1 }}
                                 </p>
@@ -42,7 +42,7 @@
                 <div class="panel  panel-success text-center">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2{{ forloop.counter }}">بازه زمانی مورد نظر</a>
+                            <a data-toggle="collapse" data-parent="#accordion{{ forloop.counter }}" href="#collapse2{{ forloop.counter }}">بازه زمانی مورد نظر</a>
                         </h4>
                     </div>
                     <div id="collapse2{{ forloop.counter }}" class="panel-collapse collapse">
