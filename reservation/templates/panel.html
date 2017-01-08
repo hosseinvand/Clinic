@@ -50,7 +50,12 @@
                             {#                                    جستجوی پزشک#}
                             {#                                </a>#}
                             {#                            </li>#}
-
+                            <li {% if view.selected == "updateProfile" %}class="active"{% endif %}>
+                                <a href="{% url 'systemUserProfile' %}">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                    ویرایش اطلاعات  کاربری
+                                </a>
+                            </li>
                             {% if user.system_user.role.get_role_id == 1 %}
                                 <li>
                                     <a href="{% url 'doctorRegister' %}">
@@ -59,6 +64,7 @@
                                     </a>
                                 </li>
                             {% else %}
+
                                 {% if user.system_user.role.get_role_id == 3 %}
                                     <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
                                         <a href="{% url 'ManageSecretary' %}">
@@ -87,12 +93,7 @@
                                     </li>
                                 {% endif %}
 
-                                <li {% if view.selected == "updateProfile" %}class="active"{% endif %}>
-                                    <a href="{% url 'systemUserProfile' %}">
-                                        <i class="glyphicon glyphicon-edit"></i>
-                                        ویرایش اطلاعات  کاربری
-                                    </a>
-                                </li>
+
                                 <li>
                                     <a href="{% url 'doctorProfile' user.system_user.role.pk %}">
                                         <i class="glyphicon glyphicon-eye-open"></i>
