@@ -273,7 +273,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
     model = Reservation
     template_name = 'reservation.html'
     form_class = ReservationDateTimeForm
-    success_url = reverse_lazy("patientReservationRequests")
+    success_url = reverse_lazy("panel")
 
     def get_context_data(self, **kwargs):
         context = super(ReservationCreateView, self).get_context_data(**kwargs)
