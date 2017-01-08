@@ -35,7 +35,7 @@ class AvailableDaysTest(TestCase):
             'base_time': 15,
             'opening_days': ['sat','tue','wed']
         }
-        doctor_user = test_utils.create_test_doctor(123,"0018032311" ,"mahshid","pass")
+        doctor_user = test_utils.create_test_doctor(123,"0018032311","mahshid","pass")
         self.client.login(username='mahshid', password='pass')
         response = self.client.post(reverse_lazy('addClinic'), office_data)
         self.assertEqual(response.status_code, 302)

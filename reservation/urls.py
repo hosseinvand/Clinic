@@ -23,7 +23,8 @@ urlpatterns = [
     url(r'^panel/clinic/edit$', UpdateClinicView.as_view(), name="updateClinic"),
     url(r'^panel/search$', PanelSearch.as_view(), name="panelSearch"),
     url(r'^panel/profile/$', UpdateSystemUserProfile.as_view(), name="systemUserProfile"),
-    url(r'^panel/reservations/$', ManageReservations.as_view(), name="manageReservations"),
+    url(r'^panel/reservation/requests/$', ManageReservations.as_view(), name="manageReservations"),
+    url(r'^panel/reservation/status/$', PatientReservationRequestsView.as_view(), name="patientReservationRequests"),
 
     url(r'^profile/(?P<pk>\d+)$', DoctorProfileView.as_view(), name="doctorProfile"),
     url(r'^reservation/(?P<pk>\d+)$', ReservationCreateView.as_view(), name="reservation"),

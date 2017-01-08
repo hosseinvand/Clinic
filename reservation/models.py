@@ -234,20 +234,24 @@ class Reservation(models.Model):
         print('not', not_available)
 
         available = [x for x in result if x not in not_available]
-        return [{'range': self.get_range(x), 'range_num': x} for x in available]
+        return [{'range': self.get_range_by_num(x), 'range_num': x} for x in available]
 
     @property
     def get_jalali(self):
         return jalali.Gregorian(self.date).persian_string()
 
     #   TODO: TEST
-    def get_range(self, num):
+    def get_range_by_num(self, num):
         base = self.doctor.get_base_time()
-        start = datetime.time((num*base)//60, (num*base) % 60)
-        end = datetime.time((((num+1)*base)//60), (((num+1)*base) % 60))
+        start = datetime.time((num * base) // 60, (num * base) % 60).strftime("%H:%M")
+        end = datetime.time((((num + 1) * base) // 60), (((num + 1) * base) % 60)).strftime("%H:%M")
         return start, end
+
+    def get_range(self):
+        return self.get_range_by_num(self.range_num)
 
     def get_num_by_start(self, hour, minute=0):
         if minute%self.doctor.get_base_time() > 0:
             return -1
         return (hour*60 + minute) // self.doctor.get_base_time()
+

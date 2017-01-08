@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -272,10 +273,30 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
     model = Reservation
     template_name = 'reservation.html'
     form_class = ReservationDateTimeForm
-    success_url = reverse_lazy("searchResult")
+    success_url = reverse_lazy("patientReservationRequests")
 
     def get_context_data(self, **kwargs):
         context = super(ReservationCreateView, self).get_context_data(**kwargs)
         context['doctor'] = Doctor.objects.get(pk=self.kwargs['pk'])
         context['patient'] = self.request.user.system_user
+        return context
+
+
+class PatientReservationRequestsView(LoginRequiredMixin, ListView):
+    selected ="PatientReservationRequestsView"
+    template_name = 'panel.html'
+    context_object_name = 'accepted'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(range_num__isnull=False, patient=self.request.user.system_user)
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientReservationRequestsView, self).get_context_data(**kwargs)
+        context['pending'] = Reservation.objects.filter(range_num__isnull=True,
+                                                        patient=self.request.user.system_user,
+                                                        date__gte=datetime.date.today())
+        print('pending: ', context['pending'])
+        context['rejected'] = Reservation.objects.filter(range_num__isnull=True,
+                                                         patient=self.request.user.system_user,
+                                                         date__lt=datetime.date.today())
         return context
