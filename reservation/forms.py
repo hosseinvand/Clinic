@@ -129,16 +129,23 @@ class ClinicForm(ModelForm):
 
 class DoctorSearchForm(ModelForm):
 
-    name = forms.CharField(widget=forms.TextInput,required=False)
-    max_price = forms.IntegerField(widget=forms.NumberInput, required=False)
-    city = fields_for_model(Office)['city']
-    from_hour = fields_for_model(Office)['from_hour']
-    to_hour = fields_for_model(Office)['to_hour']
+    name = forms.CharField(label="نام", widget=forms.TextInput,required=False)
+    max_price = forms.IntegerField(label="بیشینه قیمت", widget=forms.NumberInput, required=False)
+    city = fields_for_model(Office, labels="شهر")['city']
+    from_hour = fields_for_model(Office, labels="از ساعت")['from_hour']
+    to_hour = fields_for_model(Office, labels="تا ساعت")['to_hour']
     # days = fields_for_model(Office)['opening_days']
 
     class Meta:
         model = Doctor
         fields = ['education', 'speciality', 'insurance']
+
+        labels = {
+            'education': "تحصیلات",
+            'speciality': "تخصص",
+            'insurance': "بیمه‌ی تحت پوشش",
+
+        }
 
 
 class SystemUserUpdateForm(ModelForm):
@@ -196,14 +203,12 @@ class ReservationDateTimeForm(ModelForm):
         print("user patient: ", time.patient)
         time.doctor = Doctor.objects.get(pk=self.cleaned_data.get("doctor_pk"))
         time.date = jalali.Persian(self.cleaned_data.get("date")).gregorian_datetime()
-        time.status = RESERVATION_STATUS[0][0]
         time.save()
         return time
 
     def clean(self):
         cleaned_data = super(ReservationDateTimeForm, self).clean()
         if cleaned_data.get("from_time") > cleaned_data.get("to_time"):
-            print("خاک تو سرت!")
             raise forms.ValidationError('زمان آغازی بازه باید از ازمان پایانی آن کمتر باشد.')
         doctor = Doctor.objects.get(pk=self.cleaned_data.get("doctor_pk"))
         if cleaned_data.get("from_time") > doctor.office.to_hour or cleaned_data.get("to_time") < doctor.office.from_hour:
