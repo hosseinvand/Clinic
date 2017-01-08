@@ -143,9 +143,9 @@ class SearchDoctorView(ListView, FormView):
 
         return self.object_list
 
-class SecretaryPanel(LoginRequiredMixin, TemplateView):
-    selected = "panel"
-    template_name = 'panel.html'
+# class SecretaryPanel(LoginRequiredMixin, TemplateView):
+#     selected = "panel"
+#     template_name = 'panel.html'
 
 
 class ManageSecretary(LoginRequiredMixin, ListView):
@@ -282,8 +282,8 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class PatientReservationRequestsView(LoginRequiredMixin, ListView):
-    selected ="PatientReservationRequestsView"
+class SecretaryPanel(LoginRequiredMixin, ListView):
+    selected ="panel"
     template_name = 'panel.html'
     context_object_name = 'accepted'
 
@@ -291,7 +291,7 @@ class PatientReservationRequestsView(LoginRequiredMixin, ListView):
         return Reservation.objects.filter(range_num__isnull=False, patient=self.request.user.system_user)
 
     def get_context_data(self, **kwargs):
-        context = super(PatientReservationRequestsView, self).get_context_data(**kwargs)
+        context = super(SecretaryPanel, self).get_context_data(**kwargs)
         context['pending'] = Reservation.objects.filter(range_num__isnull=True,
                                                         patient=self.request.user.system_user,
                                                         date__gte=datetime.date.today())
