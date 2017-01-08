@@ -15,7 +15,7 @@
             <tbody>
             {% for reservation in accepted %}
                 <tr id="row{{reservation.pk}}" class="centered-cells">
-                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}" class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
                     <td>{{ reservation.doctor.get_speciality_display }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td>{{ reservation.get_range.0}} تا {{ reservation.get_range.1 }}</td>
@@ -26,7 +26,7 @@
 
             {% for reservation in pending %}
                 <tr id="row{{reservation.pk}}" class="centered-cells">
-                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}"  class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
                     <td>{{ reservation.doctor.get_speciality_display }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td> --- </td>
@@ -36,7 +36,7 @@
             <tr></tr>
             {% for reservation in rejected %}
                 <tr id="row{{reservation.pk}}" class="centered-cells">
-                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}"  class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
                     <td>{{ reservation.doctor.get_speciality_display }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td> --- </td>
