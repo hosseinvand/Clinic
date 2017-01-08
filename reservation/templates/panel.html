@@ -10,7 +10,11 @@
                 <div class="profile-sidebar">
                     <!-- SIDEBAR USERPIC -->
                     <div class="profile-userpic">
-                        <img src="{% static "image/profile_user.png" %}" class="img-responsive" alt="">
+                       {% if user.system_user.role.get_role_id == 1 %}
+                           <img src="{% static "image/avatar-blue.png" %}" class="img-responsive" alt="">
+                       {% else %}
+                           <img src="{% static "image/doctor.png" %}" class="img-responsive" alt="">
+                       {% endif %}
                     </div>
                     <!-- END SIDEBAR USERPIC -->
                     <!-- SIDEBAR USER TITLE -->
