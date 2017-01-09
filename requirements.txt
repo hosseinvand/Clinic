@@ -1,5 +1,10 @@
-dj-database-url==0.4.1
 Django==1.10.4
+django-material==0.11.0
+django-polymorphic==1.0.2
+django-widget-tweaks==1.4.1
+material==0.1
+django-multiselectfield==0.1.4
+dj-database-url==0.4.1
 gunicorn==19.6.0
 psycopg2==2.6.2
 whitenoise==3.2
