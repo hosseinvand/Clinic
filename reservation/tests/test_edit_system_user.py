@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms import forms
 from django.test import TestCase
 from django.urls import reverse_lazy
+import os
 
-from reservation.models import SystemUser
+from reservation.models import SystemUser, Doctor
 
 
-class EditSystemUserTest(TestCase):
+class SystemUserTest(TestCase):
     user_data = {
         'username': 'ahmad',
         'email': 'ahmad@gmail.com',
@@ -42,6 +44,41 @@ class EditSystemUserTest(TestCase):
     def test_redirect_to_login(self):
         response = self.client.get(reverse_lazy('systemUserProfile'), follow=True)
         self.assertRedirects(response, '/login/?next=/panel/profile/', 302, 200)
+
+    def test_user_creation(self):
+        self.create_system_user()
+
+
+class DoctorTest(SystemUserTest):
+    doctor_data = {
+        'doctor_code': 123456,
+        'education': 'S',
+        'speciality': 'Eye',
+        'insurance': 'Iran',
+        'price': 35000,
+        'cv': 'test cv test cv',
+        'contract': 'contracts/chi.jpg',
+    }
+
+    def setUp(self):
+        super(DoctorTest, self).setUp()
+        upload_file = open(os.path.join(os.path.dirname(__file__), 'test_utils.py'), 'rb')
+        self.doctor_data['contract'] = SimpleUploadedFile(upload_file.name, upload_file.read())
+
+    def create_doctor(self, data=doctor_data):
+        self.create_system_user()
+        doctor_count = Doctor.objects.all().count()
+        response = self.client.post(reverse_lazy('doctorRegister'), data)
+        doctor = Doctor.objects.filter(doctor_code=self.doctor_data['doctor_code'])
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(doctor.exists())
+        self.assertTrue(Doctor.objects.filter(education=self.doctor_data['education']).exists())
+        self.assertTrue(SystemUser.objects.filter(role=doctor[0]).exists())
+        self.assertEqual(Doctor.objects.all().count(), doctor_count + 1, "db doesn't changed")
+        return response
+
+
+class EditSystemUserTest(SystemUserTest):
 
     def test_user_access(self):
         self.create_system_user()
