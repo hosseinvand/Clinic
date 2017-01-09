@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% load material_form %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block pageBody %}
+    <div class="col-lg-12 col-sm-6">
+        <div class="card hovercard">
+            <div class="card-background">
+                <img class="card-bkimg" alt="" src="{% static "image/back.png" %}">
+                <!-- http://lorempixel.com/850/280/people/9/ -->
+            </div>
+            <div class="useravatar">
+                <img alt="" src="{% static "image/doctor.png" %}">
+            </div>
+
+            <div class="card-info">
+            <span class="card-title">
+دکتر
+            {{ doctor.full_name }}
+            </span>
+
+
+            </div>
+        </div>
+        <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <button type="button" id="doctorinfo" class="btn btn-default btn-raised" href="#tab1" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <div class="hidden-xs">مشخصات پزشک</div>
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" id="officeinfo" class="btn btn-default btn-raised" href="#tab2" data-toggle="tab"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <div class="hidden-xs text-p">اطلاعات مطب</div>
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <a href="{% url "reservation" doctor.pk %}">
+                    <button type="button" id="reservation" class="btn btn-default btn-raised"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                        <div class=" hidden-xs">نوبت‌گیری آنلاین</div>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <div class="well">
+            <div class="tab-content" id="tabs">
+                <div class="tab-pane fade in active" id="tab1">
+                    <dl class="dl-horizontal btn-lg">
+                        <dt class="text-primary">نام پزشک</dt>
+                        <dd>{{ doctor.full_name }}</dd>
+                        <dt class="text-primary">میزان تحصیلات</dt>
+                        <dd>{{ doctor.get_education_display }}   {{ doctor.get_speciality_display }}</dd>
+                        <dt class="text-primary">بیمه‌ تحت پوشش</dt>
+                        <dd>{{ doctor.get_insurance_display }}</dd>
+                        <dt class="text-primary">قیمت ویزیت</dt>
+                        <dd>{{ doctor.price }} تومان</dd>
+                        <dt class="text-primary">رزومه</dt>
+                        <dd>{{ doctor.cv}}</dd>
+
+                        <dt class="text-primary"></dt>
+                        <dd></dd>
+
+                    </dl>
+
+
+                </div>
+                <div class="tab-pane fade in" id="tab2">
+                    {% if doctor.office != None %}
+                        <dl class="dl-horizontal btn-lg">
+
+                            <dt class="text-primary">شهر</dt>
+                            <dd>{{ doctor.office.get_city_display }}</dd>
+                            <dt class="text-primary"> آدرس </dt>
+                            <dd>{{ doctor.office.address }} </dd>
+                            <dt class="text-primary"> ساعت کاری </dt>
+                            <dd>{{ doctor.office.from_hour }}
+                                تا
+                                {{ doctor.office.to_hour }}</dd>
+                            <dt class="text-primary">روزهای کاری </dt>
+                            <dd> {{ doctor.office.get_opening_days_display}}</dd>
+                            <dt class="text-primary">تلفن</dt>
+                            <dd>{{ doctor.office.phone}}</dd>
+                            <dt class="text-primary">تلگرام</dt>
+                            <dd>{{ doctor.office.telegram}}</dd>
+
+                            <dt class="text-primary"></dt>
+{#                            <h1 class="text-danger"> نمایش محل مطب روی نقشه </h1>#}
+                            <dd></dd>
+
+                            <dt class="text-primary"></dt>
+                            <dd></dd>
+                        </dl>
+                    {% else %}
+                        <div class="col-md-offset-1">
+                            <h4>اطلاعات مطب پزشک ثبت نشده‌است.</h4>
+                        </div>
+                    {% endif %}
+                </div>
+                {#                <div class="tab-pane fade in" id="tab3">#}
+                {##}
+                {#                    {% if doctor.office.get_available_days != None %}#}
+                {#                        <h3>زمان های قابل رزرو پزشک</h3>#}
+                {#                        <br>#}
+                {#                        {% include "reserve.html" %}#}
+                {#                    {% else %}#}
+                {#                        <h3>#}
+                {#                        هیچ زمان قابل رزروی برای این پزشک به ثبت نرسیده است.#}
+                {#                        </h3>#}
+                {#                    {% endif %}#}
+                {#                </div>#}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block pageBody %}
+
+    <div class="container" align="right">
+
+        <div class="col-md-3">
+            <form method="get" class="form-horizontal" action="{% url 'searchResult' %}">{% csrf_token %}
+                {{ form.as_p}}
+                <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">فیلتر  </button>
+            </form>
+        </div>
+        <div class="col-md-9">
+            <h2>
+                نتایج جست‌وجو:
+            </h2>
+                {% if not object_list %}
+                    <h4>هیچ پزشکی با این مشخصات در سیستم وجود ندارد.</h4>
+
+                {% endif %}
+
+                {% for f in object_list %}
+                    <div>
+                        {#            {% include 'widget/food.html' with food=f%}#}
+                        {% include 'doctor_card.html' with doctor=f %}
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+{% endblock %}

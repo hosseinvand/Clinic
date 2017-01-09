@@ -1,0 +1,49 @@
+{% load material_form %}
+{% load widget_tweaks %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-stripped table-bordered">
+            <thead>
+            <tr>
+                <th>نام پزشک</th>
+                <th>تخصص پزشک</th>
+                <th>تاریخ</th>
+                <th>زمان تعیین‌شده</th>
+                <th>وضعیت درخواست</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reservation in accepted %}
+                <tr id="row{{reservation.pk}}" class="centered-cells">
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}" class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td>{{ reservation.doctor.get_speciality_display }}</td>
+                    <td>{{ reservation.get_jalali }}</td>
+                    <td>{{ reservation.get_range.0}} تا {{ reservation.get_range.1 }}</td>
+                    <td class="bg-success text-success"> تعیین شده </td>
+                </tr>
+            {% endfor %}
+            <tr></tr>
+
+            {% for reservation in pending %}
+                <tr id="row{{reservation.pk}}" class="centered-cells">
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}"  class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td>{{ reservation.doctor.get_speciality_display }}</td>
+                    <td>{{ reservation.get_jalali }}</td>
+                    <td> --- </td>
+                    <td class="bg-info text-info"> در دست بررسی  </td>
+                </tr>
+            {% endfor %}
+            <tr></tr>
+            {% for reservation in rejected %}
+                <tr id="row{{reservation.pk}}" class="centered-cells">
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}"  class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td>{{ reservation.doctor.get_speciality_display }}</td>
+                    <td>{{ reservation.get_jalali }}</td>
+                    <td> --- </td>
+                    <td class="bg-info text-info"> تاریخ گذشته </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
