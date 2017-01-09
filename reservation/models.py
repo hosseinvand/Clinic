@@ -128,6 +128,17 @@ class Office(models.Model):
                 result.append((jalali.Gregorian(day).persian_string("{}/{}/{}"), WEEK_DAYS[day_code][1]))
         return result
 
+    @property
+    def doctor(self):
+        doctorSecretary = self.doctorSecretary.all()
+        print("first!: ", doctorSecretary)
+        for secretary in doctorSecretary:
+            print("role id", secretary.get_role_id())
+            if secretary.get_role_id() == DOCTOR_ROLE_ID:
+                print("secretary: " , secretary)
+                return secretary
+
+
 class Role(PolymorphicModel):
 
     @abstractmethod
@@ -148,7 +159,7 @@ class Patient(Role):
 
 
 class DoctorSecretary(Role):
-    office = models.ForeignKey(Office, blank=True, null=True)
+    office = models.ForeignKey(Office, blank=True, null=True, related_name="doctorSecretary")
 
     def get_role_type(self):
         return "منشی پزشک"

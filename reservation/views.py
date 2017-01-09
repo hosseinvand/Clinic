@@ -13,7 +13,7 @@ from django.views.generic.list import ListView
 from reservation.forms import *
 from .forms import LoginForm
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
-from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin
+from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin, DoctorSecretaryRequiredMixin
 
 
 class MainPageView(TemplateView, FormView):
@@ -262,12 +262,12 @@ class UpdateSystemUserProfile(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class ManageReservations(LoginRequiredMixin, DoctorRequiredMixin, ListView):
+class ManageReservations(LoginRequiredMixin, DoctorSecretaryRequiredMixin, ListView):
     selected = "reservation"
     template_name = 'panel.html'
 
     def get_queryset(self):
-        return Reservation.objects.filter(range_num__isnull=True, doctor=self.request.user.system_user.role)
+        return Reservation.objects.filter(range_num__isnull=True, doctor=self.request.user.system_user.role.office.doctor)
 
 
 class DoctorProfileView(DetailView):
