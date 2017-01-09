@@ -30,6 +30,6 @@ urlpatterns = [
     url(r'^reservation/(?P<pk>\d+)$', ReservationCreateView.as_view(), name="reservation"),
 
 
-    url(r'^ajax/reserve_time/$', views.reserveTime, name='deleteSecretary'),
+    url(r'^ajax/reserve_time/$', views.reserveTime, name='reserveTime'),
 
 ]

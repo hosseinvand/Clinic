@@ -24,7 +24,7 @@ def create_test_doctor(doctor_code,id_code, username, password):
 
 def create_office(phone, city, from_hour, to_hour):
     office = Office.objects.create(city=city, from_hour=from_hour, to_hour=to_hour, address="address",
-                                   phone=phone, telegram="telegram", base_time=15, opening_days=None)
+                                   phone=phone, telegram="telegram", base_time=15, opening_days=['sat', 'sun', 'mon', 'wed'])
     return office
 
 
