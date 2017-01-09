@@ -5,6 +5,7 @@
         <table class="table table-stripped table-bordered">
             <thead>
             <tr>
+                <th>شماره</th>
                 <th>نام و نام خانوادگی</th>
                 <th>تاریخ</th>
                 <th>از ساعت</th>
@@ -16,6 +17,7 @@
             <tbody>
             {% for reservation in object_list %}
                 <tr id="row{{reservation.pk}}" class="centered-cells">
+                    <td>{{ forloop.counter }}</td>
                     <td>{{ reservation.patient.full_name }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td>{{ reservation.from_time }}</td>
@@ -31,7 +33,9 @@
                         </select>
                     </td>
                     <td>
-                        <button class="btn btn-success btn-raised btn-md" role="button" onclick=reserveTime("{{ reservation.pk }}","{{ csrf_token }}")> ثبت نوبت</button>
+                        <button class="btn btn-success btn-raised btn-sm" role="button" onclick=reserveTime("{{ reservation.pk }}","{{ csrf_token }}")> ثبت نوبت</button>
+                        <button class="btn btn-danger btn-raised btn-sm" role="button" onclick=rejectTime("{{ reservation.pk }}","{{ csrf_token }}")>رد درخواست</button>
+
                     </td>
                 </tr>
             {% endfor %}

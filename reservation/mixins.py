@@ -21,10 +21,10 @@ class DoctorRequiredMixin(object):
         return super(DoctorRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 
-class SecretaryRequiredMixin(object):
+class DoctorSecretaryRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         role = SystemUser.objects.get(user=request.user).role
-        if not role.get_role_id() == SECRETARY_ROLE_ID:
+        if not (role.get_role_id() == SECRETARY_ROLE_ID or role.get_role_id() == DOCTOR_ROLE_ID):
             return HttpResponseRedirect(reverse_lazy('panel'))
-        return super(SecretaryRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super(DoctorSecretaryRequiredMixin, self).dispatch(request, *args, **kwargs)
 

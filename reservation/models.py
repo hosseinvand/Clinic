@@ -1,4 +1,5 @@
 import datetime
+import stat
 from abc import abstractmethod
 from random import choice
 from django.db.models import Q
@@ -91,22 +92,23 @@ BASE_TIMES = ((10, 10),
 HOURS = [(i, i) for i in range(24)]
 
 RESERVATION_STATUS = (
-    ('PENDING', 'منتظر تایید'),
-    ('ACCEPTED', 'تایید شده'),
-    ('REJECTED', 'رد شده')
+    ('PENDING', 'در دست بررسی'),
+    ('ACCEPTED', 'تعیین شده'),
+    ('REJECTED', 'رد شده'),
+    ('EXPIRED', 'تاریخ گذشته')
 )
 
 
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
-    city = models.CharField(max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
+    city = models.CharField("شهر",max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
     address = models.TextField()
     phone = models.CharField(max_length=11, unique=True, null=True, blank=True,
                              error_messages={'unique': "این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!"})
     telegram = models.CharField(max_length=30, null=True)
-    from_hour = models.IntegerField(choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
-    to_hour = models.IntegerField(choices=HOURS, null=True, blank=True)
+    from_hour = models.IntegerField("از ساعت", choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
+    to_hour = models.IntegerField("تا ساعت", choices=HOURS, null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
@@ -125,6 +127,16 @@ class Office(models.Model):
             if day_code in opening_days:
                 result.append((jalali.Gregorian(day).persian_string("{}/{}/{}"), WEEK_DAYS[day_code][1]))
         return result
+
+    @property
+    def doctor(self):
+        doctorSecretary = self.doctorSecretary.all()
+        print("first!: ", doctorSecretary)
+        for secretary in doctorSecretary:
+            print("role id", secretary.get_role_id())
+            if secretary.get_role_id() == DOCTOR_ROLE_ID:
+                print("secretary: " , secretary)
+                return secretary
 
 
 class Role(PolymorphicModel):
@@ -147,7 +159,7 @@ class Patient(Role):
 
 
 class DoctorSecretary(Role):
-    office = models.ForeignKey(Office, blank=True, null=True)
+    office = models.ForeignKey(Office, blank=True, null=True, related_name="doctorSecretary")
 
     def get_role_type(self):
         return "منشی پزشک"
@@ -215,6 +227,29 @@ class SystemUser(models.Model):
     def username(self):
         return self.user.username
 
+    def get_pending_reserve_times(self):
+        return Reservation.objects.filter(range_num__isnull=True,
+                                          status=RESERVATION_STATUS[0][0],
+                                          patient=self,
+                                          date__gte=datetime.date.today())
+
+    def get_accepted_reserve_times(self):
+        return Reservation.objects.filter(range_num__isnull=False,
+                                          status=RESERVATION_STATUS[1][0],
+                                          patient=self)
+
+    def get_rejected_reserve_times(self):
+        return Reservation.objects.filter(status=RESERVATION_STATUS[2][0],
+                                          patient=self)
+
+    def get_expired_reserve_times(self):
+        Reservation.objects.filter(range_num__isnull=True,
+                                   patient=self,
+                                   date__lt=datetime.date.today()).update(status=RESERVATION_STATUS[3][0])
+        return Reservation.objects.filter(range_num__isnull=True,
+                                          patient=self,
+                                          status=RESERVATION_STATUS[3][0])
+
 
 class Reservation(models.Model):
     from_time = models.IntegerField(choices=HOURS)
@@ -223,10 +258,11 @@ class Reservation(models.Model):
     patient = models.ForeignKey(SystemUser, related_name='Reservations')
     doctor = models.ForeignKey(Doctor, related_name='Reservations')
     range_num = models.IntegerField(null=True)
+    status = models.CharField(max_length=30, choices=RESERVATION_STATUS, default=RESERVATION_STATUS[0][0])
 
     def get_available_times(self):
-        start_range_num = self.get_num_by_start(self.from_time)
-        end_range_num = self.get_num_by_start(self.to_time)
+        start_range_num = self.get_num_by_start(max(self.from_time,self.doctor.office.from_hour))
+        end_range_num = self.get_num_by_start(min(self.to_time,self.doctor.office.to_hour))
         result = range(start_range_num, end_range_num)
 
         reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
@@ -255,3 +291,5 @@ class Reservation(models.Model):
             return -1
         return (hour*60 + minute) // self.doctor.get_base_time()
 
+    def set_status(self, status):
+        self.status = status

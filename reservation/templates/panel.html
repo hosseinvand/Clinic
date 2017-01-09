@@ -27,14 +27,7 @@
                             {{ user.system_user.role.get_role_type }}
                         </div>
                     </div>
-                    <!-- END SIDEBAR USER TITLE -->
-                    <!-- SIDEBAR BUTTONS -->
-                    {#                    <div class="profile-userbuttons">#}
-                    {#                        <button type="button" class="btn btn-success btn-sm">Follow</button>#}
-                    {#                        <button type="button" class="btn btn-danger btn-sm">Message</button>#}
-                    {#                    </div>#}
-                    <!-- END SIDEBAR BUTTONS -->
-                    <!-- SIDEBAR MENU -->
+
                     <div class="profile-usermenu">
                         <ul class="nav">
                             <li {% if view.selected == "panel" %}class="active"{% endif %}>
@@ -44,12 +37,7 @@
                                     وضعیت نوبت ها
                                 </a>
                             </li>
-                            {#                            <li {% if view.selected == "panelSearch" %}class="active"{% endif %}>#}
-                            {#                                <a href="{% url 'panelSearch' %}">#}
-                            {#                                    <i class="glyphicon glyphicon-search"></i>#}
-                            {#                                    جستجوی پزشک#}
-                            {#                                </a>#}
-                            {#                            </li>#}
+
  <li {% if view.selected == "updateProfile" %}class="active"{% endif %}>
                                     <a href="{% url 'systemUserProfile' %}">
                                         <i class="glyphicon glyphicon-edit"></i>
@@ -173,29 +161,5 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-
-        {#    <div class="col-md-9">#}
-        {#        <!-- Nav tabs -->#}
-        {#        <div class="panel">#}
-        {#            <ul class="nav nav-tabs" role="tablist">#}
-        {#                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>#}
-        {#                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>#}
-        {#                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>#}
-        {#                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>#}
-        {#            </ul>#}
-        {##}
-        {#            <!-- Tab panes -->#}
-        {#            <div class="panel-body">#}
-        {#                <div class="tab-content">#}
-        {#                    <div role="tabpanel" class="tab-pane active" id="home">#}
-        {#                    تست#}
-        {#                </div>#}
-        {#                    <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>#}
-        {#                    <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>#}
-        {#                    <div role="tabpanel" class="tab-pane" id="settings">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage..</div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#    </div>#}
 
 {% endblock %}

@@ -19,7 +19,7 @@
                     <td>{{ reservation.doctor.get_speciality_display }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td>{{ reservation.get_range.0}} تا {{ reservation.get_range.1 }}</td>
-                    <td class="bg-success text-success"> تعیین شده </td>
+                    <td class="bg-success text-success"> {{ reservation.get_status_display }} </td>
                 </tr>
             {% endfor %}
             <tr></tr>
@@ -30,7 +30,7 @@
                     <td>{{ reservation.doctor.get_speciality_display }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td> --- </td>
-                    <td class="bg-info text-info"> در دست بررسی  </td>
+                    <td class="bg-info text-info"> {{ reservation.get_status_display }} </td>
                 </tr>
             {% endfor %}
             <tr></tr>
@@ -40,7 +40,17 @@
                     <td>{{ reservation.doctor.get_speciality_display }}</td>
                     <td>{{ reservation.get_jalali }}</td>
                     <td> --- </td>
-                    <td class="bg-info text-info"> تاریخ گذشته </td>
+                    <td class="bg-danger text-danger"> {{ reservation.get_status_display }}  </td>
+                </tr>
+            {% endfor %}
+            <tr></tr>
+            {% for reservation in expired %}
+                <tr id="row{{reservation.pk}}" class="centered-cells">
+                    <td><a href="{% url "doctorProfile" reservation.doctor.pk  %}"  class="text-primary">{{ reservation.doctor.user_role.full_name }}</a></td>
+                    <td>{{ reservation.doctor.get_speciality_display }}</td>
+                    <td>{{ reservation.get_jalali }}</td>
+                    <td> --- </td>
+                    <td class="bg-danger text-danger">  {{ reservation.get_status_display }} </td>
                 </tr>
             {% endfor %}
             </tbody>

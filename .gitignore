@@ -262,9 +262,11 @@ media
 *.iml
 modules.xml
 .idea/misc.xml
+migrations
 *.ipr
 .idea/
 Clinic/bin/
 Clinic/lib/
 Clinic/include/
 Clinic/pip-selfcheck.json
+Clinic/reservation/migrations
