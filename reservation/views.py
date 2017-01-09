@@ -183,7 +183,7 @@ class ManageSecretary(LoginRequiredMixin, ListView):
 
 
 @login_required
-def deleteSecretary(request):
+def delete_secretary(request):
     # office = request.user.system_user.role.office
     # TODO don't allow user to delete secretary of other doctors
     username = request.POST.get('username', None)
@@ -195,14 +195,22 @@ def deleteSecretary(request):
     user.save()
     return JsonResponse({})
 
+
 @login_required
-def reserveTime(request):
-    reservationPk = request.POST.get('reservationPk', None)
-    rangeNum = request.POST.get('rangeNum', None)
-    reservation = Reservation.objects.get(pk=reservationPk)
-    reservation.range_num = rangeNum
-    reservation.save()
+def reserve_time(request):
+    reservation_pk = request.POST.get('reservationPk', None)
+    range_num = request.POST.get('rangeNum', None)
+    Reservation.objects.filter(pk=reservation_pk).update(status=models.RESERVATION_STATUS[1][0], range_num=range_num)
     return JsonResponse({})
+
+
+@login_required
+def reject_time(request):
+    reservation_pk = request.POST.get('reservationPk', None)
+    Reservation.objects.filter(pk=reservation_pk).update(status=models.RESERVATION_STATUS[2][0])
+    return JsonResponse({})
+
+
 
 class AddClinicView(LoginRequiredMixin, DoctorRequiredMixin, CreateView):
     selected = "addClinic"
@@ -287,15 +295,15 @@ class SecretaryPanel(LoginRequiredMixin, ListView):
     context_object_name = 'accepted'
 
     def get_queryset(self):
-        return Reservation.objects.filter(range_num__isnull=False, patient=self.request.user.system_user)
+        return self.request.user.system_user.get_accepted_reserve_times()
 
     def get_context_data(self, **kwargs):
         context = super(SecretaryPanel, self).get_context_data(**kwargs)
-        context['pending'] = Reservation.objects.filter(range_num__isnull=True,
-                                                        patient=self.request.user.system_user,
-                                                        date__gte=datetime.date.today())
+        context['pending'] = self.request.user.system_user.get_pending_reserve_times()
+
         print('pending: ', context['pending'])
-        context['rejected'] = Reservation.objects.filter(range_num__isnull=True,
-                                                         patient=self.request.user.system_user,
-                                                         date__lt=datetime.date.today())
+        context['rejected'] = self.request.user.system_user.get_rejected_reserve_times()
+
+        context['expired'] = self.request.user.system_user.get_expired_reserve_times()
         return context
+

@@ -28,3 +28,18 @@ function reserveTime(reservationPk, token) {
         }
     });
 }
+
+function rejectTime(reservationPk, token) {
+    $.ajax({
+        method: 'POST',
+        url: '/ajax/reject_time/',
+        data: {
+            'reservationPk': reservationPk,
+            'csrfmiddlewaretoken': token
+        },
+        dataType: 'json',
+        success: function () {
+            $("#row" + reservationPk).remove()
+        }
+    });
+}
