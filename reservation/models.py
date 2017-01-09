@@ -100,13 +100,13 @@ RESERVATION_STATUS = (
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
-    city = models.CharField(max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
+    city = models.CharField("شهر",max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
     address = models.TextField()
     phone = models.CharField(max_length=11, unique=True, null=True, blank=True,
                              error_messages={'unique': "این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!"})
     telegram = models.CharField(max_length=30, null=True)
-    from_hour = models.IntegerField(choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
-    to_hour = models.IntegerField(choices=HOURS, null=True, blank=True)
+    from_hour = models.IntegerField("از ساعت", choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
+    to_hour = models.IntegerField("تا ساعت", choices=HOURS, null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
@@ -225,8 +225,8 @@ class Reservation(models.Model):
     range_num = models.IntegerField(null=True)
 
     def get_available_times(self):
-        start_range_num = self.get_num_by_start(self.from_time)
-        end_range_num = self.get_num_by_start(self.to_time)
+        start_range_num = self.get_num_by_start(max(self.from_time,self.doctor.office.from_hour))
+        end_range_num = self.get_num_by_start(min(self.to_time,self.doctor.office.to_hour))
         result = range(start_range_num, end_range_num)
 
         reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
