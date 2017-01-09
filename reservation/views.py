@@ -200,7 +200,6 @@ def reserveTime(request):
     reservationPk = request.POST.get('reservationPk', None)
     rangeNum = request.POST.get('rangeNum', None)
     reservation = Reservation.objects.get(pk=reservationPk)
-    print("hahahah", reservationPk, rangeNum)
     reservation.range_num = rangeNum
     reservation.save()
     return JsonResponse({})

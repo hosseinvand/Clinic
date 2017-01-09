@@ -7,7 +7,7 @@ from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_
 from reservation.tests.test_utils import create_multiple_doctors, create_test_user
 
 
-class ReservationTest(TestCase):
+class ManageReservationTest(TestCase):
     user_data = {
         'username': 'ahmad',
         'email': 'ahmad@gmail.com',
@@ -54,7 +54,7 @@ class ReservationTest(TestCase):
         self.assertEqual(SystemUser.objects.all().count(), system_user_count + 1, "db doesn't changed")
         return SystemUser.objects.get(user=user)
 
-    def test_request_reservation(self):
+    def test_accept_reservation(self):
         patient = self.create_system_user(data=self.user_data, should_login=False)
         doctor = create_multiple_doctors(1)[0].role
         self.client.login(username=self.user_data['username'], password=self.user_data['password'])
@@ -73,20 +73,18 @@ class ReservationTest(TestCase):
         self.assertEqual(reservation_count_before + 1, reservation_count_after)
         self.assertTrue(Reservation.objects.filter(patient=patient, doctor=doctor).exists())
 
-    def test_request_invalid_reservation(self):
-        patient = self.create_system_user(data=self.user_data, should_login=False)
-        doctor = create_multiple_doctors(1)[0].role
-        self.client.login(username=self.user_data['username'], password=self.user_data['password'])
+        self.client.logout()
 
-        reservation_count_before = len(Reservation.objects.all())
-        date = doctor.office.get_available_days()[0][0]
-        response = self.client.post(reverse_lazy('reservation', kwargs={'pk': doctor.pk}), {
-            'from_time': '16',
-            'to_time': '12',
-            'date': str(date),
-            'patient': patient.pk,
-            'doctor': doctor.pk,
+        reservation = Reservation.objects.filter(patient=patient, doctor=doctor)[0]
+        self.client.login(username="doctor0", password="password0")
+
+        self.assertIsNone(reservation.range_num)
+        response = self.client.post(reverse_lazy("reserveTime"), {
+            'reservationPk': reservation.pk,
+            'rangeNum': reservation.get_num_by_start(8)
         })
-        reservation_count_after = len(Reservation.objects.all())
+
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(reservation_count_before, reservation_count_after)
+        reservation.refresh_from_db()
+        self.assertIsNotNone(reservation.range_num)
+        self.assertEqual(reservation.range_num, reservation.get_num_by_start(8))
