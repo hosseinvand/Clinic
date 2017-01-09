@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'clinicHeroku.urls'
+ROOT_URLCONF = 'Clinic.urls'
 
 TEMPLATES = [
     {
@@ -77,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'clinicHeroku.wsgi.application'
+WSGI_APPLICATION = 'Clinic.wsgi.application'
 
 
 # Database
