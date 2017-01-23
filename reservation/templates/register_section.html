@@ -1,47 +1,41 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-4 col-xs-12">
-            <div class="panel panel-default  text-center">
-                <div class="panel-body">
-                    <h3  class="text-info">از کجا آغاز کنم؟</h3>
-                    <br>
-                    <h4>
-                        سایت شما برای من مفید خواهد بود، می‌خواهم کار با آن را آغاز نمایم
-                    </h4>
-                    </br>
-                    <a href="{% url 'register' %}" class="btn btn-info btn-raised" role="button">ثبت نام </a>
-                </div>
-
+<div class="row">
+    <div class="col s12 m4">
+        <div class="card teal">
+            <div class="card-content white-text center">
+                <span class="card-title">از کجا آغاز کنم؟</span>
+                <p>
+                    سایت شما برای من مفید خواهد بود، می‌خواهم کار با آن را آغاز نمایم
+                </p>
             </div>
-        </div>
-        <div class="col-sm-4 col-xs-12">
-            <div class="panel panel-default text-center">
-                <div class="panel-body">
-                    <h3 class="text-primary">بزن بریم!</h3>
-                    <br>
-                    <h4>
-                        هم اکنون یک حساب کاربری دارم و برای استفاده از خدمات آمده‌ام.
-                    </h4>
-                    </br>
-                    <a href="{% url 'login' %}" class="btn btn-primary btn-raised" role="button">ورود</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4 col-xs-12">
-            <div class="panel panel-default text-center">
-                <div class="panel-body">
-                    <h3 class="text-success">من یک پزشک هستم!</h3>
-                    <br>
-                    <h4>
-                        به عنوان یک پزشک می‌خواهم از سیستم رزرو سایت بهره‌مند شوم
-                    </h4>
-                    </br>
-                    <a href="{% url 'doctorRegister' %}" class="btn btn-success btn-raised" role="button">پنل پزشکان</a>
-                </div>
-
-
+            <div class="card-action center">
+                <a href="{% url 'register' %}" class="btn teal accent-4" role="button">ثبت نام </a>
             </div>
         </div>
     </div>
-</div>
+    <div class="col s12 m4">
+        <div class="card teal">
+            <div class="card-content white-text center">
+                <span class="card-title">بزن بریم</span>
+                <p>
+                    هم اکنون یک حساب کاربری دارم و برای استفاده از خدمات آمده‌ام.
+                </p>
+            </div>
+            <div class="card-action center">
+                <a href="{% url 'register' %}" class="btn teal accent-4" role="button"> ورود </a>
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m4">
+        <div class="card teal">
+            <div class="card-content white-text center">
+                <span class="card-title">من یک پزشک هستم!</span>
+                <p>
+                    به عنوان یک پزشک می‌خواهم از سیستم رزرو سایت بهره‌مند شوم
+                </p>
+            </div>
+            <div class="card-action center">
+                <a href="{% url 'register' %}" class="btn teal accent-4" role="button">پنل پزشکان</a>
+            </div>
+        </div>
+    </div>
 </div>

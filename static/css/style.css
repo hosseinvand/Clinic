@@ -23,160 +23,168 @@
     font-weight: bold;
 }
 
-body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 ,p{
-    font-family: 'XM yekan';
+html {
+    font-family: 'XM yekan', Roboto, Trebuchet, sans-serif;
 }
 
-a, a:hover, a:focus {
-    text-decoration: none;
-    color: #fff;
+.parallax-container {
+    height: 450px;
 }
 
-th{
-    text-align: center;
-}
+/*body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 ,p{*/
+/*font-family: 'XM yekan';*/
+/*}*/
 
-.input-block-level input{
-    display: inline-block;
-    width: 90%;
-    min-height: 28px;        // Make inputs at least the height of their button counterpart
-.box-sizing(border-box); // Makes inputs behave like true block-level elements
-}
+/*a, a:hover, a:focus {*/
+/*text-decoration: none;*/
+/*color: #fff;*/
+/*}*/
 
-.empty-form{
-    margin-top: 50px;
-}
+/*th{*/
+/*text-align: center;*/
+/*}*/
 
-.center-div
-{
-    position: absolute;
-    margin: auto;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
+/*.input-block-level input{*/
+/*display: inline-block;*/
+/*width: 90%;*/
+/*min-height: 28px;        // Make inputs at least the height of their button counterpart*/
+/*.box-sizing(border-box); // Makes inputs behave like true block-level elements*/
+/*}*/
 
-.blank-divider
-{
-    height: 100px;
-    width: 100%;
-}
+/*.empty-form{*/
+/*margin-top: 50px;*/
+/*}*/
 
-.panel-body{
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
+/*.center-div*/
+/*{*/
+/*position: absolute;*/
+/*margin: auto;*/
+/*top: 0;*/
+/*right: 0;*/
+/*bottom: 0;*/
+/*left: 0;*/
+/*}*/
 
-.panel-body:hover{
-   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
+/*.blank-divider*/
+/*{*/
+/*height: 100px;*/
+/*width: 100%;*/
+/*}*/
 
-.vertical-alignment-helper {
-    display:table;
-    height: 100%;
-    width: 100%;
-    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
-}
-.vertical-align-center {
-    /* To center vertically */
-    display: table-cell;
-    vertical-align: middle;
-    pointer-events:none;
-}
-.modal-content {
-    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
-    width:inherit;
-    height:inherit;
-    /* To center horizontally */
-    margin: 0 auto;
-    pointer-events: all;
-}
+/*.panel-body{*/
+/*transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/
+/*}*/
 
-/* USER PROFILE PAGE */
- .card {
-    margin-top: 20px;
-    padding: 30px;
-    background-color: rgba(214, 224, 226, 0.2);
-    -webkit-border-top-left-radius:5px;
-    -moz-border-top-left-radius:5px;
-    border-top-left-radius:5px;
-    -webkit-border-top-right-radius:5px;
-    -moz-border-top-right-radius:5px;
-    border-top-right-radius:5px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.card.hovercard {
-    position: relative;
-    padding-top: 0;
-    overflow: hidden;
-    text-align: center;
-    background-color: #fff;
-    background-color: rgba(255, 255, 255, 1);
-}
-.card.hovercard .card-background {
-    height: 130px;
-}
-.card-background img {
-    -webkit-filter: blur(25px);
-    -moz-filter: blur(25px);
-    -o-filter: blur(25px);
-    -ms-filter: blur(25px);
-    filter: blur(25px);
-    margin-left: -100px;
-    margin-top: -200px;
-    min-width: 130%;
-}
-.card.hovercard .useravatar {
-    position: absolute;
-    top: 15px;
-    left: 0;
-    right: 0;
-}
-.card.hovercard .useravatar img {
-    width: 100px;
-    height: 100px;
-    max-width: 100px;
-    max-height: 100px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.5);
-}
-.card.hovercard .card-info {
-    position: absolute;
-    bottom: 14px;
-    left: 0;
-    right: 0;
-}
-.card.hovercard .card-info .card-title {
-    padding:0 5px;
-    font-size: 20px;
-    line-height: 1;
-    color: #262626;
-    background-color: rgba(255, 255, 255, 0.1);
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-}
-.card.hovercard .card-info {
-    overflow: hidden;
-    font-size: 12px;
-    line-height: 20px;
-    color: #737373;
-    text-overflow: ellipsis;
-}
-.card.hovercard .bottom {
-    padding: 0 20px;
-    margin-bottom: 17px;
-}
+/*.panel-body:hover{*/
+/*box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
+/*}*/
 
-.without-top-margin > :first-child {
-    margin-top: 0px;
-}
+/*.vertical-alignment-helper {*/
+/*display:table;*/
+/*height: 100%;*/
+/*width: 100%;*/
+/*pointer-events:none; /!* This makes sure that we can still click outside of the modal to close it *!/*/
+/*}*/
+/*.vertical-align-center {*/
+/*/!* To center vertically *!/*/
+/*display: table-cell;*/
+/*vertical-align: middle;*/
+/*pointer-events:none;*/
+/*}*/
+/*.modal-content {*/
+/*/!* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it *!/*/
+/*width:inherit;*/
+/*height:inherit;*/
+/*/!* To center horizontally *!/*/
+/*margin: 0 auto;*/
+/*pointer-events: all;*/
+/*}*/
 
-.centered-cells > td {
-    vertical-align: middle;
-    text-align: center;
-}
+/*/!* USER PROFILE PAGE *!/*/
+/*.card {*/
+/*margin-top: 20px;*/
+/*padding: 30px;*/
+/*background-color: rgba(214, 224, 226, 0.2);*/
+/*-webkit-border-top-left-radius:5px;*/
+/*-moz-border-top-left-radius:5px;*/
+/*border-top-left-radius:5px;*/
+/*-webkit-border-top-right-radius:5px;*/
+/*-moz-border-top-right-radius:5px;*/
+/*border-top-right-radius:5px;*/
+/*-webkit-box-sizing: border-box;*/
+/*-moz-box-sizing: border-box;*/
+/*box-sizing: border-box;*/
+/*}*/
+/*.card.hovercard {*/
+/*position: relative;*/
+/*padding-top: 0;*/
+/*overflow: hidden;*/
+/*text-align: center;*/
+/*background-color: #fff;*/
+/*background-color: rgba(255, 255, 255, 1);*/
+/*}*/
+/*.card.hovercard .card-background {*/
+/*height: 130px;*/
+/*}*/
+/*.card-background img {*/
+/*-webkit-filter: blur(25px);*/
+/*-moz-filter: blur(25px);*/
+/*-o-filter: blur(25px);*/
+/*-ms-filter: blur(25px);*/
+/*filter: blur(25px);*/
+/*margin-left: -100px;*/
+/*margin-top: -200px;*/
+/*min-width: 130%;*/
+/*}*/
+/*.card.hovercard .useravatar {*/
+/*position: absolute;*/
+/*top: 15px;*/
+/*left: 0;*/
+/*right: 0;*/
+/*}*/
+/*.card.hovercard .useravatar img {*/
+/*width: 100px;*/
+/*height: 100px;*/
+/*max-width: 100px;*/
+/*max-height: 100px;*/
+/*-webkit-border-radius: 50%;*/
+/*-moz-border-radius: 50%;*/
+/*border-radius: 50%;*/
+/*border: 5px solid rgba(255, 255, 255, 0.5);*/
+/*}*/
+/*.card.hovercard .card-info {*/
+/*position: absolute;*/
+/*bottom: 14px;*/
+/*left: 0;*/
+/*right: 0;*/
+/*}*/
+/*.card.hovercard .card-info .card-title {*/
+/*padding:0 5px;*/
+/*font-size: 20px;*/
+/*line-height: 1;*/
+/*color: #262626;*/
+/*background-color: rgba(255, 255, 255, 0.1);*/
+/*-webkit-border-radius: 4px;*/
+/*-moz-border-radius: 4px;*/
+/*border-radius: 4px;*/
+/*}*/
+/*.card.hovercard .card-info {*/
+/*overflow: hidden;*/
+/*font-size: 12px;*/
+/*line-height: 20px;*/
+/*color: #737373;*/
+/*text-overflow: ellipsis;*/
+/*}*/
+/*.card.hovercard .bottom {*/
+/*padding: 0 20px;*/
+/*margin-bottom: 17px;*/
+/*}*/
+
+/*.without-top-margin > :first-child {*/
+/*margin-top: 0px;*/
+/*}*/
+
+/*.centered-cells > td {*/
+/*vertical-align: middle;*/
+/*text-align: center;*/
+/*}*/
