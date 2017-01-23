@@ -31,6 +31,22 @@ html {
     height: 450px;
 }
 
+/* Start login page */
+#login-page {
+    width: 280px;
+    margin: 0 auto
+}
+
+.profile-image-login {
+    width: 100px;
+    height: 100px;
+}
+
+.login-form-text{
+    font-size: 1.2rem;
+}
+/* End login page */
+
 /*body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 ,p{*/
 /*font-family: 'XM yekan';*/
 /*}*/

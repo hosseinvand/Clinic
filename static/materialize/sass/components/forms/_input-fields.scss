@@ -153,13 +153,13 @@ textarea.materialize-textarea {
 
   .prefix ~ input,
   .prefix ~ textarea {
-    margin-left: 3rem;
+    margin-right: 3rem;
     width: 92%;
     width: calc(100% - 3rem);
   }
 
   .prefix ~ textarea { padding-top: .8rem; }
-  .prefix ~ label { margin-left: 3rem; }
+  .prefix ~ label { margin-right: 3rem; }
 
   @media #{$medium-and-down} {
     .prefix ~ input {

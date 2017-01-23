@@ -1,45 +1,55 @@
 {% extends "layout.html" %}
-{% load material_form %}
+{% load static %}
 {% load widget_tweaks %}
 {% block pageBody %}
-    <div class="col-md-4 col-md-offset-4">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form name="searchForm" class="form-horizontal" method="post">{% csrf_token %}
-                    <fieldset>
-{#                        {% for field in form %}#}
-{#                            {% for error in field.errors %}#}
-{#                                <div class="alert alert-danger">#}
-{#                                    <strong>{{ error|escape }}</strong>#}
-{#                                </div>#}
-{#                            {% endfor %}#}
-{#                        {% endfor %}#}
+    <div id="login-page" class="row center">
+        <div class="z-depth-4 card-panel">
+            <form name="searchForm" class="login-form" method="post">{% csrf_token %}
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        <img src="{% static "image/doctor.png" %}" alt="" class="circle responsive-img valign profile-image-login">
+                        <p class="center login-form-text ">سامانه آنلاین مدیریت نوبت</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="red-text">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
                         {% for error in form.non_field_errors %}
-                            <div class="alert alert-danger">
+                            <div class="red-text">
                                 <strong>{{ error|escape }}</strong>
                             </div>
                         {% endfor %}
-                        <div class="form-group">
-                            <div class="col-xs-10 col-xs-offset-1">
-                            {{ form.username | attr:"placeholder:نام کاربری" | attr:"required:required" | add_class:"form-control"}}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-10 col-xs-offset-1">
-                            {{ form.password | attr:"placeholder:رمز عبور" | attr:"required:required" | add_class:"form-control"}}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-10 col-xs-offset-1">
-                                <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">
-{#                                    {{ submit_button }}#}
-                                    ورود
-                                </button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
+                    </div>
+                </div>
+
+                <div class="row margin">
+                    <div class="input-field col s10">
+                        <i class="material-icons prefix">perm_identity</i>
+                        {{ form.username | attr:"id:username"}}
+                        <label for="username" class="center-align">{{ form.username.label}}</label>
+                    </div>
+                    <div class="input-field col s10">
+                        <i class="material-icons prefix">lock_outline</i>
+                        {{ form.password | attr:"id:password"}}
+                        <label for="password" class="center-align">{{ form.password.label}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button type="submit" class="btn waves-effect waves-light col s8 pull-s2">ورود</button>
+                    </div>
+                    <div class="input-field col s12">
+                        <a href="{% url "register" %}" class="btn waves-effect waves-light col s8 pull-s2">ثبت نام</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}
+

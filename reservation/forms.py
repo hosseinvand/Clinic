@@ -1,11 +1,28 @@
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.gis.admin import widgets
-from django.db.utils import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
-from reservation import jalali, models
-from reservation.models import SystemUser, Doctor, Office, Reservation, RESERVATION_STATUS
+from reservation import jalali
+from reservation.models import SystemUser, Doctor, Office, Reservation
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = "نام کاربری"
+        self.fields['password'].label = "رمز عبور"
+        self.fields['username'].error_messages = {
+            'required': 'نام کاربری اجباری است',
+            'invalid': 'مقدار ورودی نامعتبر است'
+        }
+        self.fields['password'].error_messages = {
+            'required': 'رمز عبور اجباری است',
+            'invalid': 'مقدار ورودی نامعتبر است'
+        }
+        self.error_messages = {
+            'invalid_login': "نام کاربری یا رمز عبور نادرست است!",
+            'inactive': "این حساب غیر فعال است!"
+        }
 
 
 class SystemUserRegisterForm(ModelForm):
@@ -44,33 +61,6 @@ class SystemUserRegisterForm(ModelForm):
 
         tmp_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
         return SystemUser.objects.create(user=tmp_user, id_code=id_code)
-
-
-class LoginForm(ModelForm):
-    username = fields_for_model(User)['username']
-    # password = fields_for_model(User)['password']
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = SystemUser
-        fields = []
-
-    def clean(self):
-        cleaned_data = super(LoginForm, self).clean()
-        try:
-            User.objects.get(username=cleaned_data.get("username"))
-        except User.DoesNotExist:
-            raise forms.ValidationError('Username "%s" Does not exist.' % cleaned_data.get("username"))
-
-        password = self.cleaned_data.get('password')
-        username = self.cleaned_data.get('username')
-        if not password or len(password) < 1:
-            raise forms.ValidationError("لطفا رمز عبور خود را وارد نمایید")
-
-        user = authenticate(username=username, password=password)
-        if user is None:
-            raise forms.ValidationError("رمز عبور شما نادرست است!")
-        return cleaned_data
 
 
 class DoctorRegisterForm(ModelForm):
