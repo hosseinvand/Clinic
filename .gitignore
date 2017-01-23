@@ -1,3 +1,8 @@
+venv
+*.pyc
+staticfiles
+.env
+
 
 # Created by https://www.gitignore.io/api/python,pycharm,linux,macos,django,intellij,intellij+iml
 
@@ -259,7 +264,6 @@ modules.xml
 .idea/misc.xml
 migrations
 *.ipr
-migrations
 .idea/
 Clinic/bin/
 Clinic/lib/
