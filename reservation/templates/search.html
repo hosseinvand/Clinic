@@ -1,22 +1,24 @@
 {% load widget_tweaks %}
-<div class="card-panel">
-    <div class="row center">
-        <h1 class="teal-text">کلینیک</h1>
+<div class="row">
+    <div class="card-panel col m8 s12 pull-m2">
+        <div class="row center">
+            <h1 class="teal-text">کلینیک</h1>
+            <form class="col s12" method="get" action="{% url 'searchResult' %}">{% csrf_token %}
+                <div class="row">
+                    <div class="input-field col s9 m7 pull-m2">
+                        {{ form.name | add_class:"validate"}}
+                        <label >جست و جو در بین پزشکان: </label>
+                    </div>
+                    <div class="input-field col s3 m4 pull-m1">
+                        <button class="btn" type="submit"><i class="material-icons">search</i></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 center">
+                        <a class="btn" href="{% url 'searchResult' %}"><i class="material-icons right">view_module</i>لیست تمام پزشکان</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-    <form class="col s12" method="get" action="{% url 'searchResult' %}">{% csrf_token %}
-        <div class="row">
-            <div class="input-field col s9 m6 pull-m2">
-                {{ form.name | add_class:"validate"}}
-                <label >جست و جو در بین پزشکان: </label>
-            </div>
-            <div class="input-field col s3v m6 pull-m2">
-                <button class="btn" type="submit"><i class="material-icons">search</i></button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12 center">
-                <a class="btn" href="{% url 'searchResult' %}"><i class="material-icons right">view_module</i>لیست تمام پزشکان</a>
-            </div>
-        </div>
-    </form>
 </div>

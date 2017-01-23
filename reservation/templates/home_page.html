@@ -5,24 +5,22 @@
 
 {% block parallax %}
     <div class="parallax-container">
+        <div class="section no-pad-bot">
+            <div class="container">
+                <br><br>
+                <br><br>
+                <br>
+                {% include "search.html" %}
+            </div>
+        </div>
         <div class="parallax">
             <img src="{% static "image/hospital.jpg" %}">
         </div>
+
     </div>
 {% endblock %}
 {% block pageBody %}
-    <div id="search">
-        {% include "search.html" %}
-    </div>
     <div id="registration">
         {% include "register_section.html" %}
-    </div>
-    <div id="features">
-
-    </div>
-    <div id="advertisement">
-
-    </div>
-    <div id="tutorial">
     </div>
 {% endblock %}
