@@ -2,7 +2,7 @@
     $(function(){
 
         $('.parallax').parallax();
-        $('.button-collapse').sideNav({edge:"right"});
+        $('.button-collapse').sideNav({edge:"left"});
         $(".dropdown-button").dropdown({
             belowOrigin: true,
             hover: true

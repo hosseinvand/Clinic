@@ -42,8 +42,21 @@
                     <li><a class="waves-effect" href="/panel">پنل</a></li>
                 </ul>
 
-                <ul id="nav-mobile" class="side-nav">
-                    <li><a href="#">Navbar Link</a></li>
+                <ul id="nav-mobile" class="side-nav center">
+                    <div class="col s12 center  teal lighten-5">
+                        <img src="{% static "image/doctor.png" %}" alt="" class="circle responsive-img valign profile-image-login">
+                    </div>
+                    <li><a class="waves-effect" href="/panel">پنل</a></li>
+                    <li><a class="waves-effect" href="{% url 'searchResult' %}">پزشکان</a></li>
+                    <li class="divider"></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url "systemUserProfile" %}">پروفایل</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url "logout" %}">خروج</a></li>
+                    {% else %}
+                        <li><a class="waves-effect" href="{% url "register" %}">ثبت نام</a></li>
+                        <li><a class="waves-effect" href="{% url "login" %}">ورود</a></li>
+                    {% endif %}
                 </ul>
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>
