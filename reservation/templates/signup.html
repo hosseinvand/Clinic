@@ -2,8 +2,8 @@
 {% load static %}
 {% load widget_tweaks %}
 {% block pageBody %}
-    <div id="login-page" class="row center">
-        <div class="z-depth-4 card-panel">
+    <div class="row center">
+        <div class="z-depth-4 card-panel col l10 pull-l1">
             <form name="signupForm" class="signup-form" method="post">{% csrf_token %}
                 {% if form.errors %}
                     <div class="row">
@@ -23,12 +23,25 @@
                         </div>
                     </div>
                 {% endif %}
-                <div class="row margin">
+                <br/>
+                <div class="row col m6">
                     {% for field in form %}
-                    <div class="input-field col s10 pull-s1">
-                        {{ field | attr:"id:field.label"}}
-                        <label for="{{ field.label }}" class="center-align">{{ field.label}}</label>
-                    </div>
+                        {% if forloop.counter < 4 %}
+                            <div class="input-field col s10 pull-s1">
+                                {{ field | attr:"id:field.label"}}
+                                <label for="{{ field.label }}" class="center-align">{{ field.label}}</label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="row no-margin-top col m6">
+                    {% for field in form %}
+                        {% if forloop.counter > 3 %}
+                            <div class="input-field col s10 pull-s1">
+                                {{ field | attr:"id:field.label"}}
+                                <label for="{{ field.label }}" class="center-align">{{ field.label}}</label>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
                 <div class="row">

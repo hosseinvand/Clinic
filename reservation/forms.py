@@ -32,7 +32,8 @@ class SystemUserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name')
+        # field_order = ['username', 'first_name', 'last_name', 'id_code', 'email', 'password1', 'password2']
+        fields = ('username', 'first_name', 'last_name', 'email')
         field_classes = {'username': UsernameField}
 
         labels = {
@@ -66,8 +67,6 @@ class SystemUserRegisterForm(UserCreationForm):
             'invalid': 'مقدار ورودی نامعتبر است',
         }
         self.error_messages = {
-            'password_entirely_numeric': 'رمز عبور نباید کاملا عددی باشد',
-            'password_too_short': 'رمز عبور کوتاه است. رمز شما باید حداقل %(min_length)d کاراکتر داشته باشد.',
             'password_mismatch': 'رمز عبور با تکرار آن برابر نیست',
             'invalid_melli_code': 'کد ملی صحیح نیست',
             'id_code_exists': 'کد ملی قبلا ثبت شده است',
