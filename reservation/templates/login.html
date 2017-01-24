@@ -4,7 +4,7 @@
 {% block pageBody %}
     <div id="login-page" class="row center">
         <div class="z-depth-4 card-panel">
-            <form name="searchForm" class="login-form" method="post">{% csrf_token %}
+            <form name="loginForm" class="login-form" method="post">{% csrf_token %}
                 <div class="row">
                     <div class="input-field col s12 center">
                         <img src="{% static "image/doctor.png" %}" alt="" class="circle responsive-img valign profile-image-login">
@@ -45,7 +45,8 @@
                         <button type="submit" class="btn waves-effect waves-light col s8 pull-s2">ورود</button>
                     </div>
                     <div class="input-field col s12">
-                        <a href="{% url "register" %}" class="btn waves-effect waves-light col s8 pull-s2">ثبت نام</a>
+                        ثبت نام نکرده‌اید؟
+                        <a href="{% url "register" %}" class="">ثبت نام</a>
                     </div>
                 </div>
             </form>

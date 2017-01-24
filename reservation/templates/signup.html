@@ -1,75 +1,46 @@
 {% extends "layout.html" %}
-{% load material_form %}
+{% load static %}
 {% load widget_tweaks %}
 {% block pageBody %}
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form name="searchForm" class="form-horizontal" method="post">{% csrf_token %}
-                    {% if form.errors %}
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <div class="alert alert-danger">
-                                    <strong>{{ field.label }}{{ error|escape }}</strong>
+    <div id="login-page" class="row center">
+        <div class="z-depth-4 card-panel">
+            <form name="signupForm" class="signup-form" method="post">{% csrf_token %}
+                {% if form.errors %}
+                    <div class="row">
+                        <div class="input-field col s12 center">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div class="red-text">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <div class="red-text">
+                                    <strong>{{ error|escape }}</strong>
                                 </div>
                             {% endfor %}
-                        {% endfor %}
-                        {% for error in form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                <strong>{{ error|escape }}</strong>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    <div class="col-md-6">
-                        <fieldset>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.first_name | attr:"placeholder:نام"| add_class:"form-control"}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.last_name | attr:"placeholder:نام‌خانوادگی" | add_class:"form-control"}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.id_code | attr:"placeholder: کد ملی" | add_class:"form-control"}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.email | attr:"placeholder:ایمیل" | add_class:"form-control"}}
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="col-md-6">
-                        <fieldset>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.username | attr:"placeholder:نام کاربری" | add_class:"form-control"}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.password1 | attr:"placeholder:رمز عبور" | add_class:"form-control"}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-10 col-xs-offset-1">
-                                    {{ form.password2 | attr:"placeholder:تکرار رمز عبور " | add_class:"form-control"}}
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="center-align">
-                        <div class="col-xs-4 col-xs-offset-4">
-                            <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">ثبت نام</button>
                         </div>
                     </div>
-                </form>
-            </div>
+                {% endif %}
+                <div class="row margin">
+                    {% for field in form %}
+                    <div class="input-field col s10 pull-s1">
+                        {{ field | attr:"id:field.label"}}
+                        <label for="{{ field.label }}" class="center-align">{{ field.label}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button type="submit" class="btn waves-effect waves-light col s8 pull-s2">ثبت‌نام</button>
+                    </div>
+                    <div class="input-field col s12">
+                        حساب دارید؟
+                        <a href="{% url "login" %}" class="">ورود</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}

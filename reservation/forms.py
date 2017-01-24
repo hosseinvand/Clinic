@@ -35,8 +35,19 @@ class SystemUserRegisterForm(UserCreationForm):
         fields = ('username', 'email', 'first_name', 'last_name')
         field_classes = {'username': UsernameField}
 
+        labels = {
+            'username': "نام کاربری",
+            'email': "ایمیل",
+            'first_name': "نام",
+            'last_name': "نام خانوادگی",
+        }
+
     def __init__(self, *args, **kwargs):
         super(SystemUserRegisterForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].label = "رمز عبور"
+        self.fields['password2'].label = "تکرار رمز عبور"
+        self.fields['id_code'].label = "کد ملی"
+
         self.fields['username'].error_messages = {
             'required': 'نام کاربری اجباری است',
             'invalid': 'مقدار ورودی نامعتبر است',
