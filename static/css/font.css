@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKAN.TTF") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKANBD.TTF") format("truetype");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKANIT.TTF") format("truetype");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'XM yekan';
+    src: url("/static/fonts/XMYEKANBDIT.TTF") format("truetype");
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/static/fonts/Material-Design-Icons.woff2") format('woff2');
+}

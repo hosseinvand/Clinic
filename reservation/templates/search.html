@@ -1,15 +1,15 @@
 {% load widget_tweaks %}
 <div class="row">
-    <div class="card-panel col m8 s12 pull-m2">
+    <div class="card-panel col m8 s12 offset-m2">
         <div class="row center">
             <h1 class="teal-text">کلینیک</h1>
             <form class="col s12" method="get" action="{% url 'searchResult' %}">{% csrf_token %}
                 <div class="row">
-                    <div class="input-field col s9 m7 pull-m2">
+                    <div class="input-field col s9 m7 offset-m2">
                         {{ form.name | add_class:"validate"}}
                         <label >جست و جو در بین پزشکان: </label>
                     </div>
-                    <div class="input-field col s3 m4 pull-m1">
+                    <div class="input-field col s3 m2">
                         <button class="btn" type="submit"><i class="material-icons">search</i></button>
                     </div>
                 </div>

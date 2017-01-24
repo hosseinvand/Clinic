@@ -11,6 +11,7 @@ body {
   // display: flex;
   // min-height: 100vh;
   // flex-direction: column;
+  direction: rtl;
 }
 
 main {
@@ -18,11 +19,7 @@ main {
 }
 
 ul {
-  &.browser-default {
-    list-style-type: initial;
-  }
-
-  list-style-type: none;
+	list-style-type: none;
 }
 
 a {
@@ -36,8 +33,8 @@ a {
 
 // Positioning
 .valign-wrapper {
-  display: flex;
-  align-items: center;
+  @include flexbox();
+  @include align(center);
 
   .valign {
     display: block;
@@ -79,11 +76,6 @@ ul {
 }
 .z-depth-5{
   box-shadow: 0 27px 24px 0 rgba(0, 0, 0, 0.2), 0 40px 77px 0 rgba(0, 0, 0, 0.22);
-}
-
-.hoverable {
-  transition: box-shadow .25s;
-  box-shadow: 0;
 }
 
 .hoverable:hover {
@@ -167,8 +159,7 @@ video.responsive-video {
     }
 
     i {
-      font-size: 2.2rem;
-      vertical-align: middle;
+      font-size: 2rem;
     }
   }
 
@@ -192,41 +183,6 @@ video.responsive-video {
       overflow: hidden;
       white-space: nowrap;
     }
-  }
-}
-
-// Breadcrumbs
-.breadcrumb {
-  font-size: 18px;
-  color: rgba(255,255,255, .7);
-
-  i,
-  [class^="mdi-"], [class*="mdi-"],
-  i.material-icons {
-    display: inline-block;
-    float: left;
-    font-size: 24px;
-  }
-
-  &:before {
-    content: '\E5CC';
-    color: rgba(255,255,255, .7);
-    vertical-align: top;
-    display: inline-block;
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 25px;
-    margin: 0 10px 0 8px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  &:first-child:before {
-    display: none;
-  }
-
-  &:last-child {
-    color: #fff;
   }
 }
 
@@ -311,27 +267,27 @@ ul.staggered-list li {
 }
 .show-on-large {
   @media #{$large-and-up} {
-    display: block !important;
+    display: initial !important;
   }
 }
 .show-on-medium {
   @media only screen and (min-width: $small-screen) and (max-width: $medium-screen) {
-    display: block !important;
+    display: initial !important;
   }
 }
 .show-on-small {
   @media #{$small-and-down} {
-    display: block !important;
+    display: initial !important;
   }
 }
 .show-on-medium-and-up {
   @media #{$medium-and-up} {
-    display: block !important;
+    display: initial !important;
   }
 }
 .show-on-medium-and-down {
   @media #{$medium-and-down} {
-    display: block !important;
+    display: initial !important;
   }
 }
 
@@ -379,12 +335,12 @@ table {
     }
 
     > tr > td {
-      border-radius: 0;
+      border-radius: 0px;
     }
   }
 
   &.highlight > tbody > tr {
-    transition: background-color .25s ease;
+    @include transition(background-color .25s ease);
     &:hover {
       background-color: $table-striped-color;
     }
@@ -393,6 +349,7 @@ table {
   &.centered {
     thead tr th, tbody tr td {
       text-align: center;
+
     }
   }
 
@@ -419,10 +376,6 @@ td, th{
     border-spacing: 0;
     display: block;
     position: relative;
-
-    td:empty:before {
-      content: '\00a0';
-    }
 
     th,
     td {
@@ -503,7 +456,7 @@ td, th{
     // Avatar Collection
     &.avatar {
       min-height: 84px;
-      padding-left: 72px;
+      padding-right: 72px;
       position: relative;
 
       .circle {
@@ -511,7 +464,7 @@ td, th{
         width: 42px;
         height: 42px;
         overflow: hidden;
-        left: 15px;
+        right: 15px;
         display: inline-block;
         vertical-align: middle;
       }
@@ -535,7 +488,7 @@ td, th{
       .secondary-content {
         position: absolute;
         top: 16px;
-        right: 16px;
+        left: 16px;
       }
 
     }
@@ -556,8 +509,8 @@ td, th{
   }
   a.collection-item{
     display: block;
-    transition: .25s;
-    color: $collection-link-color;
+    @include transition(.25s);
+    color: $secondary-color;
     &:not(.active) {
       &:hover {
         background-color: $collection-hover-bg-color;
@@ -582,14 +535,9 @@ td, th{
 }
 // Made less specific to allow easier overriding
 .secondary-content {
-  float: right;
+  float: left;
   color: $secondary-color;
 }
-.collapsible .collection {
-  margin: 0;
-  border: none;
-}
-
 
 
 // Badges
@@ -601,8 +549,8 @@ span.badge {
   line-height: inherit;
   color: color('grey', 'darken-1');
   position: absolute;
-  right: 15px;
-  box-sizing: border-box;
+  left: 15px;
+  @include box-sizing(border-box);
 
   &.new {
     font-weight: 300;
@@ -615,18 +563,17 @@ span.badge {
     content: " new";
   }
 }
-nav ul a span.badge {
-  position: static;
-  margin-left: 4px;
-  line-height: 0;
-}
 
 // Responsive Videos
 .video-container {
     position: relative;
     padding-bottom: 56.25%;
+    padding-top: 30px;
     height: 0;
     overflow: hidden;
+    &.no-controls {
+      padding-top: 0;
+    }
 
     iframe, object, embed {
       position: absolute;
@@ -649,11 +596,12 @@ nav ul a span.badge {
     overflow: hidden;
   .determinate {
     position: absolute;
+    background-color: inherit;
     top: 0;
     left: 0;
     bottom: 0;
     background-color: $progress-bar-color;
-    transition: width .3s linear;
+    @include transition(width .3s linear);
   }
   .indeterminate {
     background-color: $progress-bar-color;
@@ -666,7 +614,7 @@ nav ul a span.badge {
       bottom: 0;
       will-change: left, right;
       // Custom bezier
-      animation: indeterminate 2.1s cubic-bezier(0.650, 0.815, 0.735, 0.395) infinite;
+      @include animation(indeterminate 2.1s cubic-bezier(0.650, 0.815, 0.735, 0.395) infinite);
 
     }
     &:after {
@@ -678,34 +626,34 @@ nav ul a span.badge {
       bottom: 0;
       will-change: left, right;
       // Custom bezier
-      animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.840, 0.440, 1.000) infinite;
-      animation-delay: 1.15s;
+      @include animation(indeterminate-short 2.1s cubic-bezier(0.165, 0.840, 0.440, 1.000) infinite);
+      @include animation-delay(1.15s);
     }
   }
 }
-@keyframes indeterminate {
+@include keyframes(indeterminate) {
     0% {
-      left: -35%;
-      right:100%;
-    }
+            left: -35%;
+            right:100%;
+        }
     60% {
-      left: 100%;
-      right: -90%;
+        left: 100%;
+        right: -90%;
     }
     100% {
-      left: 100%;
-      right: -90%;
+        left: 100%;
+        right: -90%;
     }
 }
 
-@keyframes indeterminate-short {
+@include keyframes(indeterminate-short) {
     0% {
-      left: -200%;
-      right: 100%;
+        left: -200%;
+        right: 100%;
     }
     60% {
-      left: 107%;
-      right: -8%;
+        left: 107%;
+        right: -8%;
     }
     100% {
       left: 107%;

@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 {% block pageBody %}
     <div class="row center">
-        <div class="z-depth-4 card-panel col l10 pull-l1">
+        <div class="z-depth-4 card-panel col l10 offset-l1">
             <form name="signupForm" class="signup-form" method="post">{% csrf_token %}
                 {% if form.errors %}
                     <div class="row">
@@ -24,20 +24,20 @@
                     </div>
                 {% endif %}
                 <br/>
-                <div class="row col m6">
+                <div class="col m6">
                     {% for field in form %}
                         {% if forloop.counter < 4 %}
-                            <div class="input-field col s10 pull-s1">
+                            <div class="input-field col s10 offset-s1">
                                 {{ field | attr:"id:field.label"}}
                                 <label for="{{ field.label }}" class="center-align">{{ field.label}}</label>
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
-                <div class="row no-margin-top col m6">
+                <div class="col m6">
                     {% for field in form %}
                         {% if forloop.counter > 3 %}
-                            <div class="input-field col s10 pull-s1">
+                            <div class="input-field col s10 offset-s1">
                                 {{ field | attr:"id:field.label"}}
                                 <label for="{{ field.label }}" class="center-align">{{ field.label}}</label>
                             </div>
@@ -45,8 +45,8 @@
                     {% endfor %}
                 </div>
                 <div class="row">
-                    <div class="input-field col s12 m6 pull-m3">
-                        <button type="submit" class="btn waves-effect waves-light col s8 pull-s2">ثبت‌نام</button>
+                    <div class="input-field col s12 m6 offset-m3">
+                        <button type="submit" class="btn waves-effect waves-light col s8 offset-s2">ثبت‌نام</button>
                     </div>
                     <div class="input-field col s12">
                         حساب دارید؟

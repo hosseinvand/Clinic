@@ -11,6 +11,7 @@
 
 .card {
   position: relative;
+  overflow: hidden;
   margin: $element-top-margin 0 $element-bottom-margin 0;
   background-color: $card-bg-color;
   transition: box-shadow .25s;
@@ -19,6 +20,7 @@
 
 
   .card-title {
+    color: $card-bg-color;
     font-size: 24px;
     font-weight: 300;
     &.activator {
@@ -31,11 +33,9 @@
     position: relative;
 
     .card-image {
-      max-height: 60%;
       overflow: hidden;
     }
     .card-content {
-      max-height: 40%;
       overflow: hidden;
     }
     .card-action {
@@ -48,14 +48,36 @@
 
   &.small {
     height: 300px;
+
+    .card-image {
+      height: 150px;
+    }
+    .card-content {
+      height: 150px;
+    }
+
   }
 
   &.medium {
     height: 400px;
+
+    .card-image {
+      height: 250px;
+    }
+    .card-content {
+      height: 150px;
+    }
   }
 
   &.large {
     height: 500px;
+
+    .card-image {
+      height: 330px;
+    }
+    .card-content {
+      height: 170px;
+    }
   }
 
 
@@ -64,7 +86,6 @@
 
     // Image background for content
     img {
-      display: block;
       border-radius: 2px 2px 0 0;
       position: relative;
       left: 0;
@@ -75,10 +96,9 @@
     }
 
     .card-title {
-      color: $card-bg-color;
       position: absolute;
       bottom: 0;
-      left: 0;
+      right: 0;
       padding: $card-padding;
     }
 
@@ -87,6 +107,7 @@
   .card-content {
     padding: $card-padding;
     border-radius: 0 0 2px 2px;
+
 
     p {
       margin: 0;
@@ -98,24 +119,16 @@
   }
 
   .card-action {
-    position: relative;
-    background-color: inherit;
     border-top: 1px solid rgba(160,160,160,.2);
     padding: $card-padding;
-    z-index: 2;
 
-    a:not(.btn):not(.btn-large):not(.btn-floating) {
+    a {
       color: $card-link-color;
-      margin-right: $card-padding;
-      transition: color .3s ease;
+      margin-left: $card-padding;
+      @include transition(color .3s ease);
       text-transform: uppercase;
 
       &:hover { color: $card-link-color-light; }
-    }
-
-    & + .card-reveal {
-      z-index: 1;
-      padding-bottom: 64px;
     }
   }
 
@@ -127,12 +140,13 @@
     overflow-y: auto;
     top: 100%;
     height: 100%;
-    z-index: 3;
+    z-index: 1;
     display: none;
 
     .card-title {
       cursor: pointer;
       display: block;
     }
+
   }
 }

@@ -1,61 +1,52 @@
 .side-nav {
-   position: fixed;
+  position: fixed;
+  right: 0;
   width: 240px;
-  left: -105%;
+  left: auto;
   top: 0;
   margin: 0;
   height: 100%;
   height: calc(100% + 60px);
-  height: -moz-calc(100%);
+  height: -moz-calc(100%); //Temporary Firefox Fix
   padding-bottom: 60px;
-  background-color: #fff;
+  background-color: $sidenav-bg-color;
   z-index: 999;
   overflow-y: auto;
-  will-change: left;
 
   @extend .z-depth-1;
+  will-change: right;
 
   // Right Align
   &.right-aligned {
     will-change: right;
-  right: -105%;
-  left: auto;
+    right: -105%;
+    left: auto;
   }
 
-  .collapsible {
+  // Left Align
+  &.left-aligned {
+    will-change: left;
+    left: -105%;
+    right: auto;
+  }
+
+  .collapsible{
     margin: 0;
   }
 
 
   li {
     float: none;
-    line-height: $sidenav-item-height;
-
-    &.active { background-color: rgba(0,0,0,.05); }
+    padding: 0 $sidenav-padding-right;
+    &:hover, &.active { background-color: #ddd; }
   }
-
   a {
-    color: $sidenav-font-color;
+    color: #444;
     display: block;
     font-size: 1rem;
-    height: $sidenav-item-height;
-    line-height: $sidenav-item-height;
+    height: 64px;
+    line-height: 64px;
     padding: 0 $sidenav-padding-right;
-
-    &:hover { background-color: rgba(0,0,0,.05);}
-
-    &.btn, &.btn-large, &.btn-flat, &.btn-floating {
-      margin: 10px 15px;
-    }
-
-    &.btn,
-    &.btn-large,
-    &.btn-floating { color: $button-raised-color; }
-    &.btn-flat { color: $button-flat-color; }
-
-    &.btn:hover,
-    &.btn-large:hover { background-color: lighten($button-raised-background, 5%); }
-    &.btn-floating:hover { background-color: $button-raised-background; }
   }
 }
 
@@ -75,15 +66,15 @@
   a {
     display: block;
     padding: 0 $sidenav-padding-right;
-    color: $sidenav-font-color;
+    color: #444;
   }
 }
 
 
 // Fixed side-nav shown
 .side-nav.fixed {
-  left: 0;
-  transform: translateX(0);
+  right: 0;
+  left: auto;
   position: fixed;
 
   // Right Align
@@ -91,15 +82,26 @@
     right: 0;
     left: auto;
   }
+  // Left Align
+  &.left-aligned {
+    left: 0;
+    right: auto;
+  }
 }
 
 // Fixed sideNav hide on smaller
 @media #{$medium-and-down} {
   .side-nav.fixed {
-    transform: translateX(-105%);
+    right: -105%;
+    left: auto;
 
     &.right-aligned {
-      transform: translateX(105%);
+      right: -105%;
+      left: auto;
+    }
+    &.left-aligned {
+      left: -105%;
+      right: auto;
     }
   }
 }
