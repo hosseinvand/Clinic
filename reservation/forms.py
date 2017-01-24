@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UsernameField
 from django.contrib.auth.models import User
+from django.db.backends.dummy.base import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
 from reservation import jalali
 from reservation.models import SystemUser, Doctor, Office, Reservation
@@ -25,42 +26,70 @@ class LoginForm(AuthenticationForm):
         }
 
 
-class SystemUserRegisterForm(ModelForm):
-    username = fields_for_model(User)['username']
-    # email = fields_for_model(User)['email']
-    email = forms.EmailField(widget=forms.EmailInput())
-    # password = fields_for_model(User)['password']
-    password = forms.CharField(widget=forms.PasswordInput())
-    confirm_password = forms.CharField(widget=forms.PasswordInput())
-    first_name = fields_for_model(User)['first_name']
-    last_name = fields_for_model(User)['last_name']
+class SystemUserRegisterForm(UserCreationForm):
+
+    id_code = forms.CharField(max_length=10)
 
     class Meta:
-        model = SystemUser
-        fields = ['id_code']
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name')
+        field_classes = {'username': UsernameField}
+
+    def __init__(self, *args, **kwargs):
+        super(SystemUserRegisterForm, self).__init__(*args, **kwargs)
+        self.fields['username'].error_messages = {
+            'required': 'نام کاربری اجباری است',
+            'invalid': 'مقدار ورودی نامعتبر است',
+            'unique': 'نام کاربری توسط شخص دیگری ثبت شده‌است',
+        }
+        self.fields['password1'].error_messages = {
+            'required': 'رمز عبور اجباری است',
+            'invalid': 'مقدار ورودی نامعتبر است',
+        }
+        self.fields['password2'].error_messages = {
+            'required': 'رمز عبور اجباری است',
+            'invalid': 'مقدار ورودی نامعتبر است',
+        }
+        self.fields['email'].error_messages = {
+            'required': 'ایمیل اجباری است',
+            'invalid': 'مقدار ورودی نامعتبر است',
+        }
+        self.error_messages = {
+            'password_entirely_numeric': 'رمز عبور نباید کاملا عددی باشد',
+            'password_too_short': 'رمز عبور کوتاه است. رمز شما باید حداقل %(min_length)d کاراکتر داشته باشد.',
+            'password_mismatch': 'رمز عبور با تکرار آن برابر نیست',
+            'invalid_melli_code': 'کد ملی صحیح نیست',
+            'id_code_exists': 'کد ملی قبلا ثبت شده است',
+        }
 
     def clean(self):
         cleaned_data = super(SystemUserRegisterForm, self).clean()
-        if User.objects.filter(username=cleaned_data.get("username")).exists():
-            raise forms.ValidationError('نام کاربری وارد شده پیش از این توسط شخص دیگری ثبت شده‌است!')
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-        if password and confirm_password and password != confirm_password:
+        id_code = cleaned_data.get('id_code')
+        try:
+            if len(id_code) != 10:
+                raise ValueError
+            id_code = int(id_code)
+            if SystemUser.objects.filter(id_code=id_code).exists():
+                raise forms.ValidationError(
+                    self.error_messages['id_code_exists'],
+                    code='id_code_exists',
+                )
+        except (TypeError, ValueError):
             raise forms.ValidationError(
-                "رمز عبور و تکرار رمز عبور مشابه نیست!"
+                self.error_messages['invalid_melli_code'],
+                code='invalid_melli_code',
             )
         return cleaned_data
 
-    def save(self, commit=True):
-        username = self.cleaned_data.get('username', None)
-        email = self.cleaned_data.get('email', None)
-        password = self.cleaned_data.get('password', None)
-        first_name = self.cleaned_data.get('first_name', None)
-        last_name = self.cleaned_data.get('last_name', None)
-        id_code = self.cleaned_data.get('id_code', None)
-
-        tmp_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-        return SystemUser.objects.create(user=tmp_user, id_code=id_code)
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
 
 
 class DoctorRegisterForm(ModelForm):

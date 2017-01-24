@@ -1,5 +1,4 @@
-import datetime
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse
@@ -12,35 +11,29 @@ from django.views.generic.list import ListView
 
 from reservation.forms import *
 from .forms import LoginForm
-from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
+from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin, DoctorSecretaryRequiredMixin
 
 
 class MainPageView(TemplateView, FormView):
     template_name = 'home_page.html'
-
     form_class = DoctorSearchForm
-
-    def get_context_data(self, **kwargs):
-        context = super(MainPageView, self).get_context_data(**kwargs)
-        return context
 
 
 class SystemUserCreateView(CreateView):
-    model = SystemUser
+    model = User
     template_name = 'signup.html'
     success_url = reverse_lazy('mainPage')
     form_class = SystemUserRegisterForm
 
     def form_valid(self, form):
         response = super(SystemUserCreateView, self).form_valid(form)
-        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
-        new_user = authenticate(username=username, password=password)
-        user = User.objects.get(username=username)
-        role = Patient()
-        role.save()
-        SystemUser.objects.filter(user=user).update(role=role)
-        login(self.request, new_user)
+        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password2')
+        user = authenticate(username=username, password=password)
+        role = Patient.objects.create()
+        SystemUser.objects.create(user=user, id_code=form.cleaned_data.get('id_code'), role=role)
+
+        login(self.request, user)
         return response
 
 
@@ -55,11 +48,6 @@ class SystemUserLoginView(FormView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return response
-
-    def get_context_data(self, **kwargs):
-        context = super(SystemUserLoginView, self).get_context_data(**kwargs)
-        context['submit_button'] = 'Login'
-        return context
 
 
 class DoctorCreateView(LoginRequiredMixin, PatientRequiredMixin, CreateView):
