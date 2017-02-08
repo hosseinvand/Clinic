@@ -36,6 +36,7 @@ if HEROKU:
         'whitenoise.runserver_nostatic',
         'django.contrib.staticfiles',
         'reservation',
+        'notebook',
         'multiselectfield',
     ]
 
