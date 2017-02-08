@@ -33,4 +33,7 @@ urlpatterns = [
     url(r'^ajax/reserve_time/$', views.reserve_time, name='reserveTime'),
     url(r'^ajax/reject_time/$', views.reject_time, name='rejectTime'),
 
+    url(r'doctor-info/(?P<id>\d+)$', views.GetDoctorInfo, name='doctor_info'),
+
+
 ]

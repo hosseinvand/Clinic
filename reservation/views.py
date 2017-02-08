@@ -2,6 +2,7 @@ import datetime
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.serializers import serialize
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls.base import reverse_lazy
@@ -211,7 +212,6 @@ def reject_time(request):
     return JsonResponse({})
 
 
-
 class AddClinicView(LoginRequiredMixin, DoctorRequiredMixin, CreateView):
     selected = "addClinic"
     model = Office
@@ -274,6 +274,13 @@ class DoctorProfileView(DetailView):
     model = Doctor
     template_name = 'doctor_profile.html'
 
+def GetDoctorInfo(request, id):
+    doctor_id = id
+    # doctor_id = request.GET['id']
+    doctor_obj = Doctor.objects.filter(id=doctor_id).first()
+    selrialized_doctor = serialize('json',[doctor_obj])
+    print(selrialized_doctor)
+    return JsonResponse(selrialized_doctor, safe=False)
 
 
 class ReservationCreateView(LoginRequiredMixin, CreateView):
