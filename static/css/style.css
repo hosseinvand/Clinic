@@ -180,3 +180,9 @@ th{
     vertical-align: middle;
     text-align: center;
 }
+
+
+ .clinic-map {
+        height: 400px;
+        width: 100%;
+ }

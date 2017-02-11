@@ -1,13 +1,11 @@
 import datetime
-import stat
 from abc import abstractmethod
-from random import choice
-from django.db.models import Q
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
 from multiselectfield import MultiSelectField
 from reservation import jalali
+
 
 PATIENT_ROLE_ID = 1
 DOCTOR_SECRETARY_ROLE_ID = 2
@@ -111,6 +109,13 @@ class Office(models.Model):
     to_hour = models.IntegerField("تا ساعت", choices=HOURS, null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
+
+    lat_position = models.DecimalField(max_digits=15, decimal_places=3, null=True)
+    lang_position = models.DecimalField(max_digits=15, decimal_places=3, null=True)
+
+    @property
+    def get_position(self):
+        return self.lat_position + ',' + self.long_position
 
     def get_base_time(self):
         return self.base_time
