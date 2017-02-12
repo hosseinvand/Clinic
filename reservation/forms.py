@@ -117,6 +117,7 @@ class ClinicForm(ModelForm):
             'to_hour': "تا",
             'base_time': "مدت زمان ویزیت هر بیمار(دقیقه)",
             'opening_days': "روزهای کاری",
+            'lat_position': "محل مطب روی نقشه",
         }
 
     def clean(self):

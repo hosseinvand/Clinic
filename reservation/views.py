@@ -147,6 +147,10 @@ class SearchDoctorView(ListView, FormView):
 #     selected = "panel"
 #     template_name = 'panel.html'
 
+class SearchDoctorByLocationView(ListView):
+    model = Office #TODO! or doctor
+    template_name = 'search_by_location.html'
+
 
 class ManageSecretary(LoginRequiredMixin, ListView):
     selected = "manageSecretary"

@@ -4,6 +4,7 @@
 {% load static %}
 
 {% block pageBody %}
+
     <div class="col-lg-12 col-sm-6">
         <div class="card hovercard">
             <div class="card-background">
@@ -31,7 +32,8 @@
                 </button>
             </div>
             <div class="btn-group" role="group">
-                <button type="button" id="officeinfo" class="btn btn-default btn-raised" href="#tab2" data-toggle="tab">
+                <button type="button" id="officeinfo" class="btn btn-default btn-raised" href="#tab2" data-toggle="tab"
+                        onclick="initMap()">
                     <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                     <div class="hidden-xs text-p">اطلاعات مطب</div>
                 </button>
@@ -86,36 +88,6 @@
                             <dd>{{ doctor.office.phone }}</dd>
                             <dt class="text-primary">تلگرام</dt>
                             <dd>{{ doctor.office.telegram }}</dd>
-
-                            <dt class="text-primary">
-                             نمایش محل مطب روی نقشه
-
-</dt>
-                            <dd>
-
-                                <div id="googleMap" style="width:100%;height:400px;"></div>
-
-
-                                <script>
-                                    function initMap() {
-                                        var uluru = {lat: 35.705, lng: 51.350};
-                                        var map = new google.maps.Map(document.getElementById('googleMap'), {
-                                            zoom: 15,
-                                            center: uluru
-                                        });
-                                        var marker = new google.maps.Marker({
-                                            position: uluru,
-                                            map: map
-                                        });
-                                    }
-                                </script>
-
-                                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initMap"></script>
-
-                            </dd>
-
-                            <dt class="text-primary"></dt>
-                            <dd></dd>
                         </dl>
                     {% else %}
                         <div class="col-md-offset-1">
@@ -123,19 +95,44 @@
                         </div>
                     {% endif %}
                 </div>
-                {#                <div class="tab-pane fade in" id="tab3">#}
-                {##}
-                {#                    {% if doctor.office.get_available_days != None %}#}
-                {#                        <h3>زمان های قابل رزرو پزشک</h3>#}
-                {#                        <br>#}
-                {#                        {% include "reserve.html" %}#}
-                {#                    {% else %}#}
-                {#                        <h3>#}
-                {#                        هیچ زمان قابل رزروی برای این پزشک به ثبت نرسیده است.#}
-                {#                        </h3>#}
-                {#                    {% endif %}#}
-                {#                </div>#}
             </div>
+            {% if doctor.office != None %}
+
+                <dl class="dl-horizontal btn-lg">
+                    <dt class="text-primary">
+                        محل مطب روی نقشه
+
+                    </dt>
+                    <dd>
+
+                        <div id="googleMap" style="width:50%;height:400px;"></div>
+
+
+                        <script>
+                            function initMap() {
+                                var doctor_office_pos = {
+                                    lat: {{ doctor.office.lat_position }},
+                                    lng: {{doctor.office.lng_position}}
+                                };
+
+                                var map = new google.maps.Map(document.getElementById('googleMap'), {
+                                    zoom: 15,
+                                    center: doctor_office_pos
+                                });
+                                var marker = new google.maps.Marker({
+                                    position: doctor_office_pos,
+                                    map: map
+                                });
+                                google.maps.event.trigger(map, 'resize');
+                            }
+                        </script>
+
+                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initMap"></script>
+
+                    </dd>
+                </dl>
+            {% endif %}
+
         </div>
 
     </div>

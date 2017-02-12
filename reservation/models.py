@@ -110,8 +110,8 @@ class Office(models.Model):
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
-    lat_position = models.DecimalField(max_digits=15, decimal_places=3, null=True)
-    lang_position = models.DecimalField(max_digits=15, decimal_places=3, null=True)
+    lat_position = models.DecimalField(max_digits=20, decimal_places=15, null=True)
+    lng_position = models.DecimalField(max_digits=20, decimal_places=15, null=True)
 
     @property
     def get_position(self):
