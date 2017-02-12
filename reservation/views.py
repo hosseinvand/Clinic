@@ -148,8 +148,17 @@ class SearchDoctorView(ListView, FormView):
 #     template_name = 'panel.html'
 
 class SearchDoctorByLocationView(ListView):
-    model = Office #TODO! or doctor
+    model = Doctor #TODO! or doctor
     template_name = 'search_by_location.html'
+
+    def __init__(self):
+        super(SearchDoctorByLocationView, self).__init__()
+        self.object_list = None
+
+    def get_queryset(self):
+        self.object_list = self.model.objects.all()
+        return self.object_list
+
 
 
 class ManageSecretary(LoginRequiredMixin, ListView):
