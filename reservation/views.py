@@ -1,7 +1,13 @@
 import datetime
+import json
+from distutils.log import Log
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.gis import serializers
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls.base import reverse_lazy
@@ -160,7 +166,18 @@ class SearchDoctorByLocationView(ListView):
         self.object_list = self.model.objects.all()
         return self.object_list
 
+class GetSearchByLocationOfficeResult(View):
 
+#TODO: office hayi ro bargardunim ke doctorhashunu bargardundim tuye listview!
+    def post(self, request, *args, **kwargs):
+        all_offices = models.Office.objects.all()
+        offices_values = all_offices.values('lat_position', 'lng_position', 'doctorSecretary')
+
+        for office in all_offices:
+            dist = office.distance(float(request.POST.get('lat')), float(request.POST.get('lng')))
+            print("dist in post:",dist)
+        print("offices:", list(offices_values))
+        return JsonResponse(list(offices_values), safe=False)
 
 
 class ManageSecretary(LoginRequiredMixin, ListView):

@@ -5,27 +5,12 @@
 
     <div id="map" class="well" style="width:100%;height:500px;"></div>
     <script>
-        // Note: This example requires that you consent to location sharing when
-        // prompted by your browser. If you see the error "The Geolocation service
-        // failed.", it means you probably did not give permission for the browser to
-        // locate you.
-        $.ajax({
-            method: 'POST',
-            url: '/ajax/delete_secretary/',
-            data: {
-                'username': secretaryUsername,
-                'csrfmiddlewaretoken': token
-            },
-            dataType: 'json',
-            success: function () {
-                location.reload();
-            }
-        });
-        var office_positions = [];
+
+        var token = '{{ csrf_token }}';
 
         function initLocationSearchMap() {
             var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -34.397, lng: 150.644},
+                center: {lat: 35.696, lng: 51.351},
                 zoom: 14
             });
             var infoWindow = null;
@@ -41,10 +26,48 @@
                     var marker = new google.maps.Marker({
                         map: map,
                         position: pos,
+                        icon: 'https://cdn3.iconfinder.com/data/icons/map-markers-1/512/monument-48.png',
                         title: 'مکان فعلی شما'
                     });
-
                     map.setCenter(pos);
+
+                    $.ajax({
+                        method: 'POST',
+                        url: '/ajax/search_by_location/',
+                        data: {
+                            'lat': pos.lat,
+                            'lng': pos.lng,
+                            'csrfmiddlewaretoken': token
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                            for (i = 0; i < response.length; i++) {
+{#                                console.log(response[i]['lng_position']);#}
+{#                                console.log(response[i]['lat_position']);#}
+                                var curr_office_pos = new google.maps.LatLng(
+                                    parseFloat(response[i]['lat_position']),
+                                    parseFloat(response[i]['lng_position'])
+                                );
+
+                                var doctor_id = response[i]['doctorSecretary'];
+                                var office_string = "<a class='text-primary' href='/../profile/"+ doctor_id + "'>" + "پروفایل پزشک" + "</a>";
+                                var curr_office_marker = new google.maps.Marker({
+                                    map: map,
+                                    position: curr_office_pos
+                                });
+                                console.log(doctor_id);
+                                google.maps.event.addListener(curr_office_marker, 'click', (function(content){
+                                    return function () {
+                                        var marker_infowindow = new google.maps.InfoWindow({map: map});
+                                        marker_infowindow.setContent(content);
+                                        marker_infowindow.open(map, this);
+                                    }
+                                }(office_string)));
+
+                            }
+{#                            console.log(response);#}
+                        }
+                    });
 
                 }, function () {
                     infoWindow = new google.maps.InfoWindow({map: map});
@@ -55,9 +78,7 @@
                 infoWindow = new google.maps.InfoWindow({map: map});
                 handleLocationError(false, infoWindow, map.getCenter());
             }
-
         }
-
 
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);

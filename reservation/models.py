@@ -1,5 +1,9 @@
 import datetime
 from abc import abstractmethod
+
+import math
+from distutils.log import Log
+
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
@@ -135,13 +139,13 @@ class Office(models.Model):
 
     @property
     def doctor(self):
-        doctorSecretary = self.doctorSecretary.all()
-        print("first!: ", doctorSecretary)
-        for secretary in doctorSecretary:
-            print("role id", secretary.get_role_id())
+        doctor_secretary = self.doctorSecretary.all()
+        for secretary in doctor_secretary:
             if secretary.get_role_id() == DOCTOR_ROLE_ID:
-                print("secretary: " , secretary)
                 return secretary
+
+    def distance(self, lat, lng):
+        return math.hypot(float(self.lat_position)-lat, float(self.lng_position)-lng)
 
 
 class Role(PolymorphicModel):

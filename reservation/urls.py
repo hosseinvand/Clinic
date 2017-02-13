@@ -32,5 +32,7 @@ urlpatterns = [
 
     url(r'^ajax/reserve_time/$', reserve_time, name='reserveTime'),
     url(r'^ajax/reject_time/$', reject_time, name='rejectTime'),
+    url(r'^ajax/search_by_location/$', GetSearchByLocationOfficeResult.as_view(), name='searchLocationOffice'),
+
 
 ]
