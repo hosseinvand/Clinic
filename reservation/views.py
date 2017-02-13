@@ -2,6 +2,7 @@ import datetime
 import json
 from distutils.log import Log
 
+import math
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,6 +19,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 
 from reservation.forms import *
+from reservation.minheap import Heap
 from .forms import LoginForm
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin, DoctorSecretaryRequiredMixin
@@ -171,13 +173,27 @@ class GetSearchByLocationOfficeResult(View):
 #TODO: office hayi ro bargardunim ke doctorhashunu bargardundim tuye listview!
     def post(self, request, *args, **kwargs):
         all_offices = models.Office.objects.all()
-        offices_values = all_offices.values('lat_position', 'lng_position', 'doctorSecretary')
-
+        count = 20 #TODO: input from user
+        inf_dist = 100000
+        max_heap = Heap()
         for office in all_offices:
             dist = office.distance(float(request.POST.get('lat')), float(request.POST.get('lng')))
-            print("dist in post:",dist)
+            max_heap.push(inf_dist - dist, office.id)
+            if len(max_heap) > count:
+                max_heap.pop()
+
+        top_offices = []
+        while len(max_heap) > 0:
+            top_offices.append(max_heap.pop())
+
+        print("top offices: ", top_offices)
+
+        offices_values = models.Office.objects.filter(id__in=top_offices).values('lat_position', 'lng_position', 'doctorSecretary')
+
         print("offices:", list(offices_values))
         return JsonResponse(list(offices_values), safe=False)
+
+
 
 
 class ManageSecretary(LoginRequiredMixin, ListView):
