@@ -20,7 +20,8 @@ class Login(View):
     #     return super(Login, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        username, password = request.POST.get('username'), request.POST.get('password')
+        print(request.body)
+        username, password = request.body.get('username'), request.POST.get('password')
         print(username, password)
         try:
             user = authenticate(username=username, password=password)
