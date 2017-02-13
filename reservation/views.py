@@ -6,6 +6,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
@@ -158,6 +159,7 @@ class SearchDoctorByLocationView(ListView):
     def get_queryset(self):
         self.object_list = self.model.objects.all()
         return self.object_list
+
 
 
 

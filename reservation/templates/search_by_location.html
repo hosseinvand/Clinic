@@ -9,20 +9,20 @@
         // prompted by your browser. If you see the error "The Geolocation service
         // failed.", it means you probably did not give permission for the browser to
         // locate you.
-
+        $.ajax({
+            method: 'POST',
+            url: '/ajax/delete_secretary/',
+            data: {
+                'username': secretaryUsername,
+                'csrfmiddlewaretoken': token
+            },
+            dataType: 'json',
+            success: function () {
+                location.reload();
+            }
+        });
         var office_positions = [];
-        var doctor_list = {{ object_list }};
-        console.log(doctor_list);
-{#        {% for f in object_list %}#}
-{#            var lat = {{f.office.lat_position}};#}
-{#            var lng = {{f.office.lng_position}};#}
-{#            var name = {{ f.full_name }};#}
-{#            var office_pos = {#}
-{#                lat: lat,#}
-{#                lng: lng#}
-{#            };#}
-{#            office_positions.push([office_pos, name]);#}
-{#        {% endfor %}#}
+
         function initLocationSearchMap() {
             var map = new google.maps.Map(document.getElementById('map'), {
                 center: {lat: -34.397, lng: 150.644},
@@ -46,22 +46,6 @@
 
                     map.setCenter(pos);
 
-{#                    for (i=0 ; i<doctor_list.length;i++){#}
-{#                        new google.maps.Marker({#}
-{#                           map: map,#}
-{#                           position: doctor_list,#}
-{#                           title: 'محل مطب دکتر' + office_positions[1]#}
-{#                       });#}
-{#                    }#}
-{#                   for (i = 0; i < office_positions.length; i++) {#}
-{#                       new google.maps.Marker({#}
-{#                           map: map,#}
-{#                           position: office_positions[0],#}
-{#                           title: 'محل مطب دکتر' + office_positions[1]#}
-{#                       });#}
-{##}
-{#                   }#}
-                    {#                    putMarkersOfDoctorsOfficeOnMap(map);#}
                 }, function () {
                     infoWindow = new google.maps.InfoWindow({map: map});
                     handleLocationError(true, infoWindow, map.getCenter());
@@ -71,8 +55,6 @@
                 infoWindow = new google.maps.InfoWindow({map: map});
                 handleLocationError(false, infoWindow, map.getCenter());
             }
-        }
-
 
         }
 
