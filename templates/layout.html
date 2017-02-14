@@ -45,8 +45,9 @@
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/panel">پنل</a></li>
+                <li><a href="{% url 'panel' %}">پنل</a></li>
                 <li><a href="{% url 'searchResult' %}">پزشکان</a></li>
+                <li><a href="{% url 'searchLocation' %}">جست‌وجوی جغرافیایی</a></li>
 
                 {#                <li class="dropdown">#}
                 {#                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown#}
@@ -108,7 +109,7 @@
     });
 </script>
 <script src="{% static "js/fileBrowse.js" %}"></script>
-<script src="{% static "js/search.js" %}"></script>
+<script src="{% static "js/office_location.js" %}"></script>
 <script src="{% static "js/secretary.js" %}"></script>
 </body>
 

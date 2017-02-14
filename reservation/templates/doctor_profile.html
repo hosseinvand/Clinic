@@ -107,7 +107,6 @@
 
                         <div id="googleMap" style="width:50%;height:400px;"></div>
 
-
                         <script>
                             function initMap() {
                                 var doctor_office_pos = {
@@ -121,13 +120,16 @@
                                 });
                                 var marker = new google.maps.Marker({
                                     position: doctor_office_pos,
+                                    icon: 'http://icons.iconarchive.com/icons/carlosjj/google-jfk/48/maps-icon.png',
+                                    animation: google.maps.Animation.DROP,
                                     map: map
                                 });
                                 google.maps.event.trigger(map, 'resize');
                             }
                         </script>
 
-                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initMap"></script>
+                        <script async defer
+                                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initMap"></script>
 
                     </dd>
                 </dl>
