@@ -1,4 +1,5 @@
 import json
+from time import sleep
 
 from django.contrib.auth import authenticate, login
 from django.core import serializers
@@ -38,11 +39,52 @@ class DoctorsView(View):
 
     def get(self, request, *args, **kwargs):
         doctors = Doctor.objects.all()
+        x = 1 if doctors else 0
         data = [{
             'id': doctor.id,
             'education': doctor.get_education_display(),
             'speciality': doctor.get_speciality_display(),
             'city': doctor.city,
-            'full_name': doctor.full_name
+            'full_name': doctor.full_name,
+            'insuarance': doctor.get_insurance_display(),
+            'cv': doctor.cv,
+            'price': doctor.price,
+            'office': ({
+                'city': doctor.city,
+                'address': doctor.office.address,
+                'from_hour': doctor.office.from_hour,
+                'to_hour': doctor.office.to_hour,
+                'openning_days': doctor.office.get_opening_days_display(),
+                'phone': doctor.office.phone,
+                'telegram': doctor.office.telegram
+            } if doctor.office else None)
                 } for doctor in doctors]
+        return JsonResponse(data=data, safe=False)
+
+
+class DoctorDetailView(View):
+
+    def get(self, request, *args, **kwargs):
+        doctor = Doctor.objects.filter(id=kwargs['pk']).first()
+        print(doctor.full_name)
+        print(doctor.office)
+        data = {
+            'id': doctor.id,
+            'education': doctor.get_education_display(),
+            'speciality': doctor.get_speciality_display(),
+            'city': doctor.city,
+            'full_name': doctor.full_name,
+            'insurance': doctor.get_insurance_display(),
+            'cv': doctor.cv,
+            'price': doctor.price,
+            'office': ({
+                'city': doctor.city,
+                'address': doctor.office.address,
+                'from_hour': doctor.office.from_hour,
+                'to_hour': doctor.office.to_hour,
+                'opening_days': doctor.office.get_opening_days_display(),
+                'phone': doctor.office.phone,
+                'telegram': doctor.office.telegram
+            } if doctor.office else None)
+        }
         return JsonResponse(data=data, safe=False)

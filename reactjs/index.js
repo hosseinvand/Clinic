@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
 import Login from './containers/Login'
 import Doctors from './containers/Doctors'
+import DoctorProfile from './containers/DoctorProfile'
 import Layout from './containers/Layout'
 import axios from 'axios'
 
@@ -41,6 +42,7 @@ class App extends Component {
                <Route path="/notebook" component={Layout} >
                     <Route path="/notebook/login" component={Login} />
                     <Route path="/notebook/doctors" component={Doctors} />
+                    <Route path="/notebook/doctor/:id" component={DoctorProfile} />
                </Route>
            </Router>
         )
