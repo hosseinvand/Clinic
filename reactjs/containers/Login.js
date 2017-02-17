@@ -1,24 +1,24 @@
 import React, { Component, PropTypes } from 'react'
 import axios from 'axios'
 import { getFullUrl } from '../utils'
+import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
 
 class Login extends Component {
     constructor() {
         super()
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            error: ''
         }
     }
 
     login() {
         axios.post(getFullUrl("login/"), {username: this.state.username, password: this.state.password}).then(
             function (response) {
-                console.log(response)
+                browserHistory.push(`/notebook/doctors`)
             },
-            function (error) {
-                console.log(error)
-            }
+            error => this.setState({error: 'نام کاربری یا رمز عبور اشتباه است.'})
         )
     }
 
@@ -29,6 +29,12 @@ class Login extends Component {
                         <div className="panel-body">
                             <form name="searchForm" className="form-horizontal" method="post">
                                 <fieldset>
+                                    {
+                                        this.state.error &&
+                                        <div className="alert alert-danger">
+                                            <strong>{this.state.error}</strong>
+                                        </div>
+                                    }
                                     <div className="form-group">
                                         <div className="col-xs-10 col-xs-offset-1">
                                         <input className="form-control" id="id_username"

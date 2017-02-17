@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
 import Login from './containers/Login'
+import Doctors from './containers/Doctors'
 import Layout from './containers/Layout'
 import axios from 'axios'
 
@@ -39,6 +40,7 @@ class App extends Component {
            <Router history={browserHistory}>
                <Route path="/notebook" component={Layout} >
                     <Route path="/notebook/login" component={Login} />
+                    <Route path="/notebook/doctors" component={Doctors} />
                </Route>
            </Router>
         )

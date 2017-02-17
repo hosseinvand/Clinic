@@ -39,7 +39,7 @@ module.exports = {
             },
             { test: /\.scss$/, loader: "style!css!sass" },
             { test: /\.css$/, loader: "style!css" },
-            { test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/, loader: 'url?limit=10000' },
+            { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' },
             { test: /\.((ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9]))|(ttf|eot)$/, loader: 'file' }
         ]
     },
