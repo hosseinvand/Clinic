@@ -33,7 +33,9 @@ class OfficeAddTest(TestCase):
             'from_hour': '12',
             'to_hour': '15',
             'base_time': 15,
-            'opening_days': 'sun'
+            'opening_days': 'sun',
+            'lat_position': 35.6929946320988,
+            'lng_position': 51.39129638671875,
         }
         doctor_system_user = create_test_doctor('123456', '0011223344', 'ahmad', 'password')
         self.client.login(username='ahmad', password='password')

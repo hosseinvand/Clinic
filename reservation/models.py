@@ -1,13 +1,15 @@
 import datetime
-import stat
 from abc import abstractmethod
-from random import choice
-from django.db.models import Q
+
+import math
+from distutils.log import Log
+
 from django.db import models
 from django.contrib.auth.models import User
 from polymorphic.models import PolymorphicModel
 from multiselectfield import MultiSelectField
 from reservation import jalali
+
 
 PATIENT_ROLE_ID = 1
 DOCTOR_SECRETARY_ROLE_ID = 2
@@ -112,6 +114,13 @@ class Office(models.Model):
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
+    lat_position = models.FloatField(null=True)
+    lng_position = models.FloatField(null=True)
+
+    @property
+    def get_position(self):
+        return str(self.lat_position) + ',' + str(self.lng_position)
+
     def get_base_time(self):
         return self.base_time
 
@@ -130,13 +139,13 @@ class Office(models.Model):
 
     @property
     def doctor(self):
-        doctorSecretary = self.doctorSecretary.all()
-        print("first!: ", doctorSecretary)
-        for secretary in doctorSecretary:
-            print("role id", secretary.get_role_id())
+        doctor_secretary = self.doctorSecretary.all()
+        for secretary in doctor_secretary:
             if secretary.get_role_id() == DOCTOR_ROLE_ID:
-                print("secretary: " , secretary)
                 return secretary
+
+    def distance(self, lat, lng):
+        return math.hypot(float(self.lat_position)-lat, float(self.lng_position)-lng)
 
 
 class Role(PolymorphicModel):
@@ -269,7 +278,6 @@ class Reservation(models.Model):
 
         reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
         not_available = [reservation.range_num for reservation in reservations]
-        print('not', not_available)
 
         available = [x for x in result if x not in not_available]
         return [{'range': self.get_range_by_num(x), 'range_num': x} for x in available]

@@ -3,14 +3,18 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_list_or_404
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 
 from reservation.forms import *
+from reservation.minheap import Heap
+from .forms import LoginForm
+from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin, DoctorSecretaryRequiredMixin
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
 from .forms import LoginForm
@@ -102,7 +106,8 @@ class SearchDoctorView(ListView, FormView):
             words = name.split()
             print('words: ', words)
             for word in words:
-                self.object_list = self.object_list.filter(user_role__user__first_name__icontains=word) | self.object_list.filter(
+                self.object_list = self.object_list.filter(
+                    user_role__user__first_name__icontains=word) | self.object_list.filter(
                     user_role__user__last_name__icontains=word)
 
         # filter by city
@@ -143,9 +148,77 @@ class SearchDoctorView(ListView, FormView):
 
         return self.object_list
 
-# class SecretaryPanel(LoginRequiredMixin, TemplateView):
-#     selected = "panel"
-#     template_name = 'panel.html'
+
+# class SearchDoctorByLocationView(ListView):
+#     model = Doctor  # TODO! or doctor
+#     template_name = 'search_by_location.html'
+#
+#     def __init__(self):
+#         super(SearchDoctorByLocationView, self).__init__()
+#         self.object_list = None
+#
+#     def get_queryset(self):
+#         self.object_list = self.model.objects.all()
+#         return self.object_list
+
+
+class GetSearchByLocationOfficeResult(ListView):
+    model = Doctor
+    template_name = 'search_by_location.html'
+
+    def __init__(self):
+        super(GetSearchByLocationOfficeResult, self).__init__()
+        self.object_list = None
+        self.office_id_list = None
+    #TODO: list nearest office ... not all
+    def get_queryset(self):
+        if self.office_id_list is not None:
+            print("not none")
+            tmp_offices = models.Office.objects.filter(id__in=self.office_id_list)
+            print(tmp_offices)
+            self.object_list = self.model.objects.filter(office__in=tmp_offices)
+        else:
+            self.object_list = self.model.objects.all()
+        return self.object_list
+
+    # TODO: office hayi ro bargardunim ke doctorhashunu bargardundim tuye listview!
+    def post(self, request, *args, **kwargs):
+        all_offices = models.Office.objects.all()
+        count = 20  # TODO: input from user
+
+        # sorted by distance id list
+        office_id_list = self.get_list_of_top_office_ids(all_offices, float(request.POST.get('lat')),
+                                                         float(request.POST.get('lng')), count)
+
+        print("top offices: ", office_id_list)
+        # not sorted by distance
+        offices_values = models.Office.objects.filter(id__in=office_id_list).values('lat_position', 'lng_position',
+                                                                                 'doctorSecretary')
+
+        tmp_offices = models.Office.objects.filter(id__in=office_id_list)
+        for office in tmp_offices:
+                print("dists: ", office.id, ", ", office.distance(float(request.POST.get('lat')),
+                                                         float(request.POST.get('lng'))))
+        print("offices:", list(offices_values))
+        return JsonResponse(list(offices_values), safe=False)
+
+    # put offices in heap to find nearest ones
+    def get_list_of_top_office_ids(self, offices, loc_lat, loc_lng, number):
+        office_id_list = []
+        inf_dist = 100000
+        max_heap = Heap()
+        for office in offices:
+            dist = office.distance(loc_lat, loc_lng)
+            max_heap.push(inf_dist - dist, office.id)
+            if len(max_heap) > number:
+                max_heap.pop()
+
+        while len(max_heap) > 0:
+            office_id_list.append(max_heap.pop())
+
+        office_id_list.reverse()
+        self.office_id_list = office_id_list
+        return office_id_list
 
 
 class ManageSecretary(LoginRequiredMixin, ListView):
@@ -211,7 +284,6 @@ def reject_time(request):
     return JsonResponse({})
 
 
-
 class AddClinicView(LoginRequiredMixin, DoctorRequiredMixin, CreateView):
     selected = "addClinic"
     model = Office
@@ -267,13 +339,13 @@ class ManageReservations(LoginRequiredMixin, DoctorSecretaryRequiredMixin, ListV
     template_name = 'panel.html'
 
     def get_queryset(self):
-        return Reservation.objects.filter(range_num__isnull=True, doctor=self.request.user.system_user.role.office.doctor)
+        return Reservation.objects.filter(range_num__isnull=True,
+                                          doctor=self.request.user.system_user.role.office.doctor)
 
 
 class DoctorProfileView(DetailView):
     model = Doctor
     template_name = 'doctor_profile.html'
-
 
 
 class ReservationCreateView(LoginRequiredMixin, CreateView):
@@ -290,7 +362,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
 
 
 class SecretaryPanel(LoginRequiredMixin, ListView):
-    selected ="panel"
+    selected = "panel"
     template_name = 'panel.html'
     context_object_name = 'accepted'
 
@@ -305,4 +377,3 @@ class SecretaryPanel(LoginRequiredMixin, ListView):
 
         context['expired'] = self.request.user.system_user.get_expired_reserve_times()
         return context
-
