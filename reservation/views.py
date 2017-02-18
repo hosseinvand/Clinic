@@ -1,4 +1,5 @@
 import datetime
+import time
 import json
 from distutils.log import Log
 
@@ -383,3 +384,22 @@ class SecretaryPanel(LoginRequiredMixin, ListView):
 
         context['expired'] = self.request.user.system_user.get_expired_reserve_times()
         return context
+
+
+class ReservationListPanel(LoginRequiredMixin, DoctorSecretaryRequiredMixin, ListView):
+    selected = "reservationList"
+    template_name = 'panel.html'
+
+    def get_queryset(self):
+        week = self.request.GET.get("week")
+        day = self.request.GET.get("day", datetime.date.today())
+        print(datetime.datetime.strptime(day, '%Y-%m-%d'))
+        if not str(day).lstrip("-").isdigit():
+            day = 0
+        date = datetime.date.today() + datetime.timedelta(days=int(day))
+        start_week = date - datetime.timedelta((date.weekday() + 2) % 7)
+        end_week = start_week + datetime.timedelta(6)
+        if week is None:
+            return Reservation.objects.filter(doctor=self.request.user.system_user.role.office.doctor, date=date)
+        return Reservation.objects.filter(doctor=self.request.user.system_user.role.office.doctor,
+                                          date__range=[start_week, end_week])

@@ -176,6 +176,10 @@ th{
     margin-top: 0px;
 }
 
+.with-margin{
+    margin: 1.5rem;
+}
+
 .centered-cells > td {
     vertical-align: middle;
     text-align: center;
