@@ -29,15 +29,20 @@ if HEROKU:
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
-        # Disable Django's own staticfiles handling in favour of WhiteNoise, for
-        # greater consistency between gunicorn and `./manage.py runserver`. See:
-        # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
         'whitenoise.runserver_nostatic',
         'django.contrib.staticfiles',
         'reservation',
-        'notebook',
         'multiselectfield',
+        'webpack_loader'
+        'notebook',
     ]
+
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        }
+    }
 
     MIDDLEWARE_CLASSES = [
         'django.middleware.security.SecurityMiddleware',
@@ -168,7 +173,16 @@ else:
         'django.contrib.sites',
         'reservation',
         'multiselectfield',
+        'webpack_loader',
+        'notebook',
     ]
+
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        }
+    }
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
@@ -251,6 +265,7 @@ else:
 
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, "static"),
+        os.path.join(BASE_DIR, "reactjs/bundles"),
     )
 
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
