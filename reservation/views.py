@@ -1,14 +1,7 @@
 import datetime
-import json
-from distutils.log import Log
-
-import math
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.gis import serializers
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect, get_list_or_404
 from django.urls.base import reverse_lazy
@@ -23,6 +16,8 @@ from reservation.minheap import Heap
 from .forms import LoginForm
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin, DoctorSecretaryRequiredMixin
+from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
+from .forms import LoginForm
 
 
 class MainPageView(TemplateView, FormView):
@@ -278,14 +273,14 @@ def delete_secretary(request):
 def reserve_time(request):
     reservation_pk = request.POST.get('reservationPk', None)
     range_num = request.POST.get('rangeNum', None)
-    Reservation.objects.filter(pk=reservation_pk).update(status=models.RESERVATION_STATUS[1][0], range_num=range_num)
+    Reservation.objects.filter(pk=reservation_pk).update(range_num=range_num)
     return JsonResponse({})
 
 
 @login_required
 def reject_time(request):
     reservation_pk = request.POST.get('reservationPk', None)
-    Reservation.objects.filter(pk=reservation_pk).update(status=models.RESERVATION_STATUS[2][0])
+    Reservation.objects.filter(pk=reservation_pk).update(rejected=True)
     return JsonResponse({})
 
 
@@ -378,7 +373,6 @@ class SecretaryPanel(LoginRequiredMixin, ListView):
         context = super(SecretaryPanel, self).get_context_data(**kwargs)
         context['pending'] = self.request.user.system_user.get_pending_reserve_times()
 
-        print('pending: ', context['pending'])
         context['rejected'] = self.request.user.system_user.get_rejected_reserve_times()
 
         context['expired'] = self.request.user.system_user.get_expired_reserve_times()

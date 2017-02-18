@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 from django.views.generic import TemplateView
 
-from reservation.models import Doctor
+from reservation.models import Doctor, Reservation
 
 
 class MainPageView(TemplateView):
@@ -34,6 +34,25 @@ class Login(View):
         else:
             return HttpResponse(status=401)
 
+
+class ReservationsView(View):
+
+    def reservation_to_dict(self, reservation, status):
+        return {
+            'pk': reservation.id,
+            'doctor_pk': reservation.doctor.id,
+            'speciality': reservation.doctor.get_speciality_display(),
+            'date': reservation.get_jalali,
+            'full_name': reservation.doctor.full_name,
+            'from': reservation.from_time,
+            'to': reservation.to_time,
+            'status': status
+        }
+
+    def get(self, request, *args, **kwargs):
+        reservations = self.request.user.system_user.get_reserve_times()
+        data = [self.reservation_to_dict(reservation, reservation.status) for reservation in reservations]
+        return JsonResponse(data=data, safe=False)
 
 class DoctorsView(View):
 

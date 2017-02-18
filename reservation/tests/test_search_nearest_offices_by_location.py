@@ -1,5 +1,3 @@
-from _decimal import Decimal
-
 from django.test.testcases import TestCase
 
 from reservation.models import Office, CITY_NAMES, HOURS

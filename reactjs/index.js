@@ -5,6 +5,7 @@ import Login from './containers/Login'
 import Doctors from './containers/Doctors'
 import DoctorProfile from './containers/DoctorProfile'
 import Layout from './containers/Layout'
+import Reservations from  './containers/Reservations'
 import axios from 'axios'
 
 function getCookie(name) {
@@ -43,6 +44,7 @@ class App extends Component {
                     <Route path="/notebook/login" component={Login} />
                     <Route path="/notebook/doctors" component={Doctors} />
                     <Route path="/notebook/doctor/:id" component={DoctorProfile} />
+                    <Route path="/notebook/reservations" component={Reservations} />
                </Route>
            </Router>
         )
