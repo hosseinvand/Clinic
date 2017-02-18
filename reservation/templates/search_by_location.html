@@ -2,37 +2,34 @@
 {% load static %}
 {% load widget_tweaks %}
 {% block pageBody %}
-{% csrf_token %}
-   <div  class="panel-default panel">
-    <div class="text-primary panel-body"> <h2> نزدیک‌ترین پزشکان به مکان فعلی شما</h2></div>
-    <div id="map" class="well" style="width:100%;height:500px;"></div>
-</div>
-    <script src="{% static "js/search_by_location.js" %}"> </script>
+    {% csrf_token %}
+    <div class="panel-default panel">
+        <div class="text-primary panel-body"><h2> نزدیک‌ترین پزشکان به مکان فعلی شما</h2></div>
+        <div id="map" class="well" style="width:100%;height:500px;"></div>
+    </div>
+    <script src="{% static "js/search_by_location.js" %}"></script>
     <script> token = "{{ csrf_token }}";</script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initLocationSearchMap">
     </script>
 
-    <div class="panel panel-default">
-        <div class="page-title well text-primary">
-            <h4> نزدیک ترین پزشکان</h4>
-
-        </div>
-        <div class="panel-body ">
-            <div class="col-md-9">
-
-                {% if not object_list %}
-                    <h4>هیچ پزشکی در سیستم وجود ندارد.</h4>
-
-                {% endif %}
-
-                {% for f in object_list %}
-                    <div>
+{#    <div class="panel panel-default">#}
+{#        <div class="page-title well text-primary">#}
+{#            <h4> نزدیک ترین پزشکان</h4>#}
+{##}
+{#        </div>#}
+{#        <div class="panel-body">#}
+{#                {% if not object_list %}#}
+{#                    <h4>هیچ پزشکی در سیستم وجود ندارد.</h4>#}
+{##}
+{#                {% endif %}#}
+{##}
+{#                {% for f in object_list %}#}
+{#                    <div class="col-md-3">#}
                         {#            {% include 'widget/food.html' with food=f%}#}
-                        {% include 'doctor_card.html' with doctor=f %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+{#                        {% include 'doctor_card.html' with doctor=f %}#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
 {% endblock %}

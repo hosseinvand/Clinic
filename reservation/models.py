@@ -114,12 +114,12 @@ class Office(models.Model):
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
 
-    lat_position = models.DecimalField(max_digits=20, decimal_places=15, null=True)
-    lng_position = models.DecimalField(max_digits=20, decimal_places=15, null=True)
+    lat_position = models.FloatField(null=True)
+    lng_position = models.FloatField(null=True)
 
     @property
     def get_position(self):
-        return self.lat_position + ',' + self.long_position
+        return str(self.lat_position) + ',' + str(self.lng_position)
 
     def get_base_time(self):
         return self.base_time
@@ -276,7 +276,6 @@ class Reservation(models.Model):
 
         reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
         not_available = [reservation.range_num for reservation in reservations]
-        print('not', not_available)
 
         available = [x for x in result if x not in not_available]
         return [{'range': self.get_range_by_num(x), 'range_num': x} for x in available]

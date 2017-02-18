@@ -53,6 +53,7 @@ function initLocationSearchMap() {
                                 parseFloat(response[i]['lat_position']),
                                 parseFloat(response[i]['lng_position'])
                             );
+                            console.log(curr_office_pos);
 
                             var doctor_id = response[i]['doctorSecretary'];
                             var office_string = "<div class='panel panel-default'>" + "</div>" +

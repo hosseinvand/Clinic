@@ -14,7 +14,8 @@ urlpatterns = [
 
     # TODO: better url addresses
     url(r'^search_results/$', SearchDoctorView.as_view(), name='searchResult'),
-    url(r'^search_by_location/$', SearchDoctorByLocationView.as_view(), name='searchLocation'),
+    # url(r'^search_by_location/$', SearchDoctorByLocationView.as_view(), name='searchLocation'),
+    url(r'^search_by_location/$', GetSearchByLocationOfficeResult.as_view(), name='searchLocation'),
 
     url(r'^panel/$', SecretaryPanel.as_view(), name="panel"),
     url(r'^panel/secretary/$', ManageSecretary.as_view(), name="ManageSecretary"),
