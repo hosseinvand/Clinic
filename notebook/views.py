@@ -39,7 +39,6 @@ class DoctorsView(View):
 
     def get(self, request, *args, **kwargs):
         doctors = Doctor.objects.all()
-        x = 1 if doctors else 0
         data = [{
             'id': doctor.id,
             'education': doctor.get_education_display(),
