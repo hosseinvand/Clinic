@@ -33,7 +33,9 @@ class AvailableDaysTest(TestCase):
             'from_hour': 13,
             'to_hour': 18,
             'base_time': 15,
-            'opening_days': ['sat','tue','wed']
+            'opening_days': ['sat','tue','wed'],
+            'lat_position': 35.6929946320988,
+            'lng_position': 51.39129638671875,
         }
         doctor_user = test_utils.create_test_doctor(123,"0018032311","mahshid","pass")
         self.client.login(username='mahshid', password='pass')
