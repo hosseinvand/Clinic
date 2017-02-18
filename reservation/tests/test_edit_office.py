@@ -66,7 +66,9 @@ class EditOfficeTest(TestCase):
             'from_hour': 9,
             'to_hour': 13,
             'base_time': 15,
-            'opening_days': ['sat']
+            'opening_days': ['sat'],
+            'lat_position': 35.6929946320988,
+            'lng_position': 51.39129638671875,
         }
 
         response = self.client.post(reverse_lazy('updateClinic',), new_office_data)
