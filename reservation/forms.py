@@ -1,11 +1,10 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.contrib.gis.admin import widgets
-from django.db.utils import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
-from reservation import jalali, models
-from reservation.models import SystemUser, Doctor, Office, Reservation, RESERVATION_STATUS
+
+from reservation import jalali
+from reservation.models import SystemUser, Doctor, Office, Reservation
 
 
 class SystemUserRegisterForm(ModelForm):

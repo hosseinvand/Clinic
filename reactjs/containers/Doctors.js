@@ -29,11 +29,7 @@ class Doctors extends Component {
             <div>
                 {
                     this.state.error &&
-                    <div className="col-md-4 col-md-offset-4">
-                        <div className="alert alert-danger">
-                            <strong>{this.state.error}</strong>
-                        </div>
-                    </div>
+                    <ErrorCard error={this.state.error} />
                 }
                 {
                     this.state.doctors.length > 0 &&

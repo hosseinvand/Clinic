@@ -91,12 +91,12 @@ BASE_TIMES = ((10, 10),
 
 HOURS = [(i, i) for i in range(24)]
 
-RESERVATION_STATUS = (
-    ('PENDING', 'در دست بررسی'),
-    ('ACCEPTED', 'تعیین شده'),
-    ('REJECTED', 'رد شده'),
-    ('EXPIRED', 'تاریخ گذشته')
-)
+RESERVATION_STATUS = {
+    'PENDING': 'در دست بررسی',
+    'ACCEPTED': 'تعیین شده',
+    'REJECTED': 'رد شده',
+    'EXPIRED': 'تاریخ گذشته'
+}
 
 
 
@@ -227,28 +227,30 @@ class SystemUser(models.Model):
     def username(self):
         return self.user.username
 
+
+    def get_reserve_times(self):
+        return self.get_accepted_reserve_times() | self.get_pending_reserve_times() | self.get_rejected_reserve_times() | self.get_expired_reserve_times()
+
+
     def get_pending_reserve_times(self):
         return Reservation.objects.filter(range_num__isnull=True,
-                                          status=RESERVATION_STATUS[0][0],
+                                          date__gte=datetime.date.today(),
                                           patient=self,
-                                          date__gte=datetime.date.today())
+                                          rejected=False)
 
     def get_accepted_reserve_times(self):
         return Reservation.objects.filter(range_num__isnull=False,
-                                          status=RESERVATION_STATUS[1][0],
+                                          rejected=False,
                                           patient=self)
 
     def get_rejected_reserve_times(self):
-        return Reservation.objects.filter(status=RESERVATION_STATUS[2][0],
+        return Reservation.objects.filter(rejected=True,
                                           patient=self)
 
     def get_expired_reserve_times(self):
-        Reservation.objects.filter(range_num__isnull=True,
-                                   patient=self,
-                                   date__lt=datetime.date.today()).update(status=RESERVATION_STATUS[3][0])
         return Reservation.objects.filter(range_num__isnull=True,
                                           patient=self,
-                                          status=RESERVATION_STATUS[3][0])
+                                          date__lt=datetime.date.today())
 
 
 class Reservation(models.Model):
@@ -258,7 +260,7 @@ class Reservation(models.Model):
     patient = models.ForeignKey(SystemUser, related_name='Reservations')
     doctor = models.ForeignKey(Doctor, related_name='Reservations')
     range_num = models.IntegerField(null=True)
-    status = models.CharField(max_length=30, choices=RESERVATION_STATUS, default=RESERVATION_STATUS[0][0])
+    rejected = models.BooleanField(default=False)
 
     def get_available_times(self):
         start_range_num = self.get_num_by_start(max(self.from_time,self.doctor.office.from_hour))
@@ -276,6 +278,19 @@ class Reservation(models.Model):
     def get_jalali(self):
         return jalali.Gregorian(self.date).persian_string()
 
+    @property
+    def status(self):
+        if self.rejected:
+            return 'REJECTED'
+        if self.range_num is not None:
+            return 'ACCEPTED'
+        if self.date >= datetime.date.today():
+            return 'PENDING'
+        return 'EXPIRED'
+
+    def get_status_display(self):
+        return RESERVATION_STATUS[self.status]
+
     #   TODO: TEST
     def get_range_by_num(self, num):
         base = self.doctor.get_base_time()
@@ -290,6 +305,3 @@ class Reservation(models.Model):
         if minute%self.doctor.get_base_time() > 0:
             return -1
         return (hour*60 + minute) // self.doctor.get_base_time()
-
-    def set_status(self, status):
-        self.status = status
