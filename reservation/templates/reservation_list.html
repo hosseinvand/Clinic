@@ -6,16 +6,16 @@
         <form>
             <div class="col-sm-5">
                 <i class="btn btn-raised btn-primary btn-sm glyphicon glyphicon-calendar" id="date_btn" type="button"></i>
-                <input id="date_input" name="day" type="text">
+                <input id="date_input" name="day" type="text" value="{{ day }}">
             </div>
             <div class="col-sm-5">
                 <p class="text-primary with-margin">
                     نمایش نوبت‌ها در کل هفته
-                    <input id="date_input" name="week" type="checkbox">
+                    <input id="date_input" name="week" type="checkbox" {% if week == 'on' %}checked{% endif %}>
                 </p>
             </div>
             <div class="col-sm-2">
-                <input class="btn btn-primary btn-raised" type="submit" value="نمایش"></input>
+                <input class="btn btn-primary btn-raised" type="submit" value="نمایش">
             </div>
         </form>
     </div>

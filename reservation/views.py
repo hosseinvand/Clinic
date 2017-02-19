@@ -363,13 +363,21 @@ class ReservationListPanel(LoginRequiredMixin, DoctorSecretaryRequiredMixin, Lis
     selected = "reservationList"
     template_name = 'panel.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ReservationListPanel, self).get_context_data(**kwargs)
+        context['day'] = self.request.GET.get("day", "")
+        context['week'] = self.request.GET.get("week", "")
+        return context
+
     def get_queryset(self):
         week = self.request.GET.get("week")
-        day = self.request.GET.get("day", datetime.date.today())
-        print(datetime.datetime.strptime(day, '%Y-%m-%d'))
-        if not str(day).lstrip("-").isdigit():
-            day = 0
-        date = datetime.date.today() + datetime.timedelta(days=int(day))
+        day = self.request.GET.get("day", "")
+        date = datetime.date.today()
+        try:
+            date = jalali.Persian(day).gregorian_datetime()
+        except Exception:
+            None
+
         start_week = date - datetime.timedelta((date.weekday() + 2) % 7)
         end_week = start_week + datetime.timedelta(6)
         if week is None:
