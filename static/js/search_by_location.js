@@ -63,7 +63,7 @@ function initLocationSearchMap() {
                                         // console.log(curr_office_pos);
                                         // console.log(response[i]);
                                         // console.log(card_response);
-                                        var office_string = card_response ;
+                                        var office_string ="<div>"+ card_response +"</div>";
                                         var curr_office_marker = new google.maps.Marker({
                                             map: map,
                                             icon: 'http://icons.iconarchive.com/icons/carlosjj/google-jfk/48/maps-icon.png',
@@ -75,7 +75,10 @@ function initLocationSearchMap() {
                                             return function () {
                                                 var marker_infowindow = new google.maps.InfoWindow({
                                                     map: map,
-                                                    maxWidth: 200
+                                                    maxWidth: 190,
+                                                    marginLeft: 0,
+                                                    marginRight: 10,
+                                                    paddingRight:15,
                                                 });
                                                 marker_infowindow.setContent(content);
                                                 marker_infowindow.open(map, this);

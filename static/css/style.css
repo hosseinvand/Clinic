@@ -23,7 +23,7 @@
     font-weight: bold;
 }
 
-body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 ,p{
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 ,p ,.panel{
     font-family: 'XM yekan';
 }
 
@@ -186,7 +186,19 @@ th{
 }
 
 
- .clinic-map {
-        height: 400px;
-        width: 100%;
- }
+.clinic-map {
+    height: 400px;
+    width: 100%;
+}
+.gm-style-iw{
+    margin: 0;
+}
+
+.gm-style .panel{
+    margin: 0;
+}
+
+.gm-style {
+    padding: 0;
+    margin: 0;
+}
