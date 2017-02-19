@@ -16,9 +16,7 @@ class Doctors extends Component {
     componentWillMount() {
         axios.get(getFullUrl("doctors/")).then(
             response => {
-                console.log(response)
                 this.setState({doctors: response.data})
-                // browserHistory.push(`/notebook/doctors`)
             },
             error => this.setState({error: 'خطا در اتصال به سرور(تلاش مجدد)'})
         )

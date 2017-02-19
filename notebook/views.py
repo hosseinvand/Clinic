@@ -2,6 +2,7 @@ import json
 from time import sleep
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -28,15 +29,20 @@ class Login(View):
         username, password = body['username'], body['password']
         user = authenticate(username=username, password=password)
         login(self.request, user)
+        user_data = {
+            'first_name': user.first_name,
+            'id': user.id,
+            'username': user.username
+        }
+        print(user_data)
         if user:
             login(self.request, user)
-            return HttpResponse(status=200)
+            return JsonResponse(user_data)
         else:
             return HttpResponse(status=401)
 
 
 class ReservationsView(View):
-
     def reservation_to_dict(self, reservation, status):
         return {
             'pk': reservation.id,
@@ -50,6 +56,8 @@ class ReservationsView(View):
         }
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponse(status=403)
         reservations = self.request.user.system_user.get_reserve_times()
         data = [self.reservation_to_dict(reservation, reservation.status) for reservation in reservations]
         return JsonResponse(data=data, safe=False)

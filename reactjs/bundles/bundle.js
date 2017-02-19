@@ -16168,6 +16168,16 @@ var App = function (_Component) {
             return config;
         }
     }, {
+        key: 'requireAuth',
+        value: function requireAuth(nextState, replace) {
+            var user = localStorage.getItem('user');
+            if (!user) {
+                replace({
+                    pathname: '/notebook/login'
+                });
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -16179,7 +16189,8 @@ var App = function (_Component) {
                     _react2.default.createElement(_reactRouter.Route, { path: '/notebook/login', component: _Login2.default }),
                     _react2.default.createElement(_reactRouter.Route, { path: '/notebook/doctors', component: _Doctors2.default }),
                     _react2.default.createElement(_reactRouter.Route, { path: '/notebook/doctor/:id', component: _DoctorProfile2.default }),
-                    _react2.default.createElement(_reactRouter.Route, { path: '/notebook/reservations', component: _Reservations2.default })
+                    _react2.default.createElement(_reactRouter.Route, { path: '/notebook/reservations', component: _Reservations2.default,
+                        onEnter: this.requireAuth.bind(this) })
                 )
             );
         }
@@ -17656,9 +17667,7 @@ var Doctors = function (_Component) {
             var _this2 = this;
 
             _axios2.default.get((0, _utils.getFullUrl)("doctors/")).then(function (response) {
-                console.log(response);
                 _this2.setState({ doctors: response.data });
-                // browserHistory.push(`/notebook/doctors`)
             }, function (error) {
                 return _this2.setState({ error: 'خطا در اتصال به سرور(تلاش مجدد)' });
             });
@@ -17707,6 +17716,8 @@ var _react = __webpack_require__(11);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = __webpack_require__(50);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17725,50 +17736,104 @@ var Layout = function (_Component) {
     }
 
     _createClass(Layout, [{
+        key: 'renderNavbar',
+        value: function renderNavbar() {
+            var user = localStorage.getItem('user');
+            return _react2.default.createElement(
+                'div',
+                { className: 'navbar navbar-default' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'container-fluid' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'navbar-header' },
+                        _react2.default.createElement(
+                            'button',
+                            { type: 'button', className: 'navbar-toggle', 'data-toggle': 'collapse', 'data-target': '.navbar-responsive-collapse' },
+                            _react2.default.createElement('span', { className: 'icon-bar' }),
+                            _react2.default.createElement('span', { className: 'icon-bar' }),
+                            _react2.default.createElement('span', { className: 'icon-bar' })
+                        ),
+                        _react2.default.createElement(
+                            'a',
+                            { className: 'active navbar-brand', href: '#' },
+                            '\u06A9\u0644\u06CC\u0646\u06CC\u06A9'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'navbar-collapse collapse navbar-responsive-collapse' },
+                        _react2.default.createElement(
+                            'div',
+                            { id: 'navbar-links' },
+                            _react2.default.createElement(
+                                'ul',
+                                { className: 'nav navbar-nav' },
+                                _react2.default.createElement(
+                                    'li',
+                                    null,
+                                    _react2.default.createElement(
+                                        _reactRouter.Link,
+                                        { to: '/notebook/doctors' },
+                                        '\u067E\u0632\u0634\u06A9\u0627\u0646'
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'li',
+                                    null,
+                                    _react2.default.createElement(
+                                        _reactRouter.Link,
+                                        { to: '/notebook/reservations' },
+                                        '\u0645\u0634\u0627\u0647\u062F\u0647 \u0646\u0648\u0628\u062A\u200C\u0647\u0627'
+                                    )
+                                )
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'ul',
+                            { className: 'nav navbar-nav navbar-left' },
+                            user && _react2.default.createElement(
+                                'li',
+                                null,
+                                _react2.default.createElement(
+                                    'a',
+                                    { href: '#' },
+                                    user,
+                                    '\u0628\u0647 \u06A9\u0644\u06CC\u0646\u06CC\u06A9 \u062E\u0648\u0634 \u0622\u0645\u062F\u06CC\u062F'
+                                )
+                            ),
+                            user ? _react2.default.createElement(
+                                'li',
+                                null,
+                                _react2.default.createElement(
+                                    _reactRouter.Link,
+                                    { href: '/notebook/logout/', onClick: function onClick() {
+                                            return localStorage.removeItem('user');
+                                        } },
+                                    '\u062E\u0631\u0648\u062C'
+                                )
+                            ) : _react2.default.createElement(
+                                'li',
+                                null,
+                                _react2.default.createElement(
+                                    _reactRouter.Link,
+                                    { href: '/notebook/login' },
+                                    '\u0648\u0631\u0648\u062F'
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }, {
         key: 'render',
-
-        // renderNavbar() {
-        //     return (
-        //         <div class="navbar navbar-default">
-        //             <div class="container-fluid">
-        //                 <div class="navbar-header">
-        //                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-        //                         <span class="icon-bar"></span>
-        //                         <span class="icon-bar"></span>
-        //                         <span class="icon-bar"></span>
-        //                     </button>
-        //                     <a class="active navbar-brand" href="{% url 'react_home' %}">کلینیک</a>
-        //                 </div>
-        //                 <div class="navbar-collapse collapse navbar-responsive-collapse">
-        //                     <div id="navbar-links">
-        //                         <ul class="nav navbar-nav">
-        //                             <li><a href="/notebook/doctors">پزشکان</a></li>
-        //                             <li><a href="/panel">مشاهده نوبت‌ها</a></li>
-        //                         </ul>
-        //                     </div>
-        //                     <ul class="nav navbar-nav navbar-left">
-        //                         {% if user.is_authenticated %}
-        //                             <li>
-        //                                 <a href="#" >
-        //                                     {{ user.first_name }}
-        //                                     به کلینیک خوش آمدید
-        //                                 </a>
-        //                             </li>
-        //                             <li><a href="{% url "react_logout" %}">خروج</a></li>
-        //                         {% else %}
-        //                             <li><a href="/notebook/login">ورود</a></li>
-        //                         {% endif %}
-        //                     </ul>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     )
-        // }
-
         value: function render() {
             return _react2.default.createElement(
                 'div',
                 null,
+                this.renderNavbar(),
                 this.props.children
             );
         }
@@ -17834,9 +17899,11 @@ var Login = function (_Component) {
             var _this2 = this;
 
             _axios2.default.post((0, _utils.getFullUrl)("login/"), { username: this.state.username, password: this.state.password }).then(function (response) {
+                localStorage.setItem('user', response.data.first_name);
                 _reactRouter.browserHistory.push('/notebook/doctors');
             }, function (error) {
-                return _this2.setState({ error: 'نام کاربری یا رمز عبور اشتباه است.' });
+                _this2.setState({ error: 'نام کاربری یا رمز عبور اشتباه است.' });
+                localStorage.removeItem('user');
             });
         }
     }, {
@@ -17988,7 +18055,11 @@ var Reservations = function (_Component) {
             _axios2.default.get((0, _utils.getFullUrl)("reservations/")).then(function (response) {
                 _this2.setState({ reservations: response.data, fetching: false });
             }, function (error) {
-                return _this2.setState({ fetching: false, error: 'خطا در اتصال به سرور(تلاش مجدد)' });
+                if (error.response.status == 403) {
+                    localStorage.removeItem('user');
+                    _reactRouter.browserHistory.push('/notebook/login');
+                }
+                _this2.setState({ fetching: false, error: 'خطا در اتصال به سرور(تلاش مجدد)' });
             });
         }
     }, {
