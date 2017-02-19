@@ -16,9 +16,13 @@ class Login extends Component {
     login() {
         axios.post(getFullUrl("login/"), {username: this.state.username, password: this.state.password}).then(
             function (response) {
+                localStorage.setItem('user', response.data.first_name)
                 browserHistory.push(`/notebook/doctors`)
             },
-            error => this.setState({error: 'نام کاربری یا رمز عبور اشتباه است.'})
+            error => {
+                this.setState({error: 'نام کاربری یا رمز عبور اشتباه است.'})
+                localStorage.removeItem('user')
+            }
         )
     }
 

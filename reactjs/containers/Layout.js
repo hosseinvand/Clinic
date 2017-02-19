@@ -1,48 +1,50 @@
 import React, { Component, PropTypes } from 'react'
+import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
 
 class Layout extends Component {
-    // renderNavbar() {
-    //     return (
-    //         <div class="navbar navbar-default">
-    //             <div class="container-fluid">
-    //                 <div class="navbar-header">
-    //                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-    //                         <span class="icon-bar"></span>
-    //                         <span class="icon-bar"></span>
-    //                         <span class="icon-bar"></span>
-    //                     </button>
-    //                     <a class="active navbar-brand" href="{% url 'react_home' %}">کلینیک</a>
-    //                 </div>
-    //                 <div class="navbar-collapse collapse navbar-responsive-collapse">
-    //                     <div id="navbar-links">
-    //                         <ul class="nav navbar-nav">
-    //                             <li><a href="/notebook/doctors">پزشکان</a></li>
-    //                             <li><a href="/panel">مشاهده نوبت‌ها</a></li>
-    //                         </ul>
-    //                     </div>
-    //                     <ul class="nav navbar-nav navbar-left">
-    //                         {% if user.is_authenticated %}
-    //                             <li>
-    //                                 <a href="#" >
-    //                                     {{ user.first_name }}
-    //                                     به کلینیک خوش آمدید
-    //                                 </a>
-    //                             </li>
-    //                             <li><a href="{% url "react_logout" %}">خروج</a></li>
-    //                         {% else %}
-    //                             <li><a href="/notebook/login">ورود</a></li>
-    //                         {% endif %}
-    //                     </ul>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     )
-    // }
+    renderNavbar() {
+        const user = localStorage.getItem('user')
+        return (
+            <div className="navbar navbar-default">
+                <div className="container-fluid">
+                    <div className="navbar-header">
+                        <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                            <span className="icon-bar"></span>
+                            <span className="icon-bar"></span>
+                            <span className="icon-bar"></span>
+                        </button>
+                        <a className="active navbar-brand" href="#">کلینیک</a>
+                    </div>
+                    <div className="navbar-collapse collapse navbar-responsive-collapse">
+                        <div id="navbar-links">
+                            <ul className="nav navbar-nav">
+                                <li><Link to="/notebook/doctors">پزشکان</Link></li>
+                                <li><Link to="/notebook/reservations">مشاهده نوبت‌ها</Link></li>
+                            </ul>
+                        </div>
+                        <ul className="nav navbar-nav navbar-left">
+                            { user &&
+                                <li>
+                                    <a href="#" >
+                                        { user }
+                                        به کلینیک خوش آمدید
+                                    </a>
+                                </li>
+                            }
+                            {
+                                user ? <li><Link href="/notebook/logout/" onClick={() => localStorage.removeItem('user')}>خروج</Link></li> : <li><Link href="/notebook/login">ورود</Link></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     render() {
         return (
             <div>
-                {/*{this.renderNavbar()}*/}
+                {this.renderNavbar()}
                 {this.props.children}
             </div>
         )

@@ -21,7 +21,13 @@ class Reservations extends Component {
             response => {
                 this.setState({reservations: response.data, fetching:false})
             },
-            error => this.setState({fetching: false, error:'خطا در اتصال به سرور(تلاش مجدد)'})
+            error => {
+                if(error.response.status == 403) {
+                    localStorage.removeItem('user')
+                    browserHistory.push(`/notebook/login`)
+                }
+                this.setState({fetching: false, error:'خطا در اتصال به سرور(تلاش مجدد)'})
+            }
         )
     }
 

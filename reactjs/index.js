@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
+import {Router, Route, Link, browserHistory, IndexRoute} from 'react-router'
 import Login from './containers/Login'
 import Doctors from './containers/Doctors'
 import DoctorProfile from './containers/DoctorProfile'
@@ -37,16 +37,26 @@ class App extends Component {
         return config
     }
 
+    requireAuth(nextState, replace) {
+        const user = localStorage.getItem('user')
+        if (!user) {
+            replace({
+                pathname: '/notebook/login',
+            })
+        }
+    }
+
     render() {
         return (
-           <Router history={browserHistory}>
-               <Route path="/notebook" component={Layout} >
-                    <Route path="/notebook/login" component={Login} />
-                    <Route path="/notebook/doctors" component={Doctors} />
-                    <Route path="/notebook/doctor/:id" component={DoctorProfile} />
-                    <Route path="/notebook/reservations" component={Reservations} />
-               </Route>
-           </Router>
+            <Router history={browserHistory}>
+                <Route path="/notebook" component={Layout}>
+                    <Route path="/notebook/login" component={Login}/>
+                    <Route path="/notebook/doctors" component={Doctors}/>
+                    <Route path="/notebook/doctor/:id" component={DoctorProfile}/>
+                    <Route path="/notebook/reservations" component={Reservations}
+                           onEnter={this.requireAuth.bind(this)}/>
+                </Route>
+            </Router>
         )
     }
 }
