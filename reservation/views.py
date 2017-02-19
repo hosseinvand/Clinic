@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import redirect, get_list_or_404
+from django.shortcuts import redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic.base import View
@@ -11,10 +11,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 
+from reservation import models
 from reservation.forms import *
 from reservation.minheap import Heap
-from .forms import LoginForm
-from reservation.models import Secretary, Patient, PATIENT_ROLE_ID, RESERVATION_STATUS
 from reservation.mixins import PatientRequiredMixin, DoctorRequiredMixin, DoctorSecretaryRequiredMixin
 from reservation.models import Secretary, Patient, PATIENT_ROLE_ID
 from .forms import LoginForm
@@ -149,17 +148,13 @@ class SearchDoctorView(ListView, FormView):
         return self.object_list
 
 
-# class SearchDoctorByLocationView(ListView):
-#     model = Doctor  # TODO! or doctor
-#     template_name = 'search_by_location.html'
-#
-#     def __init__(self):
-#         super(SearchDoctorByLocationView, self).__init__()
-#         self.object_list = None
-#
-#     def get_queryset(self):
-#         self.object_list = self.model.objects.all()
-#         return self.object_list
+class GetDoctorCard(TemplateView):
+    template_name = 'doctor_card.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetDoctorCard, self).get_context_data(**kwargs)
+        context['doctor'] = models.Doctor.objects.filter(pk=kwargs['pk']).first()
+        return context
 
 
 class GetSearchByLocationOfficeResult(ListView):
@@ -170,18 +165,7 @@ class GetSearchByLocationOfficeResult(ListView):
         super(GetSearchByLocationOfficeResult, self).__init__()
         self.object_list = None
         self.office_id_list = None
-    #TODO: list nearest office ... not all
-    def get_queryset(self):
-        if self.office_id_list is not None:
-            print("not none")
-            tmp_offices = models.Office.objects.filter(id__in=self.office_id_list)
-            print(tmp_offices)
-            self.object_list = self.model.objects.filter(office__in=tmp_offices)
-        else:
-            self.object_list = self.model.objects.all()
-        return self.object_list
 
-    # TODO: office hayi ro bargardunim ke doctorhashunu bargardundim tuye listview!
     def post(self, request, *args, **kwargs):
         all_offices = models.Office.objects.all()
         count = 20  # TODO: input from user
@@ -193,13 +177,8 @@ class GetSearchByLocationOfficeResult(ListView):
         print("top offices: ", office_id_list)
         # not sorted by distance
         offices_values = models.Office.objects.filter(id__in=office_id_list).values('lat_position', 'lng_position',
-                                                                                 'doctorSecretary')
+                                                                                    'doctorSecretary')
 
-        tmp_offices = models.Office.objects.filter(id__in=office_id_list)
-        for office in tmp_offices:
-                print("dists: ", office.id, ", ", office.distance(float(request.POST.get('lat')),
-                                                         float(request.POST.get('lng'))))
-        print("offices:", list(offices_values))
         return JsonResponse(list(offices_values), safe=False)
 
     # put offices in heap to find nearest ones
@@ -377,3 +356,33 @@ class SecretaryPanel(LoginRequiredMixin, ListView):
 
         context['expired'] = self.request.user.system_user.get_expired_reserve_times()
         return context
+
+
+class ReservationListPanel(LoginRequiredMixin, DoctorSecretaryRequiredMixin, ListView):
+    selected = "reservationList"
+    template_name = 'panel.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReservationListPanel, self).get_context_data(**kwargs)
+        context['day'] = self.request.GET.get("day", "")
+        if not context['day']:
+            context['day'] = jalali.Gregorian(datetime.date.today()).persian_string(
+                date_format="{}-{}-{}")
+        context['week'] = self.request.GET.get("week", "")
+        return context
+
+    def get_queryset(self):
+        week = self.request.GET.get("week")
+        day = self.request.GET.get("day", "")
+        date = datetime.date.today()
+        try:
+            date = jalali.Persian(day).gregorian_datetime()
+        except Exception:
+            None
+
+        start_week = date - datetime.timedelta((date.weekday() + 2) % 7)
+        end_week = start_week + datetime.timedelta(6)
+        if week is None:
+            return Reservation.objects.filter(doctor=self.request.user.system_user.role.office.doctor, date=date)
+        return Reservation.objects.filter(doctor=self.request.user.system_user.role.office.doctor,
+                                          date__range=[start_week, end_week])

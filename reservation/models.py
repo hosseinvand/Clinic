@@ -301,6 +301,8 @@ class Reservation(models.Model):
 
     #   TODO: TEST
     def get_range_by_num(self, num):
+        if not num:
+            return -1, -1
         base = self.doctor.get_base_time()
         start = datetime.time((num * base) // 60, (num * base) % 60).strftime("%H:%M")
         end = datetime.time((((num + 1) * base) // 60), (((num + 1) * base) % 60)).strftime("%H:%M")

@@ -49,32 +49,46 @@ function initLocationSearchMap() {
                     dataType: 'json',
                     success: function (response) {
                         for (i = 0; i < response.length; i++) {
-                            var curr_office_pos = new google.maps.LatLng(
-                                parseFloat(response[i]['lat_position']),
-                                parseFloat(response[i]['lng_position'])
-                            );
-                            console.log(curr_office_pos);
+                            (function (i) {
+                                var doctor_id = response[i]['doctorSecretary'];
+                                $.ajax({
+                                    method: 'GET',
+                                    url: '/doctor_card/' + doctor_id,
+                                    success: function (card_response) {
+                                        var curr_office_pos = new google.maps.LatLng(
+                                            parseFloat(response[i]['lat_position']),
+                                            parseFloat(response[i]['lng_position'])
+                                        );
 
-                            var doctor_id = response[i]['doctorSecretary'];
-                            var office_string = "<div class='panel panel-default'>" + "</div>" +
-                                "<a class='btn btn-primary btn-raised btn-md text-center' role='button' style='font-family:XM Yekan;' href='/../profile/" +
-                                doctor_id + "'>" +
-                                "مشاهده پروفایل" +
-                                "</a>";
-                            var curr_office_marker = new google.maps.Marker({
-                                map: map,
-                                icon: 'http://icons.iconarchive.com/icons/carlosjj/google-jfk/48/maps-icon.png',
-                                animation: google.maps.Animation.DROP,
-                                position: curr_office_pos
-                            });
-                            console.log(doctor_id);
-                            google.maps.event.addListener(curr_office_marker, 'click', (function (content) {
-                                return function () {
-                                    var marker_infowindow = new google.maps.InfoWindow({map: map});
-                                    marker_infowindow.setContent(content);
-                                    marker_infowindow.open(map, this);
-                                }
-                            }(office_string)));
+                                        // console.log(curr_office_pos);
+                                        // console.log(response[i]);
+                                        // console.log(card_response);
+                                        var office_string ="<div>"+ card_response +"</div>";
+                                        var curr_office_marker = new google.maps.Marker({
+                                            map: map,
+                                            icon: 'http://icons.iconarchive.com/icons/carlosjj/google-jfk/48/maps-icon.png',
+                                            animation: google.maps.Animation.DROP,
+                                            position: curr_office_pos
+                                        });
+                                        console.log(doctor_id);
+                                        google.maps.event.addListener(curr_office_marker, 'click', (function (content) {
+                                            return function () {
+                                                var marker_infowindow = new google.maps.InfoWindow({
+                                                    map: map,
+                                                    maxWidth: 190,
+                                                    marginLeft: 0,
+                                                    marginRight: 10,
+                                                    paddingRight:15,
+                                                });
+                                                marker_infowindow.setContent(content);
+                                                marker_infowindow.open(map, this);
+                                            }
+                                        }(office_string)));
+
+                                    }
+                                })
+
+                            })(i);
 
                         }
                     }

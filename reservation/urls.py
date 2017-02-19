@@ -25,10 +25,12 @@ urlpatterns = [
     url(r'^panel/search$', PanelSearch.as_view(), name="panelSearch"),
     url(r'^panel/profile/$', UpdateSystemUserProfile.as_view(), name="systemUserProfile"),
     url(r'^panel/reservation/requests/$', ManageReservations.as_view(), name="manageReservations"),
-    url(r'^panel/reservation/status/$', SecretaryPanel.as_view(), name="panel"),#TODO: duplicate!
+    url(r'^panel/reservation/status/$', SecretaryPanel.as_view(), name="panel"),  # TODO: duplicate!
+    url(r'^panel/reservation/list/$', ReservationListPanel.as_view(), name="reservationList"),
 
     url(r'^profile/(?P<pk>\d+)$', DoctorProfileView.as_view(), name="doctorProfile"),
     url(r'^reservation/(?P<pk>\d+)$', ReservationCreateView.as_view(), name="reservation"),
+    url(r'^doctor_card/(?P<pk>\d+)$', GetDoctorCard.as_view(), name='doctorCard'),
 
 
     url(r'^ajax/reserve_time/$', reserve_time, name='reserveTime'),
