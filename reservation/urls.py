@@ -30,6 +30,7 @@ urlpatterns = [
 
     url(r'^profile/(?P<pk>\d+)$', DoctorProfileView.as_view(), name="doctorProfile"),
     url(r'^reservation/(?P<pk>\d+)$', ReservationCreateView.as_view(), name="reservation"),
+    url(r'^doctor_card/(?P<pk>\d+)$', GetDoctorCard.as_view(), name='doctorCard'),
 
 
     url(r'^ajax/reserve_time/$', reserve_time, name='reserveTime'),
