@@ -8,5 +8,7 @@ before_script:
   - touch ./reservation/migrations/__init__.py
   - sed "1s/.*/HEROKU = False/" ./Clinic/settings.py > tmp; cat tmp > ./Clinic/settings.py; rm ./tmp;
   - python ./manage.py makemigrations
+  - npm install
+  - npm test
 # command to run tests
 script: python ./manage.py test

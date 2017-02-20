@@ -1,0 +1,30 @@
+exports[`test renders correctly 1`] = `
+<tr
+  className="centered-cells"
+  id={3}>
+  <td>
+    <a
+      className="text-primary"
+      href="/notebook/doctor/2">
+      علی رادمنش
+    </a>
+  </td>
+  <td>
+    چشم
+  </td>
+  <td>
+    ۱۳۹۴/۲/۲
+  </td>
+  <td>
+    14
+     تا 
+    16
+  </td>
+  <td
+    className="bg-info text-info">
+     
+    در دست بررسی
+     
+  </td>
+</tr>
+`;
