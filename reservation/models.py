@@ -1,16 +1,13 @@
 import datetime
+import math
 from abc import abstractmethod
 
-import math
-from distutils.log import Log
-from pydoc import doc
-
-from django.db import models
 from django.contrib.auth.models import User
-from polymorphic.models import PolymorphicModel
+from django.db import models
 from multiselectfield import MultiSelectField
-from reservation import jalali
+from polymorphic.models import PolymorphicModel
 
+from reservation import jalali
 
 PATIENT_ROLE_ID = 1
 DOCTOR_SECRETARY_ROLE_ID = 2
@@ -25,18 +22,16 @@ WEDNESDAY = 'wed'
 THURSDAY = 'thu'
 FRIDAY = 'fri'
 
-
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
     ('Asia', 'آسیا'),
     ('Tamin', 'سازمان تامین اجتماعی'),
     ('Salamat', 'جامع سلامت ایرانیان'),
     ('Mosalah', 'خدمات درمانی نیروهای مسلح و کارکنان دولت'),
-    # TODO
 )
 
 SPECIALITY_TYPES = (
-    ('Universal','عمومی'),
+    ('Universal', 'عمومی'),
     ('Eye', 'چشم'),
     ('Zanan', 'زنان و زایمان و نازایی'),
     ('Jarahi', 'جراحی'),
@@ -55,7 +50,7 @@ SPECIALITY_TYPES = (
     # TODO
 )
 
-EDUCATION_TYPES=(
+EDUCATION_TYPES = (
     ('K', 'کارشناسی'),
     ('UK', 'کارشناسی‌ارشد'),
     ('D', 'دکترا'),
@@ -63,7 +58,7 @@ EDUCATION_TYPES=(
     ('US', 'فوق تخصص'),
 )
 
-CITY_NAMES=(
+CITY_NAMES = (
     ('Tehran', 'تهران'),
     ('Isfahan', 'اصفهان'),
     ('Mahshad', 'مشهد'),
@@ -75,7 +70,6 @@ CITY_NAMES=(
     ('Qom', 'قم'),
     ('Hamedan', 'همدان'),
     ('Karaj', 'کرج')
-
 )
 
 WEEK_DAYS = ((SATURDAY, 'شنبه'),
@@ -102,15 +96,14 @@ RESERVATION_STATUS = {
 }
 
 
-
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
-    city = models.CharField("شهر",max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
+    city = models.CharField("شهر", max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
     address = models.TextField()
     phone = models.CharField(max_length=11, unique=True, null=True, blank=True,
                              error_messages={'unique': "این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!"})
     telegram = models.CharField(max_length=30, null=True)
-    from_hour = models.IntegerField("از ساعت", choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
+    from_hour = models.IntegerField("از ساعت", choices=HOURS, null=True, blank=True)  # TODO: RangeIntegerField create
     to_hour = models.IntegerField("تا ساعت", choices=HOURS, null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
@@ -146,11 +139,10 @@ class Office(models.Model):
                 return secretary
 
     def distance(self, lat, lng):
-        return math.hypot(float(self.lat_position)-lat, float(self.lng_position)-lng)
+        return math.hypot(float(self.lat_position) - lat, float(self.lng_position) - lng)
 
 
 class Role(PolymorphicModel):
-
     @abstractmethod
     def get_role_type(self):
         pass
@@ -203,10 +195,11 @@ class DoctorSecretary(Role):
 
 class Doctor(DoctorSecretary):
     # doctor_secretary = models.OneToOneField(DoctorSecretary, related_name="doctor")
-    doctor_code = models.PositiveIntegerField(default="", unique=True, error_messages={'unique': "این شماره نظام پزشکی برای پزشک دیگری ثبت شده است."})
-    education = models.CharField(max_length=30,choices=EDUCATION_TYPES, blank=True)
-    speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES, blank=True)
-    insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES, blank=True)
+    doctor_code = models.PositiveIntegerField(default="", unique=True, error_messages={
+        'unique': "این شماره نظام پزشکی برای پزشک دیگری ثبت شده است."})
+    education = models.CharField(max_length=30, choices=EDUCATION_TYPES, blank=True)
+    speciality = models.CharField(max_length=30, choices=SPECIALITY_TYPES, blank=True)
+    insurance = models.CharField(max_length=30, choices=INSURANCE_TYPES, blank=True)
     price = models.PositiveIntegerField(default="", blank=True)
     cv = models.TextField(max_length=90, blank=True)
     contract = models.FileField(upload_to="contracts/")
@@ -233,7 +226,7 @@ class Secretary(DoctorSecretary):
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
     id_code = models.CharField(max_length=10, unique=True, default="")  # min_length=10
-    role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
+    role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)  # or make a dummy/patient role!
 
     @property
     def full_name(self):
@@ -243,10 +236,8 @@ class SystemUser(models.Model):
     def username(self):
         return self.user.username
 
-
     def get_reserve_times(self):
         return self.get_accepted_reserve_times() | self.get_pending_reserve_times() | self.get_rejected_reserve_times() | self.get_expired_reserve_times()
-
 
     def get_pending_reserve_times(self):
         return Reservation.objects.filter(range_num__isnull=True,
@@ -279,11 +270,12 @@ class Reservation(models.Model):
     rejected = models.BooleanField(default=False)
 
     def get_available_times(self):
-        start_range_num = self.get_num_by_start(max(self.from_time,self.doctor.office.from_hour))
-        end_range_num = self.get_num_by_start(min(self.to_time,self.doctor.office.to_hour))
+        start_range_num = self.get_num_by_start(max(self.from_time, self.doctor.office.from_hour))
+        end_range_num = self.get_num_by_start(min(self.to_time, self.doctor.office.to_hour))
         result = range(start_range_num, end_range_num)
 
-        reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
+        reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False,
+                                                  range_num__gte=start_range_num, range_num__lt=end_range_num)
         not_available = [reservation.range_num for reservation in reservations]
 
         available = [x for x in result if x not in not_available]
@@ -306,7 +298,6 @@ class Reservation(models.Model):
     def get_status_display(self):
         return RESERVATION_STATUS[self.status]
 
-    #   TODO: TEST
     def get_range_by_num(self, num):
         if not num:
             return -1, -1
@@ -319,6 +310,6 @@ class Reservation(models.Model):
         return self.get_range_by_num(self.range_num)
 
     def get_num_by_start(self, hour, minute=0):
-        if minute%self.doctor.get_base_time() > 0:
+        if minute % self.doctor.get_base_time() > 0:
             return -1
-        return (hour*60 + minute) // self.doctor.get_base_time()
+        return (hour * 60 + minute) // self.doctor.get_base_time()

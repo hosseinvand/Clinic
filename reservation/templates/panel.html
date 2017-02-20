@@ -61,14 +61,6 @@
                                     <br>
                                     <b> پنل پزشک</b>
                                 </li>
-                                {% if user.system_user.role.get_role_id == 3 %}
-
-                                    <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
-                                        <a href="{% url 'ManageSecretary' %}">
-                                            <i class="glyphicon glyphicon-user"></i>
-                                            مدیریت منشی </a>
-                                    </li>
-                                {% endif %}
                                 <li {% if view.selected == "reservation" %}class="active"{% endif %}>
                                     <a href="{% url "manageReservations" %}">
                                         <i class="glyphicon glyphicon-time"></i>
@@ -77,7 +69,7 @@
                                 </li>
                                 <li {% if view.selected == "reservationList" %}class="active"{% endif %}>
                                     <a href="{% url "reservationList" %}">
-                                        <i class="glyphicon glyphicon-time"></i>
+                                        <i class="glyphicon glyphicon-calendar"></i>
                                         تاریخچه‌ی نوبت‌های بیماران
                                     </a>
                                 </li>
@@ -96,7 +88,14 @@
                                     </li>
                                 {% endif %}
 
+                                {% if user.system_user.role.get_role_id == 3 %}
 
+                                    <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
+                                        <a href="{% url 'ManageSecretary' %}">
+                                            <i class="glyphicon glyphicon-user"></i>
+                                            مدیریت منشی </a>
+                                    </li>
+                                {% endif %}
                                 <li>
                                     <a href="{% url 'doctorProfile' user.system_user.role.office.doctor.pk %}">
                                         <i class="glyphicon glyphicon-eye-open"></i>

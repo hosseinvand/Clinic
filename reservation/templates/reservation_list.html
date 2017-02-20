@@ -51,10 +51,10 @@
                     {% endif %}
                     <td {% if reservation.status == 'PENDING' %}
                         class="bg-info text-info"
-                    {% elif reservation.staus == 'REJECTED' or reservation.status == 'EXPIRED' %}
-                        class="bg-danger text-danger"
-                    {% else %}
+                    {% elif reservation.status == 'ACCEPTED' %}
                         class="bg-success text-success"
+                    {% else %}
+                        class="bg-danger text-danger"
                     {% endif %}
                     >{{ reservation.get_status_display }} </td>
                 </tr>
