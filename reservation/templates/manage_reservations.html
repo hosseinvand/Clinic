@@ -35,7 +35,6 @@
                     <td>
                         <button class="btn btn-success btn-raised btn-sm" role="button" onclick=reserveTime("{{ reservation.pk }}","{{ csrf_token }}")> ثبت نوبت</button>
                         <button class="btn btn-danger btn-raised btn-sm" role="button" onclick=rejectTime("{{ reservation.pk }}","{{ csrf_token }}")>رد درخواست</button>
-
                     </td>
                 </tr>
             {% endfor %}

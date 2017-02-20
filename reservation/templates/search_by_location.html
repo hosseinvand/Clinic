@@ -12,24 +12,4 @@
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initLocationSearchMap">
     </script>
-
-{#    <div class="panel panel-default">#}
-{#        <div class="page-title well text-primary">#}
-{#            <h4> نزدیک ترین پزشکان</h4>#}
-{##}
-{#        </div>#}
-{#        <div class="panel-body">#}
-{#                {% if not object_list %}#}
-{#                    <h4>هیچ پزشکی در سیستم وجود ندارد.</h4>#}
-{##}
-{#                {% endif %}#}
-{##}
-{#                {% for f in object_list %}#}
-{#                    <div class="col-md-3">#}
-                        {#            {% include 'widget/food.html' with food=f%}#}
-{#                        {% include 'doctor_card.html' with doctor=f %}#}
-{#                    </div>#}
-{#                {% endfor %}#}
-{#        </div>#}
-{#    </div>#}
 {% endblock %}

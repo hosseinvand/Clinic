@@ -3,6 +3,7 @@ from abc import abstractmethod
 
 import math
 from distutils.log import Log
+from pydoc import doc
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -192,6 +193,12 @@ class DoctorSecretary(Role):
         if self.office is not None:
             return self.office.get_city_display()
         return ''
+
+    def get_available_reservation_requests(self):
+        return Reservation.objects.filter(range_num__isnull=True,
+                                          date__gte=datetime.date.today(),
+                                          doctor=self.office.doctor,
+                                          rejected=False)
 
 
 class Doctor(DoctorSecretary):

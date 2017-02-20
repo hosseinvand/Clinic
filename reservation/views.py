@@ -284,7 +284,7 @@ class PanelSearch(LoginRequiredMixin, TemplateView):
     template_name = 'panel.html'
 
 
-class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
+class UpdateClinicView(LoginRequiredMixin, DoctorSecretaryRequiredMixin, UpdateView):
     selected = "updateClinic"
     model = Office
     template_name = 'panel.html'
@@ -293,7 +293,6 @@ class UpdateClinicView(LoginRequiredMixin, DoctorRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         x = SystemUser.objects.get(user=self.request.user).role.office
-        print(x.get_available_days())
         return x
 
 
@@ -318,8 +317,7 @@ class ManageReservations(LoginRequiredMixin, DoctorSecretaryRequiredMixin, ListV
     template_name = 'panel.html'
 
     def get_queryset(self):
-        return Reservation.objects.filter(range_num__isnull=True,
-                                          doctor=self.request.user.system_user.role.office.doctor)
+        return self.request.user.system_user.role.get_available_reservation_requests()
 
 
 class DoctorProfileView(DetailView):

@@ -17,7 +17,6 @@
                         {% endif %}
                     </div>
                     <!-- END SIDEBAR USERPIC -->
-                    <!-- SIDEBAR USER TITLE -->
                     <div class="profile-usertitle">
                         <div class="profile-usertitle-name">
                             {{ user.first_name }} {{ user.last_name }}
@@ -30,6 +29,9 @@
 
                     <div class="profile-usermenu">
                         <ul class="nav">
+                            <li>
+                                <b> پنل کاربر</b>
+                            </li>
                             <li {% if view.selected == "panel" %}class="active"{% endif %}>
                                 <a href="{% url 'panel' %}">
                                     <i class="glyphicon glyphicon-stats"></i>
@@ -40,7 +42,7 @@
                             <li {% if view.selected == "updateProfile" %}class="active"{% endif %}>
                                 <a href="{% url 'systemUserProfile' %}">
                                     <i class="glyphicon glyphicon-edit"></i>
-                                    ویرایش اطلاعات  کاربری
+                                    ویرایش اطلاعات کاربری
                                 </a>
                             </li>
                             {% if user.system_user.role.get_role_id == 1 %}
@@ -50,9 +52,17 @@
                                         ثبت نام پزشک
                                     </a>
                                 </li>
-                            {% else %}
 
+                            {% else %}
+                                </ul>
+
+                                <ul class="nav">
+                                <li>
+                                    <br>
+                                    <b> پنل پزشک</b>
+                                </li>
                                 {% if user.system_user.role.get_role_id == 3 %}
+
                                     <li {% if view.selected == "manageSecretary" %}class="active"{% endif %}>
                                         <a href="{% url 'ManageSecretary' %}">
                                             <i class="glyphicon glyphicon-user"></i>
@@ -68,7 +78,7 @@
                                 <li {% if view.selected == "reservationList" %}class="active"{% endif %}>
                                     <a href="{% url "reservationList" %}">
                                         <i class="glyphicon glyphicon-time"></i>
-                                        لیست نوبت‌ها
+                                        تاریخچه‌ی نوبت‌های بیماران
                                     </a>
                                 </li>
                                 {% if not user.system_user.role.office %}
@@ -88,7 +98,7 @@
 
 
                                 <li>
-                                    <a href="{% url 'doctorProfile' user.system_user.role.pk %}">
+                                    <a href="{% url 'doctorProfile' user.system_user.role.office.doctor.pk %}">
                                         <i class="glyphicon glyphicon-eye-open"></i>
                                         مشاهده پروفایل
                                     </a>
@@ -96,9 +106,8 @@
 
                             {% endif %}
 
-                        </ul>
+                            </ul>
                     </div>
-                    <!-- END MENU -->
                 </div>
             </div>
         </div>
@@ -116,32 +125,14 @@
         {% elif view.selected == "reservationList" %}
             {% include "reservation_list.html" %}
         {% elif view.selected == "manageSecretary" %}
-            <div class="col-md-6">
-                <div class="panel">
-                    <div class="panel-body" data-toggle="modal" data-target="#myModal">
-                        <div class="media">
-                            <div class="media-left">
-                                <img class="media-object img-circle profile-img"
-                                     src="{% static "image/add-secretary.jpg" %}">
-                            </div>
-                            <div class="media-body">
-                                <h2 class="center"> منشی جدید</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include "manage_secretary.html" %}
             {% for f in object_list %}
                 {% include 'secretary_card.html' with secretary=f %}
             {% endfor %}
         {% elif view.selected == "panel" %}
             {% include 'reservation_requests_status.html' %}
-        {% else %}
-            {#            {% include "search.html" %}#}
         {% endif %}
-
     </div>
-
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
         <div class="vertical-alignment-helper">
@@ -165,8 +156,7 @@
                         </form>
 
                     </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
+                </div>
+            </div>
+        </div>
 {% endblock %}
