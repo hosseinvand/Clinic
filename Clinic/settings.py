@@ -1,4 +1,4 @@
-HEROKU = True
+HEROKU = False
 
 if HEROKU:
     from .settings_heroku import *
