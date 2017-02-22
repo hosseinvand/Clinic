@@ -26,7 +26,7 @@ class Layout extends Component {
                             { user &&
                                 <li>
                                     <a href="#" >
-                                        { user }
+                                        { user + ' ' }
                                         به کلینیک خوش آمدید
                                     </a>
                                 </li>

@@ -46,7 +46,6 @@ class ReservationRow extends Component {
 
 ReservationRow.propTypes = {
     pk: PropTypes.number,
-    colorClass: PropTypes.string,
     full_name: PropTypes.string,
     doctor_pk: PropTypes.number,
     speciality: PropTypes.string,
