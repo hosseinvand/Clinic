@@ -37,6 +37,10 @@ class ManageSecretary(LoginRequiredMixin, ListView):
 
     @staticmethod
     def get_system_user_by_username(username):
+        """
+        :param username
+        :return: system user that has username = username
+        """
         try:
             return User.objects.get(username=username).system_user
         except User.DoesNotExist:
@@ -59,6 +63,10 @@ class ManageSecretary(LoginRequiredMixin, ListView):
 
     @staticmethod
     def entered_username_can_become_secretary(secretary_user):
+        """
+        :param secretary_user:
+        :return: check whether a user role is patient (can become secretary) or not
+        """
         return secretary_user.role.get_role_id() == PATIENT_ROLE_ID
 
 

@@ -1,3 +1,6 @@
+"""
+models of clinic system
+"""
 import datetime
 import math
 from abc import abstractmethod
