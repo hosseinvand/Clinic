@@ -119,6 +119,9 @@ class Office(models.Model):
         return self.base_time
 
     def get_available_days(self):
+        """
+        :return: weekdays which doctor is available in next two weeks
+        """
         today = datetime.date.today()
         result, opening_days = [], []
         for day in self.opening_days:
@@ -133,12 +136,20 @@ class Office(models.Model):
 
     @property
     def doctor(self):
+        """
+        :return: doctor which works in this office
+        """
         doctor_secretary = self.doctorSecretary.all()
         for secretary in doctor_secretary:
             if secretary.get_role_id() == DOCTOR_ROLE_ID:
                 return secretary
 
     def distance(self, lat, lng):
+        """
+        :param lat:
+        :param lng:
+        :return: distance between office point and (lat,lan)
+        """
         return math.hypot(float(self.lat_position) - lat, float(self.lng_position) - lng)
 
 
@@ -187,6 +198,9 @@ class DoctorSecretary(Role):
         return ''
 
     def get_available_reservation_requests(self):
+        """
+        :return: times which are pending and doctor/secretary should get them range number
+        """
         return Reservation.objects.filter(range_num__isnull=True,
                                           date__gte=datetime.date.today(),
                                           doctor=self.office.doctor,
@@ -237,24 +251,39 @@ class SystemUser(models.Model):
         return self.user.username
 
     def get_reserve_times(self):
+        """
+        :return all reserved times by order: available, pending, rejected, expired
+        """
         return self.get_accepted_reserve_times() | self.get_pending_reserve_times() | self.get_rejected_reserve_times() | self.get_expired_reserve_times()
 
     def get_pending_reserve_times(self):
+        """
+        :return: reserved times which are still pending
+        """
         return Reservation.objects.filter(range_num__isnull=True,
                                           date__gte=datetime.date.today(),
                                           patient=self,
                                           rejected=False)
 
     def get_accepted_reserve_times(self):
+        """
+        :return: reserved times which already have been accepted
+        """
         return Reservation.objects.filter(range_num__isnull=False,
                                           rejected=False,
                                           patient=self)
 
     def get_rejected_reserve_times(self):
+        """
+        :return: reserved times which have been rejected
+        """
         return Reservation.objects.filter(rejected=True,
                                           patient=self)
 
     def get_expired_reserve_times(self):
+        """
+        :return: reserved time which had no answer and have been expired
+        """
         return Reservation.objects.filter(range_num__isnull=True,
                                           patient=self,
                                           date__lt=datetime.date.today())
@@ -270,6 +299,12 @@ class Reservation(models.Model):
     rejected = models.BooleanField(default=False)
 
     def get_available_times(self):
+        """
+        this method lists base times between "from" and "to" time
+        then remove pre-reserved times from the list
+        remaining times are available times to reserve
+        :return: available times for doctor and patient in requested range
+        """
         start_range_num = self.get_num_by_start(max(self.from_time, self.doctor.office.from_hour))
         end_range_num = self.get_num_by_start(min(self.to_time, self.doctor.office.to_hour))
         result = range(start_range_num, end_range_num)
@@ -283,10 +318,16 @@ class Reservation(models.Model):
 
     @property
     def get_jalali(self):
+        """
+        :return: persian date
+        """
         return jalali.Gregorian(self.date).persian_string()
 
     @property
     def status(self):
+        """
+        :return: status of reservation
+        """
         if self.rejected:
             return 'REJECTED'
         if self.range_num is not None:
@@ -296,9 +337,17 @@ class Reservation(models.Model):
         return 'EXPIRED'
 
     def get_status_display(self):
+        """
+        :return: persian display mode of status
+        """
         return RESERVATION_STATUS[self.status]
 
     def get_range_by_num(self, num):
+        """
+        start and end of range number is calculated according to base time
+        :param num:
+        :return: range which num is referring.
+        """
         if not num:
             return -1, -1
         base = self.doctor.get_base_time()
@@ -307,9 +356,17 @@ class Reservation(models.Model):
         return start, end
 
     def get_range(self):
+        """
+        :return: start and end of self range number
+        """
         return self.get_range_by_num(self.range_num)
 
     def get_num_by_start(self, hour, minute=0):
+        """
+        :param hour:
+        :param minute:
+        :return: number of range which starts with hour:minute
+        """
         if minute % self.doctor.get_base_time() > 0:
             return -1
         return (hour * 60 + minute) // self.doctor.get_base_time()
