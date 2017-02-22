@@ -33,7 +33,7 @@ if HEROKU:
         'django.contrib.staticfiles',
         'reservation',
         'multiselectfield',
-        'webpack_loader'
+        'webpack_loader',
         'notebook',
     ]
 
