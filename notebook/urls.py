@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^api/login/$', Login.as_view(), name='react_login'),
     url(r'^api/doctors/$', DoctorsView.as_view(), name='react_doctors'),
     url(r'^api/reservations/$', ReservationsView.as_view(), name='react_reservations'),
-    url(r'^api/doctor/(?P<pk>\d+)/$', DoctorDetailView.as_view(), name='react_doctors'),
+    url(r'^api/doctor/(?P<pk>\d+)/$', DoctorDetailView.as_view(), name='react_doctor_detail'),
     url(r'^$', MainPageView.as_view(), name='react_home'),
     url(r'^(?:.*)/?$', MainPageView.as_view()),
 ]

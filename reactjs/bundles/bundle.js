@@ -17248,7 +17248,6 @@ var ReservationRow = function (_Component) {
 
 ReservationRow.propTypes = {
   pk: _react.PropTypes.number,
-  colorClass: _react.PropTypes.string,
   full_name: _react.PropTypes.string,
   doctor_pk: _react.PropTypes.number,
   speciality: _react.PropTypes.string,
