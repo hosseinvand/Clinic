@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 
 from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_ROLE_ID, Patient, PATIENT_ROLE_ID, \
     Reservation
-from reservation.tests.test_utils import create_multiple_doctors, create_test_user
+from reservation.tests.utils import create_multiple_doctors, create_test_user
 
 
 class ManageReservationTest(TestCase):

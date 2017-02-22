@@ -1,9 +1,10 @@
+import os
+
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms import forms
 from django.test import TestCase
 from django.urls import reverse_lazy
-import os
 
 from reservation.models import SystemUser, Doctor
 
@@ -62,7 +63,7 @@ class DoctorTest(SystemUserTest):
 
     def setUp(self):
         super(DoctorTest, self).setUp()
-        upload_file = open(os.path.join(os.path.dirname(__file__), 'test_utils.py'), 'rb')
+        upload_file = open(os.path.join(os.path.dirname(__file__), 'utils.py'), 'rb')
         self.doctor_data['contract'] = SimpleUploadedFile(upload_file.name, upload_file.read())
 
     def create_doctor(self, data=doctor_data):
@@ -79,7 +80,6 @@ class DoctorTest(SystemUserTest):
 
 
 class EditSystemUserTest(SystemUserTest):
-
     def test_user_access(self):
         self.create_system_user()
         response = self.client.get(reverse_lazy('systemUserProfile'))
@@ -135,7 +135,8 @@ class EditSystemUserTest(SystemUserTest):
         self.test_user_access()
         response = self.client.post(reverse_lazy('systemUserProfile'), self.user_data2)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.user_data2['id_code'], User.objects.filter(username=self.user_data2['username'])[0].system_user.id_code)
+        self.assertEqual(self.user_data2['id_code'],
+                         User.objects.filter(username=self.user_data2['username'])[0].system_user.id_code)
 
     def test_valid_id_code_submit(self):
         self.test_user_access()
@@ -143,7 +144,8 @@ class EditSystemUserTest(SystemUserTest):
         new_data['id_code'] = self.user_data2['id_code']
         response = self.client.post(reverse_lazy('systemUserProfile'), new_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.user_data2['id_code'], User.objects.filter(username=self.user_data['username'])[0].system_user.id_code)
+        self.assertEqual(self.user_data2['id_code'],
+                         User.objects.filter(username=self.user_data['username'])[0].system_user.id_code)
 
     def test_passwords_did_not_match(self):
         self.test_user_access()
@@ -164,4 +166,3 @@ class EditSystemUserTest(SystemUserTest):
         response = self.client.post(reverse_lazy('login'), {'username': new_data['username'],
                                                             'password': new_password})
         self.assertEqual(response.status_code, 302)
-

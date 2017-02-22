@@ -2,9 +2,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse_lazy
 
-from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_ROLE_ID, Patient, PATIENT_ROLE_ID, \
-    Reservation
-from reservation.tests.test_utils import create_multiple_doctors, create_test_user
+from reservation.models import SystemUser, Patient
+from reservation.tests.utils import create_multiple_doctors, create_test_user
 
 
 class EditOfficeTest(TestCase):
@@ -71,7 +70,7 @@ class EditOfficeTest(TestCase):
             'lng_position': 51.39129638671875,
         }
 
-        response = self.client.post(reverse_lazy('updateClinic',), new_office_data)
+        response = self.client.post(reverse_lazy('updateClinic', ), new_office_data)
         self.assertEqual(response.status_code, 302)
         office = doctor.office
         office.refresh_from_db()

@@ -5,8 +5,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse_lazy
 
-from reservation.models import SystemUser, INSURANCE_TYPES, Doctor, Office, Patient
-from reservation.tests.test_utils import create_test_doctor, create_test_user, create_test_system_user
+from reservation.models import SystemUser, Doctor, Office, Patient
+from reservation.tests.utils import create_test_doctor, create_test_user, create_test_system_user
 
 
 class OfficeAddTest(TestCase):
@@ -58,7 +58,7 @@ class DoctorSignupViewTest(TestCase):
     }
 
     def setUp(self):
-        upload_file = open(os.path.join(os.path.dirname(__file__), 'test_utils.py'), 'rb')
+        upload_file = open(os.path.join(os.path.dirname(__file__), 'utils.py'), 'rb')
         self.doctor_data['contract'] = SimpleUploadedFile(upload_file.name, upload_file.read())
 
     def test_valid_new_doctor_creation(self):
@@ -69,7 +69,6 @@ class DoctorSignupViewTest(TestCase):
         self.assertTrue(Doctor.objects.filter(doctor_code=self.doctor_data['doctor_code']).exists())
 
     def test_invalid_new_doctor_code_already_exist(self):
-        print(Doctor.objects.all())
         create_test_doctor(self.doctor_data['doctor_code'], '0044225533', 'doki', 'password')
         create_test_system_user(create_test_user('alien', 'alien'), '0052342')
         self.client.login(username='alien', password='alien')
@@ -80,17 +79,16 @@ class DoctorSignupViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-
 class LoginViewTest(TestCase):
     def test_page_status(self):
         response = self.client.get(reverse_lazy('login'))
         self.assertEqual(response.status_code, 200)
 
     def setUp(self):
-        tmp_user = User.objects.create_user(username='ahmad', email='ahmad@gmail.com', password='password', first_name='ahmad',
+        tmp_user = User.objects.create_user(username='ahmad', email='ahmad@gmail.com', password='password',
+                                            first_name='ahmad',
                                             last_name='ahmad')
         SystemUser.objects.create(user=tmp_user, id_code='123456')
-
 
     def test_login_existing_user(self):
         login_data = {

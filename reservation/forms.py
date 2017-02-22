@@ -119,7 +119,6 @@ class ClinicForm(ModelForm):
         cleaned_data = super(ClinicForm, self).clean()
         if cleaned_data.get("from_hour") > cleaned_data.get("to_hour"):
             raise forms.ValidationError('ساعت شروع کار باید از ساعت پایان کار کمتر باشد')
-        print("opening days:", cleaned_data.get("opening_days"))
         return cleaned_data
 
 
@@ -192,7 +191,6 @@ class ReservationDateTimeForm(ModelForm):
     def save(self, commit=True):
         time = super(ReservationDateTimeForm, self).save(commit=False)
         time.patient = SystemUser.objects.get(pk=self.cleaned_data.get("patient_pk"))
-        print("user patient: ", time.patient)
         time.doctor = Doctor.objects.get(pk=self.cleaned_data.get("doctor_pk"))
         time.date = jalali.Persian(self.cleaned_data.get("date")).gregorian_datetime()
         time.save()

@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 
 from reservation import models
 from reservation.models import Doctor
-from reservation.tests.test_utils import create_multiple_doctors
+from reservation.tests.utils import create_multiple_doctors
 
 
 class SearchTest(TestCase):
@@ -55,7 +55,8 @@ class SearchTest(TestCase):
         }
         response = self.client.get(reverse_lazy('searchResult'), data)
         self.assertTrue(all(doctor.speciality == data['speciality'] for doctor in response.context['object_list']))
-        self.assertEqual(len(response.context['object_list']), len(Doctor.objects.filter(speciality=data['speciality'])))
+        self.assertEqual(len(response.context['object_list']),
+                         len(Doctor.objects.filter(speciality=data['speciality'])))
 
     def test_education(self):
         data = {
@@ -79,10 +80,12 @@ class SearchTest(TestCase):
         self.assertEqual(len(response.context['object_list']), 1)
         response = self.client.get(reverse_lazy('searchResult'), data_medium_price)
         self.assertEqual(len(response.context['object_list']), 6)
-        self.assertTrue(all(doctor.price <= data_medium_price['max_price'] for doctor in response.context['object_list']))
+        self.assertTrue(
+            all(doctor.price <= data_medium_price['max_price'] for doctor in response.context['object_list']))
         response = self.client.get(reverse_lazy('searchResult'), data_large_price)
         self.assertEqual(len(response.context['object_list']), 10)
-        self.assertTrue(all(doctor.price <= data_large_price['max_price'] for doctor in response.context['object_list']))
+        self.assertTrue(
+            all(doctor.price <= data_large_price['max_price'] for doctor in response.context['object_list']))
 
     def test_multiple_word_name(self):
         data_single_name_1 = {

@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User
-from django.forms import forms
 from django.test import TestCase
 from django.urls import reverse_lazy
 
-from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_ROLE_ID, Patient, PATIENT_ROLE_ID
-from reservation.tests.test_utils import create_office, create_multiple_doctors, create_test_user
+from reservation.models import SystemUser, Secretary, DOCTOR_ROLE_ID, SECRETARY_ROLE_ID, Patient
+from reservation.tests.utils import create_multiple_doctors, create_test_user
 
 
 class SecretaryTest(TestCase):
@@ -68,7 +67,6 @@ class SecretaryTest(TestCase):
         response = self.client.post(reverse_lazy('ManageSecretary'), {'username': candidate_system_user.user.username})
         secretary_count_after = len(Secretary.objects.filter(office=doctor_system_user.role.office))
         self.assertEqual(response.status_code, 302)
-        # candidate_system_user = SystemUser.objects.get(id_code=self.user_data['id_code'])
         candidate_system_user.refresh_from_db()
         self.assertEqual(candidate_system_user.role.get_role_id(), SECRETARY_ROLE_ID)
         self.assertEqual(candidate_system_user.role.office, doctor_system_user.role.office)
