@@ -5947,7 +5947,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getFullUrl = getFullUrl;
-var API_ROOT = "http://localhost:3000/notebook/api/";
+var API_ROOT = "https://asd-clinic.herokuapp.com/notebook/api/";
+// const API_ROOT = "http://localhost:3000/notebook/api/"
 
 function getFullUrl(endpoint) {
     var fullUrl = endpoint.indexOf(API_ROOT) === -1 ? API_ROOT + endpoint : endpoint;
