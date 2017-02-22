@@ -262,6 +262,7 @@ media
 *.iml
 modules.xml
 .idea/misc.xml
+
 *.ipr
 .idea/
 Clinic/bin/
