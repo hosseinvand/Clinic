@@ -1,4 +1,4 @@
-HEROKU = False
+HEROKU = True
 
 import os
 import dj_database_url
@@ -131,6 +131,7 @@ if HEROKU:
     # Extra places for collectstatic to find static files.
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
+        os.path.join(BASE_DIR, "reactjs/bundles"),
     ]
 
     LOGIN_URL = '/login/'
