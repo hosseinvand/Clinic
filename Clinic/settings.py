@@ -1,4 +1,4 @@
-HEROKU = True
+HEROKU = False
 
 import os
 import dj_database_url
@@ -8,7 +8,6 @@ if HEROKU:
     # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
 
     # Quick-start development settings - unsuitable for production
     # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -30,14 +29,20 @@ if HEROKU:
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
-        # Disable Django's own staticfiles handling in favour of WhiteNoise, for
-        # greater consistency between gunicorn and `./manage.py runserver`. See:
-        # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
         'whitenoise.runserver_nostatic',
         'django.contrib.staticfiles',
         'reservation',
         'multiselectfield',
+        'webpack_loader'
+        'notebook',
     ]
+
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        }
+    }
 
     MIDDLEWARE_CLASSES = [
         'django.middleware.security.SecurityMiddleware',
@@ -168,7 +173,16 @@ else:
         'django.contrib.sites',
         'reservation',
         'multiselectfield',
+        'webpack_loader',
+        'notebook',
     ]
+
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        }
+    }
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
@@ -251,6 +265,7 @@ else:
 
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, "static"),
+        os.path.join(BASE_DIR, "reactjs/bundles"),
     )
 
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

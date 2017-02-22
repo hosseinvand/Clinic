@@ -25,8 +25,13 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-material-design.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/ripples.min.css" %}">
 
+    <link rel="stylesheet" href="{% static "jalalijscalendar/skins/calendar-blue.css" %}">
+
     <link href="{% static "css/style.css" %}" rel="stylesheet">
     <link href="{% static "css/profile.css" %}" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="{% static "image/favicon-32x32.png" %}" sizes="16x16" />
+
 
 </head>
 <body>
@@ -42,36 +47,21 @@
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/panel">پنل</a></li>
+                <li><a href="{% url 'panel' %}">پنل</a></li>
                 <li><a href="{% url 'searchResult' %}">پزشکان</a></li>
-
-                {#                <li class="dropdown">#}
-                {#                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown#}
-                {#                        <b class="caret"></b></a>#}
-                {#                    <ul class="dropdown-menu">#}
-                {#                        <li><a href="javascript:void(0)">Action</a></li>#}
-                {#                        <li><a href="javascript:void(0)">Another action</a></li>#}
-                {#                        <li><a href="javascript:void(0)">Something else here</a></li>#}
-                {#                        <li class="divider"></li>#}
-                {#                        <li class="dropdown-header">Dropdown header</li>#}
-                {#                        <li><a href="javascript:void(0)">Separated link</a></li>#}
-                {#                        <li><a href="javascript:void(0)">One more separated link</a></li>#}
-                {#                    </ul>#}
-                {#                </li>#}
+                <li><a href="{% url 'searchLocation' %}">جست‌وجوی جغرافیایی</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-left">
                 {#                <li><a href="javascript:void(0)">Link</a></li>#}
                 {% if user.is_authenticated %}
                     <li class="dropdown">
-                        <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a data-target="#" class="dropdown-toggle" data-toggle="dropdown">
                             {{ user.first_name }}
                             به کلینیک خوش آمدید
                             <b class="caret"></b>
 
                         </a>
                         <ul class="dropdown-menu">
-{#                            <li><a href="javascript:void(0)">Action</a></li>#}
-{#                            <li><a href="javascript:void(0)">Another action</a></li>#}
                             <li><a href="{% url "systemUserProfile" %}">پروفایل</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url "logout" %}">خروج</a></li>
@@ -97,16 +87,18 @@
 <script src="{% static "js/bootstrap.min.js" %}"></script>
 <script src="{% static "js/ripples.min.js" %}"></script>
 <script src="{% static "js/material.min.js" %}"></script>
+<script src="{% static "js/maps.js" %}"></script>
+
 <script>
     $(function () {
         $.material.init();
     });
 </script>
 <script src="{% static "js/fileBrowse.js" %}"></script>
-<script src="{% static "js/search.js" %}"></script>
+<script src="{% static "js/office_location.js" %}"></script>
 <script src="{% static "js/secretary.js" %}"></script>
-
-
+{% block source %}
+{% endblock %}
 </body>
 
 </html>

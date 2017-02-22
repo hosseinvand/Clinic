@@ -1,0 +1,80 @@
+{% load static %}
+{% load material_form %}
+{% load widget_tweaks %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form>
+            <div class="col-sm-5">
+                <i class="btn btn-raised btn-primary btn-sm glyphicon glyphicon-calendar" id="date_btn"
+                   type="button"></i>
+                <input id="date_input" name="day" type="text" value="{{ day }}">
+            </div>
+            <div class="col-sm-5">
+                <p class="text-primary with-margin">
+                    <input id="date_input" name="week" type="checkbox" {% if week == 'on' %}checked{% endif %}>
+                    مشاهده نوبت‌ها در کل هفته
+                </p>
+            </div>
+            <div class="col-sm-2">
+                <input class="btn btn-primary btn-raised" type="submit" value="نمایش">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4 class="text-primary">
+            نتایج (مرتب‌شده بر اساس تاریخ):
+        </h4>
+        <br>
+
+        <table class="table table-stripped table-bordered">
+            <thead>
+            <tr>
+                <th>شماره</th>
+                <th>نام و نام خانوادگی بیمار</th>
+                <th>تاریخ</th>
+                <th>زمان تعیین‌شده</th>
+                <th>وضعیت درخواست</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reservation in object_list %}
+                <tr id="row{{ reservation.pk }}" class="centered-cells">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ reservation.patient.full_name }}</td>
+                    <td>{{ reservation.get_jalali }}</td>
+                    {% if reservation.get_range.0 != -1 %}
+                        <td>{{ reservation.get_range.0 }} تا {{ reservation.get_range.1 }}</td>
+                    {% else %}
+                        <td>نامشخص</td>
+                    {% endif %}
+                    <td {% if reservation.status == 'PENDING' %}
+                        class="bg-info text-info"
+                    {% elif reservation.status == 'ACCEPTED' %}
+                        class="bg-success text-success"
+                    {% else %}
+                        class="bg-danger text-danger"
+                    {% endif %}
+                    >{{ reservation.get_status_display }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% block source %}
+    <script src="{% static 'jalalijscalendar/jalali.js' %}"></script>
+    <script src="{% static 'jalalijscalendar/calendar.js' %}"></script>
+    <script src="{% static 'jalalijscalendar/calendar-setup.js' %}"></script>
+    <script src="{% static 'jalalijscalendar/lang/calendar-fa.js' %}"></script>
+
+    <script>
+        Calendar.setup({
+            inputField: 'date_input',
+            button: 'date_btn',
+            ifFormat: '%Y-%m-%d',
+            dateType: 'jalali'
+        });
+    </script>
+{% endblock %}

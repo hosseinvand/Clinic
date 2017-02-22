@@ -1,0 +1,11 @@
+exports[`test renders correctly 1`] = `
+<div
+  className="col-md-8 col-md-offset-2">
+  <div
+    className="alert alert-danger text-center">
+    <strong>
+      خطا خطا خطا
+    </strong>
+  </div>
+</div>
+`;

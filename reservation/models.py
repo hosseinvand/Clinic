@@ -1,12 +1,15 @@
+"""
+models of clinic system
+"""
 import datetime
-import stat
+import math
 from abc import abstractmethod
-from random import choice
-from django.db.models import Q
-from django.db import models
+
 from django.contrib.auth.models import User
-from polymorphic.models import PolymorphicModel
+from django.db import models
 from multiselectfield import MultiSelectField
+from polymorphic.models import PolymorphicModel
+
 from reservation import jalali
 
 PATIENT_ROLE_ID = 1
@@ -22,18 +25,16 @@ WEDNESDAY = 'wed'
 THURSDAY = 'thu'
 FRIDAY = 'fri'
 
-
 INSURANCE_TYPES = (
     ('Iran', 'ایران'),
     ('Asia', 'آسیا'),
     ('Tamin', 'سازمان تامین اجتماعی'),
     ('Salamat', 'جامع سلامت ایرانیان'),
     ('Mosalah', 'خدمات درمانی نیروهای مسلح و کارکنان دولت'),
-    # TODO
 )
 
 SPECIALITY_TYPES = (
-    ('Universal','عمومی'),
+    ('Universal', 'عمومی'),
     ('Eye', 'چشم'),
     ('Zanan', 'زنان و زایمان و نازایی'),
     ('Jarahi', 'جراحی'),
@@ -52,7 +53,7 @@ SPECIALITY_TYPES = (
     # TODO
 )
 
-EDUCATION_TYPES=(
+EDUCATION_TYPES = (
     ('K', 'کارشناسی'),
     ('UK', 'کارشناسی‌ارشد'),
     ('D', 'دکترا'),
@@ -60,7 +61,7 @@ EDUCATION_TYPES=(
     ('US', 'فوق تخصص'),
 )
 
-CITY_NAMES=(
+CITY_NAMES = (
     ('Tehran', 'تهران'),
     ('Isfahan', 'اصفهان'),
     ('Mahshad', 'مشهد'),
@@ -72,7 +73,6 @@ CITY_NAMES=(
     ('Qom', 'قم'),
     ('Hamedan', 'همدان'),
     ('Karaj', 'کرج')
-
 )
 
 WEEK_DAYS = ((SATURDAY, 'شنبه'),
@@ -91,31 +91,40 @@ BASE_TIMES = ((10, 10),
 
 HOURS = [(i, i) for i in range(24)]
 
-RESERVATION_STATUS = (
-    ('PENDING', 'در دست بررسی'),
-    ('ACCEPTED', 'تعیین شده'),
-    ('REJECTED', 'رد شده'),
-    ('EXPIRED', 'تاریخ گذشته')
-)
-
+RESERVATION_STATUS = {
+    'PENDING': 'در دست بررسی',
+    'ACCEPTED': 'تعیین شده',
+    'REJECTED': 'رد شده',
+    'EXPIRED': 'تاریخ گذشته'
+}
 
 
 class Office(models.Model):
     # country = models.CharField(max_length=30, default='ایران')
-    city = models.CharField("شهر",max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
+    city = models.CharField("شهر", max_length=30, choices=CITY_NAMES, default='تهران', blank=True)
     address = models.TextField()
     phone = models.CharField(max_length=11, unique=True, null=True, blank=True,
                              error_messages={'unique': "این شماره تلفن برای مطب شخص دیگری ثبت شده‌است!"})
     telegram = models.CharField(max_length=30, null=True)
-    from_hour = models.IntegerField("از ساعت", choices=HOURS, null=True, blank=True)   #TODO: RangeIntegerField create
+    from_hour = models.IntegerField("از ساعت", choices=HOURS, null=True, blank=True)  # TODO: RangeIntegerField create
     to_hour = models.IntegerField("تا ساعت", choices=HOURS, null=True, blank=True)
     base_time = models.IntegerField(choices=BASE_TIMES, default=15)
     opening_days = MultiSelectField(choices=WEEK_DAYS, null=True)
+
+    lat_position = models.FloatField(null=True)
+    lng_position = models.FloatField(null=True)
+
+    @property
+    def get_position(self):
+        return str(self.lat_position) + ',' + str(self.lng_position)
 
     def get_base_time(self):
         return self.base_time
 
     def get_available_days(self):
+        """
+        :return: weekdays which doctor is available in next two weeks
+        """
         today = datetime.date.today()
         result, opening_days = [], []
         for day in self.opening_days:
@@ -130,17 +139,24 @@ class Office(models.Model):
 
     @property
     def doctor(self):
-        doctorSecretary = self.doctorSecretary.all()
-        print("first!: ", doctorSecretary)
-        for secretary in doctorSecretary:
-            print("role id", secretary.get_role_id())
+        """
+        :return: doctor which works in this office
+        """
+        doctor_secretary = self.doctorSecretary.all()
+        for secretary in doctor_secretary:
             if secretary.get_role_id() == DOCTOR_ROLE_ID:
-                print("secretary: " , secretary)
                 return secretary
+
+    def distance(self, lat, lng):
+        """
+        :param lat:
+        :param lng:
+        :return: distance between office point and (lat,lan)
+        """
+        return math.hypot(float(self.lat_position) - lat, float(self.lng_position) - lng)
 
 
 class Role(PolymorphicModel):
-
     @abstractmethod
     def get_role_type(self):
         pass
@@ -184,13 +200,23 @@ class DoctorSecretary(Role):
             return self.office.get_city_display()
         return ''
 
+    def get_available_reservation_requests(self):
+        """
+        :return: times which are pending and doctor/secretary should get them range number
+        """
+        return Reservation.objects.filter(range_num__isnull=True,
+                                          date__gte=datetime.date.today(),
+                                          doctor=self.office.doctor,
+                                          rejected=False)
+
 
 class Doctor(DoctorSecretary):
     # doctor_secretary = models.OneToOneField(DoctorSecretary, related_name="doctor")
-    doctor_code = models.PositiveIntegerField(default="", unique=True, error_messages={'unique': "این شماره نظام پزشکی برای پزشک دیگری ثبت شده است."})
-    education = models.CharField(max_length=30,choices=EDUCATION_TYPES, blank=True)
-    speciality = models.CharField(max_length=30,choices=SPECIALITY_TYPES, blank=True)
-    insurance = models.CharField(max_length=30,choices=INSURANCE_TYPES, blank=True)
+    doctor_code = models.PositiveIntegerField(default="", unique=True, error_messages={
+        'unique': "این شماره نظام پزشکی برای پزشک دیگری ثبت شده است."})
+    education = models.CharField(max_length=30, choices=EDUCATION_TYPES, blank=True)
+    speciality = models.CharField(max_length=30, choices=SPECIALITY_TYPES, blank=True)
+    insurance = models.CharField(max_length=30, choices=INSURANCE_TYPES, blank=True)
     price = models.PositiveIntegerField(default="", blank=True)
     cv = models.TextField(max_length=90, blank=True)
     contract = models.FileField(upload_to="contracts/")
@@ -217,7 +243,7 @@ class Secretary(DoctorSecretary):
 class SystemUser(models.Model):
     user = models.OneToOneField(User, related_name="system_user")
     id_code = models.CharField(max_length=10, unique=True, default="")  # min_length=10
-    role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)     # or make a dummy/patient role!
+    role = models.OneToOneField(Role, related_name="user_role", null=True, blank=True)  # or make a dummy/patient role!
 
     @property
     def full_name(self):
@@ -227,28 +253,43 @@ class SystemUser(models.Model):
     def username(self):
         return self.user.username
 
+    def get_reserve_times(self):
+        """
+        :return all reserved times by order: available, pending, rejected, expired
+        """
+        return self.get_accepted_reserve_times() | self.get_pending_reserve_times() | self.get_rejected_reserve_times() | self.get_expired_reserve_times()
+
     def get_pending_reserve_times(self):
+        """
+        :return: reserved times which are still pending
+        """
         return Reservation.objects.filter(range_num__isnull=True,
-                                          status=RESERVATION_STATUS[0][0],
+                                          date__gte=datetime.date.today(),
                                           patient=self,
-                                          date__gte=datetime.date.today())
+                                          rejected=False)
 
     def get_accepted_reserve_times(self):
+        """
+        :return: reserved times which already have been accepted
+        """
         return Reservation.objects.filter(range_num__isnull=False,
-                                          status=RESERVATION_STATUS[1][0],
+                                          rejected=False,
                                           patient=self)
 
     def get_rejected_reserve_times(self):
-        return Reservation.objects.filter(status=RESERVATION_STATUS[2][0],
+        """
+        :return: reserved times which have been rejected
+        """
+        return Reservation.objects.filter(rejected=True,
                                           patient=self)
 
     def get_expired_reserve_times(self):
-        Reservation.objects.filter(range_num__isnull=True,
-                                   patient=self,
-                                   date__lt=datetime.date.today()).update(status=RESERVATION_STATUS[3][0])
+        """
+        :return: reserved time which had no answer and have been expired
+        """
         return Reservation.objects.filter(range_num__isnull=True,
                                           patient=self,
-                                          status=RESERVATION_STATUS[3][0])
+                                          date__lt=datetime.date.today())
 
 
 class Reservation(models.Model):
@@ -258,38 +299,77 @@ class Reservation(models.Model):
     patient = models.ForeignKey(SystemUser, related_name='Reservations')
     doctor = models.ForeignKey(Doctor, related_name='Reservations')
     range_num = models.IntegerField(null=True)
-    status = models.CharField(max_length=30, choices=RESERVATION_STATUS, default=RESERVATION_STATUS[0][0])
+    rejected = models.BooleanField(default=False)
 
     def get_available_times(self):
-        start_range_num = self.get_num_by_start(max(self.from_time,self.doctor.office.from_hour))
-        end_range_num = self.get_num_by_start(min(self.to_time,self.doctor.office.to_hour))
+        """
+        this method lists base times between "from" and "to" time
+        then remove pre-reserved times from the list
+        remaining times are available times to reserve
+        :return: available times for doctor and patient in requested range
+        """
+        start_range_num = self.get_num_by_start(max(self.from_time, self.doctor.office.from_hour))
+        end_range_num = self.get_num_by_start(min(self.to_time, self.doctor.office.to_hour))
         result = range(start_range_num, end_range_num)
 
-        reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False, range_num__gte=start_range_num, range_num__lt=end_range_num)
+        reservations = Reservation.objects.filter(doctor=self.doctor, date=self.date, range_num__isnull=False,
+                                                  range_num__gte=start_range_num, range_num__lt=end_range_num)
         not_available = [reservation.range_num for reservation in reservations]
-        print('not', not_available)
 
         available = [x for x in result if x not in not_available]
         return [{'range': self.get_range_by_num(x), 'range_num': x} for x in available]
 
     @property
     def get_jalali(self):
+        """
+        :return: persian date
+        """
         return jalali.Gregorian(self.date).persian_string()
 
-    #   TODO: TEST
+    @property
+    def status(self):
+        """
+        :return: status of reservation
+        """
+        if self.rejected:
+            return 'REJECTED'
+        if self.range_num is not None:
+            return 'ACCEPTED'
+        if self.date >= datetime.date.today():
+            return 'PENDING'
+        return 'EXPIRED'
+
+    def get_status_display(self):
+        """
+        :return: persian display mode of status
+        """
+        return RESERVATION_STATUS[self.status]
+
     def get_range_by_num(self, num):
+        """
+        start and end of range number is calculated according to base time
+        :param num:
+        :return: range which num is referring.
+        """
+        if not num:
+            return -1, -1
         base = self.doctor.get_base_time()
         start = datetime.time((num * base) // 60, (num * base) % 60).strftime("%H:%M")
         end = datetime.time((((num + 1) * base) // 60), (((num + 1) * base) % 60)).strftime("%H:%M")
         return start, end
 
     def get_range(self):
+        """
+        :return: start and end of self range number
+        """
         return self.get_range_by_num(self.range_num)
 
     def get_num_by_start(self, hour, minute=0):
-        if minute%self.doctor.get_base_time() > 0:
+        """
+        :param hour:
+        :param minute:
+        :return: number of range which starts with hour:minute
+        """
+        if minute % self.doctor.get_base_time() > 0:
             return -1
-        return (hour*60 + minute) // self.doctor.get_base_time()
-
-    def set_status(self, status):
-        self.status = status
+        return (hour * 60 + minute) // self.doctor.get_base_time()

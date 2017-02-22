@@ -1,18 +1,15 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.contrib.gis.admin import widgets
-from django.db.utils import IntegrityError
 from django.forms.models import ModelForm, fields_for_model
-from reservation import jalali, models
-from reservation.models import SystemUser, Doctor, Office, Reservation, RESERVATION_STATUS
+
+from reservation import jalali
+from reservation.models import SystemUser, Doctor, Office, Reservation
 
 
 class SystemUserRegisterForm(ModelForm):
     username = fields_for_model(User)['username']
-    # email = fields_for_model(User)['email']
     email = forms.EmailField(widget=forms.EmailInput())
-    # password = fields_for_model(User)['password']
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
     first_name = fields_for_model(User)['first_name']
@@ -42,13 +39,13 @@ class SystemUserRegisterForm(ModelForm):
         last_name = self.cleaned_data.get('last_name', None)
         id_code = self.cleaned_data.get('id_code', None)
 
-        tmp_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+        tmp_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name,
+                                            last_name=last_name)
         return SystemUser.objects.create(user=tmp_user, id_code=id_code)
 
 
 class LoginForm(ModelForm):
     username = fields_for_model(User)['username']
-    # password = fields_for_model(User)['password']
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
@@ -74,7 +71,6 @@ class LoginForm(ModelForm):
 
 
 class DoctorRegisterForm(ModelForm):
-
     class Meta:
         model = Doctor
         fields = '__all__'
@@ -99,7 +95,6 @@ class DoctorRegisterForm(ModelForm):
 
 
 class ClinicForm(ModelForm):
-
     class Meta:
         model = Office
         fields = '__all__'
@@ -117,6 +112,7 @@ class ClinicForm(ModelForm):
             'to_hour': "تا",
             'base_time': "مدت زمان ویزیت هر بیمار(دقیقه)",
             'opening_days': "روزهای کاری",
+            'lat_position': "محل مطب روی نقشه",
         }
 
     def clean(self):
@@ -128,13 +124,11 @@ class ClinicForm(ModelForm):
 
 
 class DoctorSearchForm(ModelForm):
-
-    name = forms.CharField(label="نام", widget=forms.TextInput,required=False)
+    name = forms.CharField(label="نام", widget=forms.TextInput, required=False)
     max_price = forms.IntegerField(label="بیشینه قیمت", widget=forms.NumberInput, required=False)
     city = fields_for_model(Office, labels="شهر")['city']
     from_hour = fields_for_model(Office, labels="از ساعت")['from_hour']
     to_hour = fields_for_model(Office, labels="تا ساعت")['to_hour']
-    # days = fields_for_model(Office)['opening_days']
 
     class Meta:
         model = Doctor
@@ -185,13 +179,11 @@ class SystemUserUpdateForm(ModelForm):
         user.save()
         return user
 
-class ReservationDateTimeForm(ModelForm):
 
+class ReservationDateTimeForm(ModelForm):
     doctor_pk = forms.IntegerField()
     patient_pk = forms.IntegerField()
     date = forms.CharField()
-    # from_time = forms.TimeField(widget=SelectTimeWidget(minute_step=15, second_step=30, twelve_hr=True))
-    # to_time = forms.TimeField(widget=SelectTimeWidget(minute_step=15, second_step=30, twelve_hr=True))
 
     class Meta:
         model = Reservation
@@ -211,6 +203,7 @@ class ReservationDateTimeForm(ModelForm):
         if cleaned_data.get("from_time") > cleaned_data.get("to_time"):
             raise forms.ValidationError('زمان آغازی بازه باید از ازمان پایانی آن کمتر باشد.')
         doctor = Doctor.objects.get(pk=self.cleaned_data.get("doctor_pk"))
-        if cleaned_data.get("from_time") > doctor.office.to_hour or cleaned_data.get("to_time") < doctor.office.from_hour:
+        if cleaned_data.get("from_time") > doctor.office.to_hour or cleaned_data.get(
+                "to_time") < doctor.office.from_hour:
             raise forms.ValidationError('زمان انتخابی شما در بازه‌ی ساعات کاری پزشک نیست')
         return cleaned_data

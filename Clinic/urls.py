@@ -22,6 +22,7 @@ from Clinic import settings
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('reservation.urls')),
+    url(r'^notebook/', include('notebook.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL,

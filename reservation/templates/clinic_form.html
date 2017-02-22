@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+{% load static %}
 <div class="panel panel-default">
     <div class="panel-body">
         <form name="searchForm" class="form-horizontal" method="post">{% csrf_token %}
@@ -39,28 +40,26 @@
                             {% render_field form.telegram placeholder=form.telegram.label class="form-control" %}
                         </div>
                     </div>
-                </fieldset>
-            </div>
-            <div class="col-md-6">
-                <fieldset>
-
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
                             ساعت کاری:
                         </div>
-                    </div>
-                    <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
                             {{ form.from_hour.label_tag }}
                             {% render_field form.from_hour placeholder=form.from_hour.label class="form-control" %}
                         </div>
                     </div>
                     <div class="form-group">
+
                         <div class="col-xs-10 col-xs-offset-1">
                             {{ form.to_hour.label_tag }}
                             {% render_field form.to_hour placeholder=form.to_hour.label class="form-control" %}
                         </div>
                     </div>
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <fieldset>
                     <div class="form-group">
                         <div class="col-xs-10 col-xs-offset-1">
                             {{ form.base_time.label_tag }}
@@ -77,13 +76,28 @@
                             {% endfor %}
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-xs-10 col-xs-offset-1">
+                            {{ form.lat_position.label_tag }}
+                            <input id="lat" name="lat_position" type="text" hidden required="">
+                            <input id="lng" name="lng_position" type="text" hidden required="">
+
+                        </div>
+                    </div>
+
+                    <div id="googleMap" style="width:100%;height:400px;"></div>
+
+                    <script src="{% static "js/office_location.js" %}"></script>
+                    <script  async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIh9_A6auPUrSy0w8xx2mmJkPuQVAPnEU&callback=initOfficeMap"></script>
+
                 </fieldset>
             </div>
             <div class="col-md-12">
                 <fieldset>
                     <div class="form-group">
                         <div class="col-xs-6 col-xs-offset-3">
-                            <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">ثبت اطلاعات</button>
+                            <button type="submit" class="btn btn-lg btn-block btn-raised btn-primary">ثبت اطلاعات
+                            </button>
                         </div>
                     </div>
                 </fieldset>
