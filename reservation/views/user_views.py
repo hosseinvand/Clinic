@@ -152,8 +152,12 @@ class GetSearchByLocationOfficeResult(ListView):
         office_id_list = self.get_list_of_top_office_ids(all_offices, float(request.POST.get('lat')),
                                                          float(request.POST.get('lng')), count)
         # not sorted by distance
-        offices_values = models.Office.objects.filter(id__in=office_id_list).values('lat_position', 'lng_position',
+        tmp_offices_values = models.Office.objects.filter(id__in=office_id_list).values('lat_position', 'lng_position',
                                                                                     'doctorSecretary')
+        offices_values = []
+        for offices_value in tmp_offices_values:
+            if models.Doctor.objects.filter(pk=offices_value['doctorSecretary']):
+                offices_values.append(offices_value)
         return JsonResponse(list(offices_values), safe=False)
 
     # put offices in heap to find nearest ones

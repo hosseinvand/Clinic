@@ -61,30 +61,32 @@
                                     <br>
                                     <b> پنل پزشک</b>
                                 </li>
-                                <li {% if view.selected == "reservation" %}class="active"{% endif %}>
-                                    <a href="{% url "manageReservations" %}">
-                                        <i class="glyphicon glyphicon-time"></i>
-                                        نوبت دهی
-                                    </a>
-                                </li>
-                                <li {% if view.selected == "reservationList" %}class="active"{% endif %}>
-                                    <a href="{% url "reservationList" %}">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-                                        تاریخچه‌ی نوبت‌های بیماران
-                                    </a>
-                                </li>
-                                {% if not user.system_user.role.office %}
-                                    <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
-                                        <a href="{% url 'addClinic' %}">
-                                            <i class="glyphicon glyphicon-ok"></i>
-                                            ثبت اطلاعات مطب </a>
+
+
+                                {% if user.system_user.role.office %}
+                                    <li {% if view.selected == "reservation" %}class="active"{% endif %}>
+                                        <a href="{% url "manageReservations" %}">
+                                            <i class="glyphicon glyphicon-time"></i>
+                                            نوبت دهی
+                                        </a>
                                     </li>
-                                {% else %}
+                                    <li {% if view.selected == "reservationList" %}class="active"{% endif %}>
+                                        <a href="{% url "reservationList" %}">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                            تاریخچه‌ی نوبت‌های بیماران
+                                        </a>
+                                    </li>
                                     <li {% if view.selected == "updateClinic" %}class="active"{% endif %}>
                                         <a href="{% url 'updateClinic' %}">
                                             <i class="glyphicon glyphicon-edit"></i>
                                             ویرایش اطلاعات مطب
                                         </a>
+                                    </li>
+                                {% else %}
+                                    <li {% if view.selected == "addClinic" %}class="active"{% endif %}>
+                                        <a href="{% url 'addClinic' %}">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                            ثبت اطلاعات مطب </a>
                                     </li>
                                 {% endif %}
 

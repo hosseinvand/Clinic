@@ -51,6 +51,7 @@ function initLocationSearchMap() {
                         for (i = 0; i < response.length; i++) {
                             (function (i) {
                                 var doctor_id = response[i]['doctorSecretary'];
+                                console.log(doctor_id)
                                 $.ajax({
                                     method: 'GET',
                                     url: '/doctor_card/' + doctor_id,
