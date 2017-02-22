@@ -17799,7 +17799,7 @@ var Layout = function (_Component) {
                                 _react2.default.createElement(
                                     'a',
                                     { href: '#' },
-                                    user,
+                                    user + ' ',
                                     '\u0628\u0647 \u06A9\u0644\u06CC\u0646\u06CC\u06A9 \u062E\u0648\u0634 \u0622\u0645\u062F\u06CC\u062F'
                                 )
                             ),
